@@ -11,18 +11,5 @@
 - Reid Stagemeyer
 
 
-## Using git. 
 
-1) Have a new features? 
-2) Create a new branch.
-3) When finished developing the features. 
-4) create a pull request to the master. 
-- This can be done by
-
-```
-Switch to master branch. 
-click New Pull Request
-```
-
-5) Voila. 
 
