@@ -1,9 +1,19 @@
+//https://github.com/kittykatattack/learningPixi
+
+// pixi example: http://scottmcdonnell.github.io/pixi-examples/
+
+
+
+
+var WIDTH = 500;
+var HEIGHT = 500;
+
 //Create a Pixi Application
 // figures out whether to use the Canvas Drawing API or WebGL to render graphics, 
 //depending on which is available in the web browser you're using
 let app = new PIXI.Application({ 
-    width: 256,         // default: 800
-    height: 256,        // default: 600
+    width: WIDTH,         // default: 800
+    height: HEIGHT,        // default: 600
     antialias: true,    // default: false // smooth the edges of display // does not available on all platofmr
     transparent: false, // default: false
     resolution: 1       // default: 1
@@ -14,8 +24,45 @@ let app = new PIXI.Application({
 app.renderer.backgroundColor = 0x0076DE;
 
 
+
 //Add the canvas that Pixi automatically created for you to the HTML document
 document.body.appendChild(app.view);
+
+
+//pixijs text editor: https://pixijs.io/pixi-text-style/#
+
+
+
+
+var style = {
+    align: "center",
+    dropShadowBlur: 14,
+    dropShadowDistance: 9,
+    fontFamily: "Verdana, Geneva, sans-serif",
+    fontVariant: "small-caps",
+    fontWeight: "lighter",
+    lineJoin: "bevel",
+    miterLimit: 9,
+    strokeThickness: 1,
+    whiteSpace: "normal"
+};
+
+let message = new PIXI.Text("Welcome to \nCity Boost!", style);
+
+var startTextContainer = new PIXI.Container();
+startTextContainer.addChild(message);
+var reg = startTextContainer.getBounds();
+startTextContainer.x = (WIDTH / 2) - (reg.width/2);
+startTextContainer.y = (HEIGHT / 2) - (reg.height/2);// scale to center
+app.stage.addChild(startTextContainer);
+
+
+
+/************************/
+//TODO: animated start icon example 
+//http://pixijs.download/dev/docs/PIXI.Ticker_.html
+// software to create automated sprite. https://www.codeandweb.com/texturepacker/start-download?os=win&bits=64&download=true
+/************************/
 
 //load the the image and run the 'setup' function 
 // when it is done
@@ -33,6 +80,7 @@ PIXI.loader
 // for efficiency reason you want to use the loader
 let cat, state;
 function setup(){
+
 
 	// create a new cat sprite when image has loaded
 	cat = new PIXI.Sprite.fromImage("./images/cat.png");
