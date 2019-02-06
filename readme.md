@@ -1,6 +1,9 @@
+
+> Maintained by Team <img align="center" src="https://user-images.githubusercontent.com/35666615/52318190-de194580-2988-11e9-929d-09aec2551b13.png" height="50" width="50">
+
 ## City traffic simulator
 
-> <img align="center" src="https://user-images.githubusercontent.com/35666615/52318190-de194580-2988-11e9-929d-09aec2551b13.png" height="250" width="250">
+
 
 
 
