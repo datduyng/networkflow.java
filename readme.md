@@ -1,5 +1,9 @@
 ## City traffic simulator
 
+> <img src="https://user-images.githubusercontent.com/35666615/52318190-de194580-2988-11e9-929d-09aec2551b13.png" height="200" width="200">
+
+
+
 **Section** <br> 
 
 ## Important info 
