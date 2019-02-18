@@ -1,4 +1,3 @@
-
 ## City traffic simulator
 
 
@@ -36,8 +35,8 @@
 
 
 ## Diagram
-- Diagrams was created using [drawio](https://www.draw.io/)
-
+- Diagrams was created using [drawio](https://www.draw.io/), [Lucid chart](https://www.lucidchart.com).
+- 
 ### Sequence diagram 
 - []()
 ### Use case diagram 
