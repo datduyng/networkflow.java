@@ -4,8 +4,6 @@
 ## Use case diagram 
 - [Use case diagram](https://drive.google.com/file/d/1wBvyoXSj8t_jBm7rjeH1VZ2HX8ub-Lsa/view?usp=sharing)
 
-> <img src="./uml-diagram.png" height="400" widht="600">
-
 ## Structural diagram/UML
 - [UML diagram](https://www.lucidchart.com/invitations/accept/6ee82b63-ec81-4f8d-bdfb-3fc045e517da)
 
