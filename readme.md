@@ -35,7 +35,7 @@
 ## Diagram
 - Diagrams was created using [drawio](https://www.draw.io/) and [Lucid chart](https://www.lucidchart.com).
 
-
 ## About the Application
-- Application will be implement in Java. Helper tool like map creater will be create in Javascript
+- Application will be implement in [Java](https://www.java.com/en/) . Helper tool like map creater will be create in Javascript
+
 
