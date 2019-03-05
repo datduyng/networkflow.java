@@ -1,15 +1,11 @@
-## City traffic simulator
-
-
-
-
-
-**Section** <br> 
+## NetFlow 
+- [**Web App demo**](https://datduyng.github.io/cityboost/createMap.html)
+- The apps is under prototyping processes. **No** IDE was being use to initialize the work. 
 
 ## Important info 
-- [Link to RAD](https://1drv.ms/w/s!Ao4rMqb_sxm7hLUf-XdQlYHJ8v6mWw)
+- Team Docs (SDD/ RAD/ slides/.....).[Link](https://1drv.ms/f/s!Ao4rMqb_sxm7hekkgVly3Rf05hR_0Q)
 - Team presentation slides folder. [Link](https://1drv.ms/f/s!Ao4rMqb_sxm7hLZ969vMy8ix-KIkQg)
-- 
+
 
 ## Team members
 - Dat Nguyen 
@@ -28,6 +24,8 @@
 
 ## Requirement
 - [Link to Requirement Analysis Document(RAD)](https://1drv.ms/w/s!Ao4rMqb_sxm7hLQrMgIDW_j-IFPFhw)
+
+
 ## Team members
 - Dat Nguyen 
 - Zoe Fu
@@ -35,14 +33,8 @@
 
 
 ## Diagram
-- Diagrams was created using [drawio](https://www.draw.io/), [Lucid chart](https://www.lucidchart.com).
-- 
-### Sequence diagram 
-- []()
-### Use case diagram 
-- []()
-### UML class diagram 
-- []()
+- Diagrams was created using [drawio](https://www.draw.io/) and [Lucid chart](https://www.lucidchart.com).
+
 
 ## About the Application
 - Application will be implement in Java. Helper tool like map creater will be create in Javascript
