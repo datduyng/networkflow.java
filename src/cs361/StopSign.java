@@ -1,18 +1,30 @@
 package cs361;
 
-import java.util.List;
+import java.util.Queue;
 
-public class StopSign extends Tile {
+public class StopSign extends Intersection {
 	
-	private List CarEnter;
+	private Queue carEnter;
 	private String state;
-	private int increment;
 	
-	public List getCarEnter() {
-		return CarEnter;
+	public StopSign() {
+		this.carEnter = null;
+		this.state = null;
+		this.increment = 0;
 	}
-	public void setCarEnter(List carEnter) {
-		CarEnter = carEnter;
+	
+	public StopSign(Queue carEnter, String state, int increment) {
+		super();
+		this.carEnter = carEnter;
+		this.state = state;
+		this.increment = increment;
+	}
+
+	public Queue getCarEnter() {
+		return carEnter;
+	}
+	public void setCarEnter(Queue carEnter) {
+		carEnter = carEnter;
 	}
 	public String getState() {
 		return state;
@@ -20,13 +32,4 @@ public class StopSign extends Tile {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public int getIncrement() {
-		return increment;
-	}
-	public void updateIncrement() {
-		this.increment++;
-	}
-	
-	
-	
 }
