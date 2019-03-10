@@ -1,5 +1,5 @@
-package cs361;
-
+package component;
+//TODO: add To string method
 public class TrafficLight extends Intersection {
 
 	private String state;

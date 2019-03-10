@@ -1,4 +1,4 @@
-package cs361;
+package component;
 
 public class Ground extends Tile{
 	private String type;
@@ -9,6 +9,10 @@ public class Ground extends Tile{
 	}
  	
 	public String getType() {
+		return this.type;
+	}
+	
+	public String toString() {
 		return this.type;
 	}
 }

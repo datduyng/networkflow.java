@@ -1,4 +1,4 @@
-package cs361;
+package component;
 
 public class Road extends Tile {
 	private String type;
@@ -11,5 +11,6 @@ public class Road extends Tile {
 	public String getType() {
 		return this.type;
 	}
+	//To string method
 
 }

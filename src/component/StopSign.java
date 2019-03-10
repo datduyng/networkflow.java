@@ -1,7 +1,9 @@
-package cs361;
+package component;
 
 import java.util.PriorityQueue;
 
+
+//TODO: add To string method
 public class StopSign extends Intersection {
 	
 	private PriorityQueue carEnter;
@@ -21,10 +23,10 @@ public class StopSign extends Intersection {
 	}
 
 	public PriorityQueue getCarEnter() {
-		return carEnter;
+		return this.carEnter;
 	}
 	public void setCarEnter(PriorityQueue carEnter) {
-		carEnter = carEnter;
+		this.carEnter = carEnter;
 	}
 	public String getState() {
 		return state;
