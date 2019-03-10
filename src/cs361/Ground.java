@@ -1,19 +1,14 @@
 package cs361;
 
 public class Ground extends Tile{
-	private int id;
+	private String type;
 	
 	public Ground() {
 		super();
-		this.id = 0;
+		this.type = "Ground";
 	}
  	
-	public Ground(int id) {
-		super();
-		this.id = id;
-	}
-
-	public int getID() {
-		return this.id;
+	public String getType() {
+		return this.type;
 	}
 }

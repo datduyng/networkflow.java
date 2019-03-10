@@ -1,10 +1,10 @@
 package cs361;
 
-import java.util.Queue;
+import java.util.PriorityQueue;
 
 public class StopSign extends Intersection {
 	
-	private Queue carEnter;
+	private PriorityQueue carEnter;
 	private String state;
 	
 	public StopSign() {
@@ -13,17 +13,17 @@ public class StopSign extends Intersection {
 		this.increment = 0;
 	}
 	
-	public StopSign(Queue carEnter, String state, int increment) {
+	public StopSign(PriorityQueue carEnter, String state, int increment) {
 		super();
 		this.carEnter = carEnter;
 		this.state = state;
 		this.increment = increment;
 	}
 
-	public Queue getCarEnter() {
+	public PriorityQueue getCarEnter() {
 		return carEnter;
 	}
-	public void setCarEnter(Queue carEnter) {
+	public void setCarEnter(PriorityQueue carEnter) {
 		carEnter = carEnter;
 	}
 	public String getState() {

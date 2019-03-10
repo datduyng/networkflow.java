@@ -1,23 +1,23 @@
 package cs361;
 
 public class Intersection extends Tile {
-	protected int id;
+	protected String type;
 	protected int increment;
 	
 	public Intersection() {
 		super();
-		this.id = 0;
+		this.type = "Intersection";
 		this.increment = 0;
 	}
 	
-	public Intersection(int id, int increment) {
+	public Intersection(int increment) {
 		super();
-		this.id = id;
+		this.type = "Intersection";
 		this.increment = increment;
 	}
 
-	public int getID() {
-		return this.id;
+	public String getType() {
+		return this.type;
 	}
 	
 	public void updateIncrement() {

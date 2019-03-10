@@ -1,20 +1,15 @@
 package cs361;
 
 public class Road extends Tile {
-	private int id;
+	private String type;
 	
 	public Road() {
 		super();
-		this.id = 0;
-	}
-	
-	public Road(int id) {
-		super();
-		this.id = id;
+		this.type = "Road";
 	}
 	 
-	public int getID() {
-		return this.id;
+	public String getType() {
+		return this.type;
 	}
 
 }
