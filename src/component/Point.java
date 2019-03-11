@@ -1,4 +1,4 @@
-package cs361;
+package component;
 
 public class Point<X, Y> {
 	public final X x;

@@ -1,4 +1,4 @@
-package cs361;
+package component;
 
 public class TrafficLight extends Intersection {
 
@@ -6,13 +6,17 @@ public class TrafficLight extends Intersection {
 	private int increment;
 	
 	public TrafficLight() {
+		super();
 		this.state = null;
 		this.increment = 0;
+		this.type = "traffic light";
 	}
 	
 	public TrafficLight(String state, int increment) {
+		super();
 		this.state = state;
 		this.increment = increment;
+		this.type = "traffic light";
 	}
 	
 	public String getState() {

@@ -1,4 +1,4 @@
-package cs361;
+package component;
 
 import java.util.PriorityQueue;
 
@@ -11,6 +11,7 @@ public class StopSign extends Intersection {
 		this.carEnter = null;
 		this.state = null;
 		this.increment = 0;
+		this.type = "stop sign";
 	}
 	
 	public StopSign(PriorityQueue carEnter, String state, int increment) {
@@ -18,6 +19,7 @@ public class StopSign extends Intersection {
 		this.carEnter = carEnter;
 		this.state = state;
 		this.increment = increment;
+		this.type = "stop sign";
 	}
 
 	public PriorityQueue getCarEnter() {
