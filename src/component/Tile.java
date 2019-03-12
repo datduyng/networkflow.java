@@ -3,10 +3,9 @@ package component;
 public abstract class Tile {
 	
 	protected int numCarPass;
-	
-	Point mapIndex;
-	Point position;
-	String type;
+	protected  Point mapIndex;
+	protected Point position;
+	protected String type;
 	
 	public Tile() {
 		this.numCarPass = 0;
@@ -28,14 +27,13 @@ public abstract class Tile {
 	 * @return
 	 */
 	public static Tile initTileType(String type) {
-		
 		if(type.equalsIgnoreCase("ground")) {
 			return new Ground();
 		} else if (type.equalsIgnoreCase("road")) {
-			return new Road();
-		} else if (type.equalsIgnoreCase("traffic light")) {
+			return new Road();	
+		} else if (type.equalsIgnoreCase("traffic-light")) {
 			return new TrafficLight();
-		} else if (type.equalsIgnoreCase("stop sign")) {
+		} else if (type.equalsIgnoreCase("stop-sign")) {
 			return new StopSign();
 		} else {
 			return null;
@@ -49,6 +47,10 @@ public abstract class Tile {
 	 */
 	public int getNumCarPass() {
 		return this.numCarPass;
+	}
+	
+	public String toString() {
+		return this.type; 
 	}
 	
 }

@@ -5,7 +5,6 @@ import java.util.PriorityQueue;
 public class TrafficLight extends Intersection {
 
 	private String state;
-	private int increment;
 	
 	private PriorityQueue<Car> northSouthTraffic;
 	private PriorityQueue<Car> eastWestTraffic;
@@ -59,9 +58,10 @@ public class TrafficLight extends Intersection {
 		}
 	}
 	
-	public int getIncrement() {
+	public long getIncrement() {
 		return increment;
 	}
+	
 	public void updateIncrement() {
 		this.increment++;
 	}

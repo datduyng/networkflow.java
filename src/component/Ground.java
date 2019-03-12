@@ -1,7 +1,6 @@
 package component;
 
 public class Ground extends Tile{
-	private String type;
 	
 	public Ground() {
 		super();

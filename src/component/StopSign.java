@@ -16,6 +16,7 @@ public class StopSign extends Intersection {
 	}
 	
 	public StopSign(String state) {
+		super();
 		this.carEnter = new PriorityQueue<Car>();
 		this.state = state;
 		this.increment = 0;

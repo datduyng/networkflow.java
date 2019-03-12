@@ -67,6 +67,7 @@ public class SimulationMap {
 			this._loadCars(cars);
 			this._loadTrafficComponents(trafficComponents);
 			
+			
 		}catch(FileNotFoundException e) {
 			
 		}catch(IOException e) {
