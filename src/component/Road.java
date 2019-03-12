@@ -5,12 +5,15 @@ public class Road extends Tile {
 	
 	public Road() {
 		super();
-		this.type = "Road";
+		this.type = "road";
 	}
 	 
 	public String getType() {
 		return this.type;
 	}
-	//To string method
+	
+	public String toString() {
+		return this.type;
+	}
 
 }

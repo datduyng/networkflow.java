@@ -6,15 +6,14 @@ public abstract class Tile {
 	
 	Point mapIndex;
 	Point position;
-	String type; // added @dat
+	String type;
 	
 	public Tile() {
 		this.numCarPass = 0;
 	}
 	
-	//reid: 
 	public Tile(Point mapIndex, Point position) {
-//		this.numCarPass = numCarPass; del by @dat
+		this.numCarPass = 0;
 		this.mapIndex = mapIndex;
 		this.position = position;
 	}
@@ -29,11 +28,21 @@ public abstract class Tile {
 	 * @return
 	 */
 	public static Tile initTileType(String type) {
+		
 		if(type.equalsIgnoreCase("ground")) {
 			return new Ground();
+		} else if (type.equalsIgnoreCase("road")) {
+			return new Road();
+		} else if (type.equalsIgnoreCase("traffic light")) {
+			return new TrafficLight();
+		} else if (type.equalsIgnoreCase("stop sign")) {
+			return new StopSign();
+		} else {
+			return null;
 		}
-		return null;
 	}
+
+
 	/**
 	 * Gets attribute of the specific tile
 	 * @return the number of cars that have passed through this tile

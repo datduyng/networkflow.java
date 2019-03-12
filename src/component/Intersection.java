@@ -1,8 +1,8 @@
 package component;
 
-public class Intersection extends Tile {
+public abstract class Intersection extends Tile {
 	protected String type;
-	protected int increment;
+	protected long increment;
 	
 	public Intersection() {
 		super();
@@ -22,5 +22,9 @@ public class Intersection extends Tile {
 	
 	public void updateIncrement() {
 		this.increment++;
+	}
+	
+	public String toString() {
+		return this.type;
 	}
 }

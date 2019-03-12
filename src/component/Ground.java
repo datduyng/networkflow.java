@@ -5,7 +5,7 @@ public class Ground extends Tile{
 	
 	public Ground() {
 		super();
-		this.type = "Ground";
+		this.type = "ground";
 	}
  	
 	public String getType() {
