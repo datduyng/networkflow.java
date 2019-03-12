@@ -12,14 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import org.json.*;
-//class Point<X, Y> { 
-//	  public final X x; 
-//	  public final Y y; 
-//	  public Point(X x, Y y) { 
-//	    this.x = x; 
-//	    this.y = y; 
-//	  } 
-//} 
+
 
 
 public class SimulationMap {
@@ -29,12 +22,13 @@ public class SimulationMap {
 	private int numHeight; 
 	private int numWidth;
 	private int pixelSize=10;
-	private ArrayList<Car> carList = new ArrayList<Car>();
+	private ArrayList<car> carList = new ArrayList<car>();
 	private ArrayList<Intersection> intersectionList = new ArrayList<Intersection>();
 	
 	public SimulationMap(int height, int width) {
 		//init and then load map. 
 	}
+	
 	
 	/**
 	 * This function load map components take input as filePath to 
@@ -57,7 +51,7 @@ public class SimulationMap {
 			//Process map tiles
 			JSONArray tiles = (JSONArray) jsonObject.get("tiles");
 			JSONArray cars = (JSONArray) jsonObject.get("cars");
-			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
+//			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
 			
 			this.numHeight = Integer.parseInt(jsonObject.get("numHeight").toString());
 			this.numWidth = Integer.parseInt(jsonObject.get("numWidth").toString());
@@ -65,14 +59,14 @@ public class SimulationMap {
 			//load tiles and cars given JSON objects
 			this._loadTiles(tiles);
 			this._loadCars(cars);
-			this._loadTrafficComponents(trafficComponents);
+//			this._loadTrafficComponents(trafficComponents);
 			
 		}catch(FileNotFoundException e) {
-			
+			System.out.println("FileNotFoundException");
 		}catch(IOException e) {
-			
+			System.out.println("IOException");
 		}catch(ParseException e) {
-			
+			System.out.println("ParseException");
 		}
 	}
 	
@@ -86,10 +80,19 @@ public class SimulationMap {
 		Iterator<JSONObject> iterator = JSONCars.iterator();
 		while(iterator.hasNext()) {
 			JSONObject carObj = iterator.next();
-			int x = Integer.parseInt(carObj.get("x").toString()), 
+//			int xStart = Integer.parseInt(carObj.get("HorizontalStart").toString()), 
+//				yStart = Integer.parseInt(carObj.get("VerticalStart").toString());
+//			int xEnd = Integer.parseInt(carObj.get("HorizontalEnd").toString()),
+//				yEnd = Integer.parseInt(carObj.get("VerticalEnd").toString());		
+			int x = Integer.parseInt(carObj.get("x").toString()),
 				y = Integer.parseInt(carObj.get("y").toString());
-			char direction = (char) carObj.get("direction").toString().charAt(0);
+			String direction = carObj.get("direction").toString();
 			//TODO: init car object and add to list
+			car carComp = new car();
+			Point currentPosition = new Point(x,y);
+			carComp.setCurrentPosition(currentPosition);
+			carComp.setDirection(direction);
+			carList.add(carComp);
 		}
 	}
 	
@@ -122,7 +125,7 @@ public class SimulationMap {
 	}
 	public String carListToString() {
 		StringBuilder result = new StringBuilder();
-		for(Car car: carList) {
+		for(car car: carList) {
 			result.append(car.toString());
 		}
 		return result.toString();
@@ -164,11 +167,11 @@ public class SimulationMap {
 		this.pixelSize = pixelSize;
 	}
 
-	public ArrayList<Car> getCarList() {
+	public ArrayList<car> getCarList() {
 		return carList;
 	}
 
-	public void setCarList(ArrayList<Car> carList) {
+	public void setCarList(ArrayList<car> carList) {
 		this.carList = carList;
 	}
 

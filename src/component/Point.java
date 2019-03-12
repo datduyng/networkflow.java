@@ -1,11 +1,25 @@
 package component;
 
 public class Point<X, Y> {
-	public final X x;
-	public final Y y;
-	public Point(X x, Y y) {
+	public int x;
+	public int y;
+	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	
 }
 

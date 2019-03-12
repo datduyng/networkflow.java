@@ -36,40 +36,51 @@ public class car {
 
 	//move 
 	public void move(){
-		this.state = "move";
+		int possibleState = 2;
+		String state= this.state;
+
 		int possibleDirection = 4;
-		String direction = getDirection();
+		String direction = this.direction;
 		int currentX = 0;
 		int currentY = 0;
-		
-		switch (possibleDirection) {
-		case 1:
-			//go left 
-			direction = ">";
-			updateIncrement();
-			currentX = (getStart().getX()) + (getSpeed() * getIncrement());
-			currentPosition.setX(currentX);
+
+		switch(possibleState){
+		case 1:		
+			state = "move";
+
+			switch (possibleDirection) {
+			case 1:
+				//go left 
+				direction = ">";
+				updateIncrement();
+				currentX = (getStart().getX()) + (getSpeed() * getIncrement());
+				currentPosition.setX(currentX);
+			case 2:
+				//go right
+				direction = "<";
+				updateIncrement();
+				currentX = (getStart().getX()) - (getSpeed() * getIncrement());
+				currentPosition.setX(currentX);
+			case 3:
+				//go up
+				direction = "^";
+				updateIncrement();
+				currentY = (getStart().getY()) + (getSpeed() * getIncrement());
+				currentPosition.setY(currentY);
+			case 4:
+				//go down
+				direction = "v";
+				updateIncrement();
+				currentY = (getStart().getY()) - (getSpeed() * getIncrement());
+				currentPosition.setY(currentY);		
+			}
+			
 		case 2:
-			//go right
-			direction = "<";
-			updateIncrement();
-			currentX = (getStart().getX()) - (getSpeed() * getIncrement());
-			currentPosition.setX(currentX);
-		case 3:
-			//go up
-			direction = "^";
-			updateIncrement();
-			currentY = (getStart().getY()) + (getSpeed() * getIncrement());
-			currentPosition.setY(currentY);
-		case 4:
-			//go down
-			direction = "v";
-			updateIncrement();
-			currentY = (getStart().getY()) - (getSpeed() * getIncrement());
-			currentPosition.setY(currentY);		
+			state = "stop";
+			setStop(this.currentPosition);
 		}
 	}
-	
+
 	//update increment 
 	public void updateIncrement(){
 		setIncrement(0);
