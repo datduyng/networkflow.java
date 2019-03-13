@@ -22,7 +22,7 @@ public class SimulationMap {
 	private int numHeight; 
 	private int numWidth;
 	private int pixelSize=10;
-	private ArrayList<car> carList = new ArrayList<car>();
+	private ArrayList<Car> carList = new ArrayList<Car>();
 	private ArrayList<Intersection> intersectionList = new ArrayList<Intersection>();
 	
 	public SimulationMap(int height, int width) {
@@ -88,7 +88,7 @@ public class SimulationMap {
 				y = Integer.parseInt(carObj.get("y").toString());
 			String direction = carObj.get("direction").toString();
 			//TODO: init car object and add to list
-			car carComp = new car();
+			Car carComp = new Car();
 			Point currentPosition = new Point(x,y);
 			carComp.setCurrentPosition(currentPosition);
 			carComp.setDirection(direction);
@@ -125,7 +125,7 @@ public class SimulationMap {
 	}
 	public String carListToString() {
 		StringBuilder result = new StringBuilder();
-		for(car car: carList) {
+		for(Car car: carList) {
 			result.append(car.toString());
 		}
 		return result.toString();
@@ -167,11 +167,11 @@ public class SimulationMap {
 		this.pixelSize = pixelSize;
 	}
 
-	public ArrayList<car> getCarList() {
+	public ArrayList<Car> getCarList() {
 		return carList;
 	}
 
-	public void setCarList(ArrayList<car> carList) {
+	public void setCarList(ArrayList<Car> carList) {
 		this.carList = carList;
 	}
 

@@ -1,6 +1,6 @@
 package component;
 
-public class car {
+public class Car {
 	private String id;
 	private String direction;
 	private int initialSpeed;
@@ -12,7 +12,7 @@ public class car {
 	Point currentPosition;
 
 	//constructors
-	public car(String id,String direction, int initialSpeed, int speed, int increment, String state, Point start, Point stop,
+	public Car(String id,String direction, int initialSpeed, int speed, int increment, String state, Point start, Point stop,
 			Point currentPosition) {
 		super();
 		this.id = id;
@@ -27,7 +27,7 @@ public class car {
 	}
 
 	//get component
-	public car(){}
+	public Car(){}
 
 	//toString
 	public String toString(){ 
@@ -36,38 +36,35 @@ public class car {
 
 	//move 
 	public void move(){
-		int possibleState = 2;
 		String state= this.state;
 
-		int possibleDirection = 4;
 		String direction = this.direction;
 		int currentX = 0;
 		int currentY = 0;
 
-		switch(possibleState){
-		case 1:		
-			state = "move";
-
-			switch (possibleDirection) {
-			case 1:
+		switch(state){
+		case "move":		
+			
+			switch (direction) {
+			case ">":
 				//go left 
 				direction = ">";
 				updateIncrement();
 				currentX = (getStart().getX()) + (getSpeed() * getIncrement());
 				currentPosition.setX(currentX);
-			case 2:
+			case "<":
 				//go right
 				direction = "<";
 				updateIncrement();
 				currentX = (getStart().getX()) - (getSpeed() * getIncrement());
 				currentPosition.setX(currentX);
-			case 3:
+			case "^":
 				//go up
 				direction = "^";
 				updateIncrement();
 				currentY = (getStart().getY()) + (getSpeed() * getIncrement());
 				currentPosition.setY(currentY);
-			case 4:
+			case "v":
 				//go down
 				direction = "v";
 				updateIncrement();
@@ -75,9 +72,8 @@ public class car {
 				currentPosition.setY(currentY);		
 			}
 			
-		case 2:
-			state = "stop";
-			setStop(this.currentPosition);
+		case "stop":
+			setStop(currentPosition);
 		}
 	}
 
