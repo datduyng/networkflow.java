@@ -16,7 +16,7 @@ import org.json.*;
 
 
 public class SimulationMap {
-	public Tile[][] layout;
+	public static Tile[][] layout;
 	private int height=30; 
 	private int width=30;
 	private int numHeight; 

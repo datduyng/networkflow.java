@@ -5,11 +5,11 @@ public class Car {
 	private String direction;
 	private int initialSpeed;
 	private int speed;
-	private int increment;
+	private int increment; /* increments in one tile */
 	private String state;
 	Point start;
 	Point stop;
-	Point currentPosition;
+	Point currentPosition; /* same as the tile position */
 
 	//constructors
 	public Car(String id,String direction, int initialSpeed, int speed, int increment, String state, Point start, Point stop,
@@ -17,8 +17,8 @@ public class Car {
 		super();
 		this.id = id;
 		this.direction = direction;
-		this.initialSpeed = initialSpeed;
-		this.speed = speed;
+		this.initialSpeed = 15;
+		this.speed = 30;
 		this.increment = increment;
 		this.state = state;
 		this.start = start;
@@ -31,8 +31,9 @@ public class Car {
 
 	//toString
 	public String toString(){ 
-		return "direction is " + direction + ", current position is " + currentPosition; 
+		return "direction is " + direction + ", current position is " + "<" + this.currentPosition.getX()+"," + this.getCurrentPosition().getY() + ">"; 
 	} 
+	
 
 	//move 
 	public void move(){
@@ -50,25 +51,25 @@ public class Car {
 				//go left 
 				direction = ">";
 				updateIncrement();
-				currentX = (getStart().getX()) + (getSpeed() * getIncrement());
+				currentX = (getCurrentPosition().getX()) + (getSpeed() * getIncrement());
 				currentPosition.setX(currentX);
 			case "<":
 				//go right
 				direction = "<";
 				updateIncrement();
-				currentX = (getStart().getX()) - (getSpeed() * getIncrement());
+				currentX = (getCurrentPosition().getX()) - (getSpeed() * getIncrement());
 				currentPosition.setX(currentX);
 			case "^":
 				//go up
 				direction = "^";
 				updateIncrement();
-				currentY = (getStart().getY()) + (getSpeed() * getIncrement());
+				currentY = (getCurrentPosition().getY()) + (getSpeed() * getIncrement());
 				currentPosition.setY(currentY);
 			case "v":
 				//go down
 				direction = "v";
 				updateIncrement();
-				currentY = (getStart().getY()) - (getSpeed() * getIncrement());
+				currentY = (getCurrentPosition().getY()) - (getSpeed() * getIncrement());
 				currentPosition.setY(currentY);		
 			}
 			
