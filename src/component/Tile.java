@@ -3,7 +3,7 @@ package component;
 public abstract class Tile {
 	
 	protected int numCarPass;
-	protected  Point mapIndex;
+	protected Point mapIndex;
 	protected Point position;
 	protected String type;
 	

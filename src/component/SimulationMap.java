@@ -130,7 +130,7 @@ public class SimulationMap {
 	}
 	public String mapToString() {
 		StringBuilder result = new StringBuilder();
-		
+			
 		for(int y=0;y<this.getNumHeight();y++) {
 			for(int x=0;x<this.getNumWidth();x++) {
 				result.append(this.layout[y][x].toString() + ",");
