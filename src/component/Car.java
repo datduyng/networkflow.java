@@ -39,10 +39,6 @@ public class Car {
 	public String toString(){ 
 		return "direction is " + direction + ", current position is " + "<" + this.getCurrentPosition().getX() +"," + this.getCurrentPosition().getY() + ">"; 
 	} 
-	
-	//stop function 
-	//reset currentSpeed to 15mph 
-	
 
 	//move 
 	public void move(){
@@ -74,25 +70,26 @@ public class Car {
 		}
 	}
 	
+	//stop function, change state to stop
+	//reset currentSpeed to 0 mph 
+	public void stop() {
+		this.state =  "stopped";
+		this.currentSpeed = 0;
+	}
+	
 	public Point moveTile() {
 		//Point currPoint = this.getCurrentPosition();
 		int currentX = this.getCurrentPosition().getX();
-		System.out.println("currentX" + currentX);
 		int currentY = this.getCurrentPosition().getY();
-		System.out.println("currentY" + currentY);
 		switch (this.direction) {
 		case ">":
 			//go right
 			return new Point(currentX, (currentY + 1));
-			//this.setCurrY(currentY + 1);
-			//System.out.println("This currY: " + this.getCurrY());
 		case "<":
 			//go left
 			return new Point(currentX, (currentY - 1));
-			//this.decreaseCurrY();
 		case "^":
 			//go up
-			//this.decreaseCurrX();
 			return new Point((currentX - 1), currentY);
 		case "v":
 			//go down

@@ -18,7 +18,7 @@ public class cs03_08_19_design_map_test {
 		
 		boolean running = true; 
 		int count = 0;
-		while(running && (count < 65)) {
+		while(running && (count < 95)) {
 			//update cars 
 			for(int i = 0; i < carList.size(); i++) {
 				carList.get(i).move();
