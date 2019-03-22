@@ -6,13 +6,14 @@ public class TrafficLight extends Intersection {
 	private int increment;
 	
 	public TrafficLight() {
-		this.state = null;
+		this.state = "empty";
 		this.increment = 0;
 	}
 	
-	public TrafficLight(String state, int increment) {
-		this.state = state;
-		this.increment = increment;
+	public TrafficLight(String type) {
+		this.type = type;
+		this.state = "empty";
+		this.increment = 0;
 	}
 	
 	public String getState() {
@@ -26,6 +27,10 @@ public class TrafficLight extends Intersection {
 	}
 	public void updateIncrement() {
 		this.increment++;
+	}
+	
+	public String toString() {
+		return this.type;
 	}
 }
 	

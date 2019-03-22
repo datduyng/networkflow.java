@@ -12,6 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import org.json.*;
+import org.json.simple.JSONObject;
+
+import component.Point;
 
 
 
@@ -84,14 +87,16 @@ public class SimulationMap {
 //				yStart = Integer.parseInt(carObj.get("VerticalStart").toString());
 //			int xEnd = Integer.parseInt(carObj.get("HorizontalEnd").toString()),
 //				yEnd = Integer.parseInt(carObj.get("VerticalEnd").toString());		
-			int x = Integer.parseInt(carObj.get("x").toString()),
-				y = Integer.parseInt(carObj.get("y").toString());
+			int x = Integer.parseInt(carObj.get("xIndex").toString()),
+				y = Integer.parseInt(carObj.get("yIndex").toString());
 			String direction = carObj.get("direction").toString();
 			//TODO: init car object and add to list
 			Car carComp = new Car();
 			Point currentPosition = new Point(x,y);
 			carComp.setCurrentPosition(currentPosition);
 			carComp.setDirection(direction);
+			carComp.setState("stopped");
+			carComp.setCurrentSpeed(0);
 			carList.add(carComp);
 		}
 	}
@@ -105,11 +110,16 @@ public class SimulationMap {
 		Iterator<JSONArray> rowIterator = JSONTiles.iterator();
 		while(rowIterator.hasNext() && y < this.numHeight) {
 			JSONArray row = rowIterator.next();
-			Iterator<String> colIterator = row.iterator();
+			Iterator<JSONObject> colIterator = row.iterator();
 			x = 0;
 			while(colIterator.hasNext() && x < this.numWidth) {
-				String tileType = colIterator.next();
-				this.layout[y][x] = Tile.initTileType(tileType);
+				JSONObject nextObj = colIterator.next();
+				String generalType = nextObj.get("generalType").toString();
+				String classType = nextObj.get("classType").toString();
+				System.out.println(generalType);
+				System.out.println(classType);
+				System.out.println();
+				this.layout[y][x] = Tile.initTileType(generalType, classType);
 				x+=1;
 			}
 			y+=1;

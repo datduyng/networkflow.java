@@ -1,6 +1,6 @@
 package component;
 
-public class Point<X, Y> {
+public class Point {
 	public int x;
 	public int y;
 	public Point(int x, int y) {
@@ -19,6 +19,25 @@ public class Point<X, Y> {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	public void increaseX() {
+		this.x++;
+	}
+	
+	public void increaseY() {
+		System.out.println(this.y);
+		this.y++;
+		System.out.println(this.y);
+	}
+	
+	public void decreaseX() {
+		this.x--;
+	}
+	
+	public void decreaseY() {
+		this.y--;
+	}
+	
 	public Point(){}
 
 	

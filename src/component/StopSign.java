@@ -6,26 +6,25 @@ import java.util.PriorityQueue;
 //TODO: add To string method
 public class StopSign extends Intersection {
 	
-	private PriorityQueue carEnter;
+	private PriorityQueue<Car> carEnter;
 	private String state;
 	
 	public StopSign() {
-		this.carEnter = null;
-		this.state = null;
+		this.carEnter = new PriorityQueue<Car>();
+		this.state = "empty";
 		this.increment = 0;
 	}
 	
-	public StopSign(PriorityQueue carEnter, String state, int increment) {
-		super();
-		this.carEnter = carEnter;
-		this.state = state;
-		this.increment = increment;
+	public StopSign(String type) {
+		this.type = type;
+		this.state = "empty";
+		this.carEnter = new PriorityQueue<Car>();
 	}
 
-	public PriorityQueue getCarEnter() {
+	public PriorityQueue<Car> getCarEnter() {
 		return this.carEnter;
 	}
-	public void setCarEnter(PriorityQueue carEnter) {
+	public void setCarEnter(PriorityQueue<Car> carEnter) {
 		this.carEnter = carEnter;
 	}
 	public String getState() {
@@ -33,5 +32,9 @@ public class StopSign extends Intersection {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	
+	public String toString() {
+		return this.toString();
 	}
 }

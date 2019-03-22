@@ -28,9 +28,15 @@ public abstract class Tile {
 	 * @param type
 	 * @return
 	 */
-	public static Tile initTileType(String type) {
-		if(type.equalsIgnoreCase("ground")) {
-			return new Ground();
+	public static Tile initTileType(String generalType, String classType) {
+		if(generalType.equalsIgnoreCase("ground")) {
+			return new Ground(classType);
+		} else if(generalType.equalsIgnoreCase("road")) {
+			return new Road(classType);
+		} else if(generalType.equalsIgnoreCase("stop-sign")) {
+			return new StopSign(classType);
+		} else if(generalType.equalsIgnoreCase("traffic-light")) {
+			return new TrafficLight(classType);
 		}
 		return null;
 	}
