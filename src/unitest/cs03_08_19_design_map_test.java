@@ -21,7 +21,7 @@ public class cs03_08_19_design_map_test {
 		while(running && (count < 95)) {
 			//update cars 
 			for(int i = 0; i < carList.size(); i++) {
-				carList.get(i).move();
+				carList.get(i).move(map.getLayout());
 				System.out.println("Current X Pos: " + carList.get(i).getCurrentPosition().getX());
 				System.out.println("Current Y Pos: " + carList.get(i).getCurrentPosition().getY());
 

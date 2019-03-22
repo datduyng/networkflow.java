@@ -41,7 +41,7 @@ public class Car {
 	} 
 
 	//move 
-	public void move(){
+	public void move(Tile[][] layout){
 		this.increment++;
 		System.out.println("increment " + this.increment);
 		if(this.state.equals("stopped")) {
@@ -53,18 +53,27 @@ public class Car {
 				this.currentSpeed = 15;
 			}
 		} else if(this.state.equals("moving")) {
+			Point nextTile = null;
 			if(this.currentSpeed == 15) {
 				//30 seconds, move tile
 				if((this.increment % 60) == 0) {
-					this.setCurrentPosition(this.moveTile());
-					this.currentSpeed = 30; //increase speed
-					this.increment = 0; // reset increment
+					nextTile = this.moveTile();
+					//update position if next tile is valid
+					if(this.checkTile(nextTile, layout) == true) {
+						this.setCurrentPosition(this.moveTile());
+						this.currentSpeed = 30; //increase speed
+						this.increment = 0; // reset increment
+					}
 				}
 			} else if(this.currentSpeed == 30) {
 				//15 seconds, move tile
 				if((this.increment % 30) == 0) {
-					this.setCurrentPosition(this.moveTile());
-					this.increment = 0; // reset increment
+					nextTile = this.moveTile();
+					//update position if next tile is valid
+					if(this.checkTile(nextTile, layout) == true) {
+						this.setCurrentPosition(this.moveTile());
+						this.increment = 0; // reset increment
+					}
 				}
 			}
 		}
@@ -84,20 +93,43 @@ public class Car {
 		switch (this.direction) {
 		case ">":
 			//go right
-			return new Point(currentX, (currentY + 1));
+			return new Point((currentX + 1), currentY);
 		case "<":
 			//go left
-			return new Point(currentX, (currentY - 1));
+			return new Point((currentX - 1), currentY);
 		case "^":
 			//go up
-			return new Point((currentX - 1), currentY);
+			return new Point(currentX, (currentY - 1));
 		case "v":
 			//go down
-			return new Point((currentX + 1), currentY);
+			return new Point(currentX, (currentY + 1));
 		default :
 			return null;
 		}
 		
+	}
+	
+	public boolean checkTile(Point nextTile, Tile[][] layout) {
+		Tile tile = layout[nextTile.getY()][nextTile.getX()];
+		System.out.println(tile.getClass().getSimpleName());
+		if(tile.getClass().getSimpleName().equals("Road")) {
+			Road road = (Road) tile;
+			if((this.getDirection().equals(">") || this.getDirection().equals(">")) && road.getType().equals("road-horizontal")) {
+				return true;
+			} else if((this.getDirection().equals("^") || this.getDirection().equals("v")) && road.getType().equals("road-verticle")) {
+				return true;
+			} else {
+				return false;
+			}
+		} else if(layout[nextTile.getY()][nextTile.getX()].getClass().getSimpleName().equals("Ground")) {
+			return false;
+		} else if(layout[nextTile.getY()][nextTile.getX()].getClass().getSimpleName().equals("StopSign")) {
+			return false;
+		} else if(layout[nextTile.getY()][nextTile.getX()].getClass().getSimpleName().equals("TrafficLight")) {
+			return false;
+		} else {
+			return false;
+		}
 	}
 	
 	//getter and setter
@@ -134,12 +166,7 @@ public class Car {
 	public void setIncrement(int increment) {
 		this.increment = increment;
 	}
-	public void updateIncrement() {
-		this.increment++;
-	}
-	public void resetIncrement() {
-		this.increment = 0;
-	}
+	
 	public String getState() {
 		return state;
 	}
