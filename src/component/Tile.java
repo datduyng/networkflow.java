@@ -28,18 +28,19 @@ public abstract class Tile {
 	 * @param type
 	 * @return
 	 */
-	public static Tile initTileType(String generalType, String classType) {
+	public static Tile initTileType(String generalType, String classType, Point mapIndex) {
 		if(generalType.equalsIgnoreCase("ground")) {
 			return new Ground(classType);
 		} else if(generalType.equalsIgnoreCase("road")) {
 			return new Road(classType);
 		} else if(generalType.equalsIgnoreCase("stop-sign")) {
-			return new StopSign(classType);
+			return new StopSign(classType, mapIndex);
 		} else if(generalType.equalsIgnoreCase("traffic-light")) {
-			return new TrafficLight(classType);
+			return new TrafficLight(classType, mapIndex);
 		}
 		return null;
 	}
+
 	/**
 	 * Gets attribute of the specific tile
 	 * @return the number of cars that have passed through this tile

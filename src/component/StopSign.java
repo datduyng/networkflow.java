@@ -13,12 +13,27 @@ public class StopSign extends Intersection {
 		this.carEnter = new PriorityQueue<Car>();
 		this.state = "empty";
 		this.increment = 0;
+		this.mapIndex = new Point(0,0);
 	}
 	
 	public StopSign(String type) {
 		this.type = type;
 		this.state = "empty";
 		this.carEnter = new PriorityQueue<Car>();
+		this.mapIndex = new Point(0,0);
+	}
+	public StopSign(String type, Point mapIndex) {
+		this.mapIndex = mapIndex;
+		this.type = type;
+		this.state = "empty";
+		this.increment = 0;
+	}
+	public StopSign(String type, Point mapIndex, String builtDirections) {
+		this.mapIndex = mapIndex;
+		this.builtDirections = builtDirections;
+		this.type = type;
+		this.state = "empty";
+		this.increment = 0;
 	}
 
 	public PriorityQueue<Car> getCarEnter() {
@@ -32,9 +47,5 @@ public class StopSign extends Intersection {
 	}
 	public void setState(String state) {
 		this.state = state;
-	}
-	
-	public String toString() {
-		return this.toString();
 	}
 }

@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class SimulationMap {
 	private int numWidth;
 	private int pixelSize=10;
 	private ArrayList<Car> carList = new ArrayList<Car>();
-	private ArrayList<Intersection> intersectionList = new ArrayList<Intersection>();
+	private ArrayList<Intersection> trafficComponents = new ArrayList<Intersection>();
 	
 	public SimulationMap(int height, int width) {
 		//init and then load map. 
@@ -45,24 +46,30 @@ public class SimulationMap {
 	 */
 	public void loadComponents(String filePath) {
 		JSONParser parser = new JSONParser();
-	
+		System.out.println("File exist check" + new File(filePath).exists());
 		try {
-			Object obj = parser.parse(new FileReader(filePath));
 			
+			
+		    
+		    
+		    FileReader file= new FileReader(filePath);
+			Object obj = parser.parse(file);
+			System.out.println(obj);
 			JSONObject jsonObject = (JSONObject) obj;
 			
 			//Process map tiles
 			JSONArray tiles = (JSONArray) jsonObject.get("tiles");
 			JSONArray cars = (JSONArray) jsonObject.get("cars");
-//			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
+			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
 			
+			System.out.println(jsonObject);
 			this.numHeight = Integer.parseInt(jsonObject.get("numHeight").toString());
 			this.numWidth = Integer.parseInt(jsonObject.get("numWidth").toString());
 			
 			//load tiles and cars given JSON objects
 			this._loadTiles(tiles);
 			this._loadCars(cars);
-//			this._loadTrafficComponents(trafficComponents);
+			this._loadTrafficComponents(trafficComponents);
 			
 		}catch(FileNotFoundException e) {
 			System.out.println("FileNotFoundException");
@@ -75,18 +82,26 @@ public class SimulationMap {
 	
 
 	public void _loadTrafficComponents(JSONArray JSONTraffic) {
-		
+		int i = 0;
+		Iterator<JSONObject> iterator = JSONTraffic.iterator();
+		while(iterator.hasNext()) {
+			JSONObject componentObj = iterator.next();
+			String generalType = componentObj.get("generalType").toString();
+			String classType = componentObj.get("classType").toString();
+			String builtDirections = componentObj.get("builtDirections").toString();
+			int x = Integer.parseInt(componentObj.get("xIndex").toString()),
+					y = Integer.parseInt(componentObj.get("yIndex").toString());
+			Point mapIndex = new Point(x, y);
+			Intersection intersection = Intersection.initIntersectionType(generalType, classType, mapIndex, builtDirections);
+			trafficComponents.add(intersection);
+		}
 	}
 	
 	public void _loadCars(JSONArray JSONCars) {
 		int i = 0; 
 		Iterator<JSONObject> iterator = JSONCars.iterator();
 		while(iterator.hasNext()) {
-			JSONObject carObj = iterator.next();
-//			int xStart = Integer.parseInt(carObj.get("HorizontalStart").toString()), 
-//				yStart = Integer.parseInt(carObj.get("VerticalStart").toString());
-//			int xEnd = Integer.parseInt(carObj.get("HorizontalEnd").toString()),
-//				yEnd = Integer.parseInt(carObj.get("VerticalEnd").toString());		
+			JSONObject carObj = iterator.next();	
 			int x = Integer.parseInt(carObj.get("xIndex").toString()),
 				y = Integer.parseInt(carObj.get("yIndex").toString());
 			String direction = carObj.get("direction").toString();
@@ -116,27 +131,25 @@ public class SimulationMap {
 				JSONObject nextObj = colIterator.next();
 				String generalType = nextObj.get("generalType").toString();
 				String classType = nextObj.get("classType").toString();
-				System.out.println(generalType);
-				System.out.println(classType);
-				System.out.println();
-				this.layout[y][x] = Tile.initTileType(generalType, classType);
+				this.layout[y][x] = Tile.initTileType(generalType, classType, new Point(x, y));
 				x+=1;
 			}
 			y+=1;
 		}
 	}
 	
-	public String intersectionToString() {
+	public String componentsToString() {
 		StringBuilder result = new StringBuilder();
-		for(Intersection intersection: intersectionList) {
-			result.append(intersection.toString());
+		for(Intersection intersection: trafficComponents) {
+			result.append("Component: " + intersection.toString() + "\n");
 		}
 		return result.toString(); 
 	}
 	public String carListToString() {
 		StringBuilder result = new StringBuilder();
 		for(Car car: carList) {
-			result.append(car.toString());
+			result.append("Car: "+ car.toString() + '\n');
+			
 		}
 		return result.toString();
 	}
@@ -185,13 +198,6 @@ public class SimulationMap {
 		this.carList = carList;
 	}
 
-	public ArrayList<Intersection> getIntersectionList() {
-		return intersectionList;
-	}
-
-	public void setIntersectionList(ArrayList<Intersection> intersectionList) {
-		this.intersectionList = intersectionList;
-	}
 	
 	public Tile[][] getLayout() {
 		return layout;
@@ -224,5 +230,4 @@ public class SimulationMap {
 	public void setWidth(int width) {
 		this.width = width;
 	}
-	
 }

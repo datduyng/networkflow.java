@@ -38,8 +38,9 @@ public class Point {
 		this.y--;
 	}
 	
-	public Point(){}
-
+	public String toString() {
+		return "x:" + this.x + "y:" + this.y + " ";
+	}
 	
 }
 

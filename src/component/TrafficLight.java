@@ -10,6 +10,22 @@ public class TrafficLight extends Intersection {
 		this.increment = 0;
 	}
 	
+	public TrafficLight(String type, Point mapIndex) {
+		this.mapIndex = mapIndex;
+		this.type = type;
+		this.state = "empty";
+		this.increment = 0;
+	}
+	public TrafficLight(String type, Point mapIndex, String builtDirections) {
+		this.mapIndex = mapIndex;
+		this.builtDirections = builtDirections;
+		this.type = type;
+		this.state = "empty";
+		this.increment = 0;
+	}
+	
+	
+	
 	public TrafficLight(String type) {
 		this.type = type;
 		this.state = "empty";
@@ -29,9 +45,6 @@ public class TrafficLight extends Intersection {
 		this.increment++;
 	}
 	
-	public String toString() {
-		return this.type;
-	}
 }
 	
 	 
