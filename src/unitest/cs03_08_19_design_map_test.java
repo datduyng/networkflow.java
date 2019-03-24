@@ -8,8 +8,19 @@ import component.SimulationMap;
 public class cs03_08_19_design_map_test {
 
 	public static void main(String args[]) {
+		test_03_22_19();
+	}
+	
+	public static void test_03_22_19() {
 		SimulationMap map = new SimulationMap(30, 30);
-		
+		map.loadComponents("./simulation-data/map03-test-load-component-json.json");
+		System.out.println(map.mapToString());
+		System.out.println(map.carListToString());
+	}
+	
+	public void test_03_08_09_reid() {
+		SimulationMap map = new SimulationMap(30, 30);
+		System.out.println("check");
 		map.loadComponents("./simulation-data/map02.json");
 		System.out.println(map.mapToString());
 		System.out.println(map.carListToString());

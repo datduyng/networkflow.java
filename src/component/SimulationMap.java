@@ -19,6 +19,12 @@ import component.Point;
 
 
 
+/**
+ * Simulation class provide tiles 2d backend representation
+ * of the simlation
+ * @author datng
+ *
+ */
 public class SimulationMap {
 	public static Tile[][] layout;
 	private int height=30; 
@@ -29,6 +35,11 @@ public class SimulationMap {
 	private ArrayList<Car> carList = new ArrayList<Car>();
 	private ArrayList<Intersection> trafficComponents = new ArrayList<Intersection>();
 	
+	/**
+	 * 
+	 * @param height
+	 * @param width
+	 */
 	public SimulationMap(int height, int width) {
 		//init and then load map. 
 	}
@@ -39,7 +50,11 @@ public class SimulationMap {
 	 * a JSON file. the format of json file will include
 	 * the map format as csv file. delimit end of each row as a ';'. 
 	 * seperate each tile as a ','.
-	 * ex:https://www.mkyong.com/java/json-simple-example-read-and-write-json/
+	 * Tiles map can be creates on project website. netflot.github.io
+	 * 
+	 * @see https://netflow.github.io
+	 * @see (last update:3/24/19) https://datduyng.github.io/cityboost/createMap.html
+	 * @see https://www.mkyong.com/java/json-simple-example-read-and-write-json/
 	 * @param filePath
 	 * @throws ParseException 
 	 * @throws IOException 
@@ -48,13 +63,8 @@ public class SimulationMap {
 		JSONParser parser = new JSONParser();
 		System.out.println("File exist check" + new File(filePath).exists());
 		try {
-			
-			
-		    
-		    
 		    FileReader file= new FileReader(filePath);
 			Object obj = parser.parse(file);
-			System.out.println(obj);
 			JSONObject jsonObject = (JSONObject) obj;
 			
 			//Process map tiles
@@ -80,7 +90,12 @@ public class SimulationMap {
 		}
 	}
 	
-
+	
+	/**
+	 * Load traffic components List given JSONArray parsed from 
+	 * JSON inputs.
+	 * @param JSONTraffic
+	 */
 	public void _loadTrafficComponents(JSONArray JSONTraffic) {
 		int i = 0;
 		Iterator<JSONObject> iterator = JSONTraffic.iterator();
@@ -97,6 +112,11 @@ public class SimulationMap {
 		}
 	}
 	
+	/**
+	 * Load car list given JSONArray parsed from JSON inputs.
+	 * @see (last update:3/24/19) https://netflow.github.io/createmap.html
+	 * @param JSONCars
+	 */
 	public void _loadCars(JSONArray JSONCars) {
 		int i = 0; 
 		Iterator<JSONObject> iterator = JSONCars.iterator();
@@ -116,6 +136,11 @@ public class SimulationMap {
 		}
 	}
 	
+	/**
+	 * Load tiles class given JSON array of tiles parsed from input JSON
+	 * @see (last update:3/24/19) https://netflow.github.io/createmap.html 
+	 * @param JSONTiles
+	 */
 	public void _loadTiles(JSONArray JSONTiles) {
 		//init map layout size
 		this.layout = new Tile[this.numHeight][this.numWidth];
@@ -138,6 +163,10 @@ public class SimulationMap {
 		}
 	}
 	
+	/**
+	 * build and format string of components list
+	 * @return String
+	 */
 	public String componentsToString() {
 		StringBuilder result = new StringBuilder();
 		for(Intersection intersection: trafficComponents) {
@@ -145,6 +174,12 @@ public class SimulationMap {
 		}
 		return result.toString(); 
 	}
+	
+	
+	/**
+	 * build and format string of car list
+	 * @return String
+	 */
 	public String carListToString() {
 		StringBuilder result = new StringBuilder();
 		for(Car car: carList) {
@@ -153,6 +188,11 @@ public class SimulationMap {
 		}
 		return result.toString();
 	}
+	
+	/**
+	 * build and format string of tiles 2d array
+	 * @return String
+	 */
 	public String mapToString() {
 		StringBuilder result = new StringBuilder();
 		
@@ -168,37 +208,68 @@ public class SimulationMap {
 	
 	
 	//////////////////GETTER and SETTER/////////////////
+	/**
+	 * get height of 2d tiles map
+	 * @return
+	 */
 	public int getHeight() {
 		return height;
 	}
 
-
+	/**
+	 * get width of 2d tiles map
+	 * @return
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * set size of tiles maps
+	 * @param height
+	 * @param width
+	 */
 	public void setSize(int height, int width) {
 		this.width = width;
 		this.height = height;
 	}
 
+	/**
+	 * get size of pixel in simulation map
+	 * @return
+	 */
 	public int getPixelSize() {
 		return pixelSize;
 	}
 
+	/**
+	 * set size of pixel in simulation map
+	 * @param pixelSize
+	 */
 	public void setPixelSize(int pixelSize) {
 		this.pixelSize = pixelSize;
 	}
 
+	/**
+	 * get car list
+	 * @return
+	 */
 	public ArrayList<Car> getCarList() {
 		return carList;
 	}
 
+	/**
+	 * set carList(ArrayList)
+	 * @param carList
+	 */
 	public void setCarList(ArrayList<Car> carList) {
 		this.carList = carList;
 	}
 
-	
+	/**
+	 * Set 2d tiles layouts(map)
+	 * @return
+	 */
 	public Tile[][] getLayout() {
 		return layout;
 	}
