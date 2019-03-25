@@ -17,7 +17,16 @@ public class Car {
 	Point currentPosition; /* same as the tile position */
 
 
-	//constructors
+	/**
+	 * Parameterized Car object Constructor
+	 * @param id car identification number
+	 * @param direction current direction of travel '<,>,^
+	 * @param increment
+	 * @param state
+	 * @param start
+	 * @param stop
+	 * @param currentPosition
+	 */
 	public Car(String id,String direction, int increment, String state, Point start, Point stop,
 			Point currentPosition) {
 		super();
