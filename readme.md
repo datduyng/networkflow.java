@@ -2,6 +2,10 @@
 - [**Web App demo**](https://datduyng.github.io/cityboost/createMap.html)
 - The apps is under prototyping processes. **No** IDE was being use to initialize the work. 
 
+## Quick Intro
+
+> <center><img src="https://user-images.githubusercontent.com/35666615/54955307-efa7b400-4f1a-11e9-81db-8a74db918069.gif"></center>
+
 ## Important info 
 - Team Docs (SDD/ RAD/ slides/.....).[Link](https://1drv.ms/f/s!Ao4rMqb_sxm7hekkgVly3Rf05hR_0Q)
 - Team presentation slides folder. [Link](https://1drv.ms/f/s!Ao4rMqb_sxm7hLZ969vMy8ix-KIkQg)
@@ -15,6 +19,8 @@
 
 
 > Maintained by Team <img align="center" src="https://user-images.githubusercontent.com/35666615/52318190-de194580-2988-11e9-929d-09aec2551b13.png" height="50" width="50">
+
+
 
 
 ## City traffic simulator
