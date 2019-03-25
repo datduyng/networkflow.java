@@ -12,9 +12,7 @@ public abstract class Tile {
 		this.numCarPass = 0;
 	}
 	
-	//reid: 
 	public Tile(Point mapIndex, Point position) {
-//		this.numCarPass = numCarPass; del by @dat
 		this.mapIndex = mapIndex;
 		this.position = position;
 	}

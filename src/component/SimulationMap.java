@@ -265,7 +265,23 @@ public class SimulationMap {
 	public void setCarList(ArrayList<Car> carList) {
 		this.carList = carList;
 	}
+	
+	/**
+	 * get traffic component list
+	 * @return
+	 */
+	public ArrayList<Intersection> getTrafficCompList() {
+		return this.trafficComponents;
+	}
 
+	/**
+	 * set traffic component list
+	 * @param trafficCompList list of traffic components
+	 */
+	public void setTrafficCompList(ArrayList<Intersection> trafficCompList) {
+		this.trafficComponents = trafficCompList;
+	}
+	
 	/**
 	 * Set 2d tiles layouts(map)
 	 * @return
