@@ -125,9 +125,42 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	   
-	   @Spawns("car")
-	   public Entity newCar(SpawnData data) {
-		   Rectangle rec = getNewRecWFill("assets/textures/car.png");
+	   @Spawns("car-east")
+	   public Entity newCarEast(SpawnData data) {
+		   Rectangle rec = getNewRecWFill("assets/textures/car-east.png");
+		   return Entities.builder()
+				   .from(data)
+				   .at(data.getX(), data.getY())
+				   .type(EntityType.CAR)
+				   .viewFromNode(rec)
+				   .build();
+	    }
+	   
+	   @Spawns("car-north")
+	   public Entity newCarNorth(SpawnData data) {
+		   Rectangle rec = getNewRecWFill("assets/textures/car-north.png");
+		   return Entities.builder()
+				   .from(data)
+				   .at(data.getX(), data.getY())
+				   .type(EntityType.CAR)
+				   .viewFromNode(rec)
+				   .build();
+	    }
+	   
+	   @Spawns("car-west")
+	   public Entity newCarWest(SpawnData data) {
+		   Rectangle rec = getNewRecWFill("assets/textures/car-west.png");
+		   return Entities.builder()
+				   .from(data)
+				   .at(data.getX(), data.getY())
+				   .type(EntityType.CAR)
+				   .viewFromNode(rec)
+				   .build();
+	    }
+	   
+	   @Spawns("car-south")
+	   public Entity newCarSouth(SpawnData data) {
+		   Rectangle rec = getNewRecWFill("assets/textures/car-south.png");
 		   return Entities.builder()
 				   .from(data)
 				   .at(data.getX(), data.getY())

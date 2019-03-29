@@ -51,7 +51,7 @@ public class JSONProcessor {
 			JSONObject jsonObject = (JSONObject) obj;
 			
 			//Process map cars
-			cars = (JSONArray) jsonObject.get("tiles");
+			cars = (JSONArray) jsonObject.get("cars");
 			
 		}catch(FileNotFoundException e) {
 			System.out.println("FileNotFoundException");

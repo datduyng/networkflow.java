@@ -47,8 +47,8 @@ public class AppMain extends GameApplication {
 		int tileWidth = Math.floorDiv(gameWidth, JSONProcessor.getWidth("simulation-data/map08.json"));
 		int tileHeight = Math.floorDiv(gameHeight, JSONProcessor.getHeight("simulation-data/map08.json"));
 		
-		System.out.println("tileWidth: " + tileWidth);
-		System.out.println("tileHeight: " + tileHeight);
+		//System.out.println("tileWidth: " + tileWidth);
+		//System.out.println("tileHeight: " + tileHeight);
 		
 		//create simulation factory and add to game world
 		SimulationFactory factory = new SimulationFactory();
@@ -59,16 +59,22 @@ public class AppMain extends GameApplication {
 		
 		//add factory to game world
 		getGameWorld().addEntityFactory(factory);
+		
+		initTiles("simulation-data/map09.json", tileWidth, tileHeight);
+		initCars("simulation-data/map09.json", tileWidth, tileHeight);
 
+	}
+	
+	public void initTiles(String filePath, int tileWidth, int tileHeight) {
 		//Iterate through JSON array of tiles and spawn tile entities on map
 		int y = 0, x = 0;
-		JSONArray tiles = JSONProcessor.getTiles("simulation-data/map09.json");
+		JSONArray tiles = JSONProcessor.getTiles(filePath);
 		Iterator<JSONArray> rowIterator = tiles.iterator();
-		while(rowIterator.hasNext() && y < JSONProcessor.getHeight("simulation-data/map09.json")) {
+		while(rowIterator.hasNext() && y < JSONProcessor.getHeight(filePath)) {
 			JSONArray row = rowIterator.next();
 			Iterator<JSONObject> colIterator = row.iterator();
 			x = 0;
-			while(colIterator.hasNext() && x < JSONProcessor.getWidth("simulation-data/map09.json")) {
+			while(colIterator.hasNext() && x < JSONProcessor.getWidth(filePath)) {
 				int spawnX = x * tileWidth;
 				int spawnY = y * tileHeight;
 				
@@ -78,9 +84,8 @@ public class AppMain extends GameApplication {
 				
 				//System.out.println("spawnX: " + spawnX);
 				//System.out.println("spawnY: " + spawnY);
-				
-				//getGameWorld().spawn("ground", spawnX, spawnY);
-				
+		
+				//spawn correct type of tile sized entity (w/ pic)
 				switch(classType) 
 				{
 					case "construction-man":
@@ -125,6 +130,71 @@ public class AppMain extends GameApplication {
 			y+=1;
 		}	
 	}
+	
+	public void initCars(String filePath, int tileWidth, int tileHeight) {
+		//Iterate through JSON array of tiles and spawn tile entities on map
+		int y = 0, x = 0;
+		JSONArray cars = JSONProcessor.getCars(filePath);
+		//System.out.println("cars.size(): " + cars.size());
+		Iterator<JSONObject> iter = cars.iterator();
+		while(iter.hasNext()) {
+			JSONObject nextObj = iter.next();
+			
+			int xIndex = Integer.parseInt(nextObj.get("xIndex").toString());
+			int yIndex = Integer.parseInt(nextObj.get("yIndex").toString());
+			
+			int adjX =  Math.toIntExact(Math.round((tileWidth) / 4.00));
+			int adjY =  Math.toIntExact(Math.round((tileHeight) / 4.00));
+			
+			//System.out.println("adjX: " + adjX);
+			//System.out.println("adjY: " + adjY);
+				
+			String direction = nextObj.get("direction").toString();
+			int spawnX;
+			int spawnY;
+			
+			switch (direction)
+			{
+				case ">":
+					//spawn east car
+					spawnX = (xIndex * tileWidth) + adjX;
+					spawnY = (yIndex * tileHeight) + adjY;
+					getGameWorld().spawn("car-east", spawnX, spawnY);
+					break;
+			
+				case "^":
+					//spawn north car
+					spawnX = (xIndex * tileWidth) + adjX;
+					spawnY = (yIndex * tileHeight) + adjY;
+					getGameWorld().spawn("car-north", spawnX, spawnY);
+					break;
+				
+				case "<":
+					//spawn west car
+					spawnX = (xIndex * tileWidth) + adjX;
+					spawnY = (yIndex * tileHeight) - adjY;
+					getGameWorld().spawn("car-west", spawnX, spawnY);
+					break;
+				
+				case "v":
+					//spawn south car
+					spawnX = (xIndex * tileWidth) - adjX;
+					spawnY = (yIndex * tileHeight) + adjY;
+					getGameWorld().spawn("car-south", spawnX, spawnY);
+					break;
+				
+				default:
+					//default
+					break;
+				
+			}
+			
+			//System.out.println("spawnX: " + spawnX);
+			//System.out.println("spawnY: " + spawnY);
+			
+		}					
+	}	
+	
 	
 	
 	@Override
