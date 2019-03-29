@@ -62,13 +62,13 @@ public class AppMain extends GameApplication {
 
 		//Iterate through JSON array of tiles and spawn tile entities on map
 		int y = 0, x = 0;
-		JSONArray tiles = JSONProcessor.getTiles("simulation-data/map08.json");
+		JSONArray tiles = JSONProcessor.getTiles("simulation-data/map09.json");
 		Iterator<JSONArray> rowIterator = tiles.iterator();
-		while(rowIterator.hasNext() && y < JSONProcessor.getHeight("simulation-data/map08.json")) {
+		while(rowIterator.hasNext() && y < JSONProcessor.getHeight("simulation-data/map09.json")) {
 			JSONArray row = rowIterator.next();
 			Iterator<JSONObject> colIterator = row.iterator();
 			x = 0;
-			while(colIterator.hasNext() && x < JSONProcessor.getWidth("simulation-data/map08.json")) {
+			while(colIterator.hasNext() && x < JSONProcessor.getWidth("simulation-data/map09.json")) {
 				int spawnX = x * tileWidth;
 				int spawnY = y * tileHeight;
 				
@@ -79,9 +79,7 @@ public class AppMain extends GameApplication {
 				//System.out.println("spawnX: " + spawnX);
 				//System.out.println("spawnY: " + spawnY);
 				
-				getGameWorld().spawn("ground", spawnX, spawnY);
-				
-				/*
+				//getGameWorld().spawn("ground", spawnX, spawnY);
 				
 				switch(classType) 
 				{
@@ -101,12 +99,12 @@ public class AppMain extends GameApplication {
 						getGameWorld().spawn("ground", spawnX, spawnY);
 						break;
 					
-					case "horizontal-road":
-						getGameWorld().spawn("horizontal-road", spawnX, spawnY); 
+					case "road-horizontal":
+						getGameWorld().spawn("road-horizontal", spawnX, spawnY); 
 						break;
 						
-					case "verticle-road":
-						getGameWorld().spawn("verticle-road", spawnX, spawnY);
+					case "road-verticle":
+						getGameWorld().spawn("road-verticle", spawnX, spawnY);
 						break;
 						
 					case "stop-sign":
@@ -121,10 +119,7 @@ public class AppMain extends GameApplication {
 						//default
 						break;
 						
-				}
-				
-				*/
-				
+				}				
 				x+=1;
 			}
 			y+=1;

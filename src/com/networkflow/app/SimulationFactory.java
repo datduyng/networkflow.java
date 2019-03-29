@@ -72,7 +72,7 @@ public class SimulationFactory implements TextEntityFactory {
 	   
 	   @Spawns("ground")
 	   public Entity newGround(SpawnData data) {
-		   Rectangle rec = getNewRecWFill("assets/textures/ground.jpg");
+		   Rectangle rec = getNewRecWFill("assets/textures/ground.png");
 		   return Entities.builder()
 				   .from(data)
 				   .at(data.getX(), data.getY())
@@ -81,9 +81,9 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	   
-	   @Spawns("horizontal-road")
+	   @Spawns("road-horizontal")
 	   public Entity newHorizontalRoad(SpawnData data) {
-		   Rectangle rec = getNewRecWFill("assets/textures/horizontal-road.png");
+		   Rectangle rec = getNewRecWFill("assets/textures/road-horizontal.png");
 		   return Entities.builder()
 				   .from(data)
 				   .at(data.getX(), data.getY())
@@ -92,9 +92,9 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	   
-	   @Spawns("verticle-road")
+	   @Spawns("road-verticle")
 	   public Entity newVerticleRoad(SpawnData data) {
-		   Rectangle rec = getNewRecWFill("assets/textures/verticle-road.png");
+		   Rectangle rec = getNewRecWFill("assets/textures/road-verticle.png");
 		   return Entities.builder()
 				   .from(data)
 				   .at(data.getX(), data.getY())
@@ -116,7 +116,7 @@ public class SimulationFactory implements TextEntityFactory {
 	   
 	   @Spawns("traffic-light")
 	   public Entity newTrafficLight(SpawnData data) {
-		   Rectangle rec = getNewRecWFill("assets/textures/traffic-light.png");
+		   Rectangle rec = getNewRecWFill("assets/textures/traffic-light-we.png");
 		   return Entities.builder()
 				   .from(data)
 				   .at(data.getX(), data.getY())
