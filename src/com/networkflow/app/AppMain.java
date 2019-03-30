@@ -14,6 +14,9 @@ import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.parser.tiled.TiledMap;
 import com.almasb.fxgl.physics.box2d.collision.shapes.Shape;
 import com.almasb.fxgl.settings.GameSettings;
+
+import com.networkflow.app.ui.AgentInfoView;
+import com.networkflow.app.ui.UserView;
 import com.networkflow.component.JSONProcessor;
 import com.networkflow.component.Point;
 import com.networkflow.component.Tile;
@@ -26,8 +29,8 @@ import javafx.scene.shape.Rectangle;
 
 public class AppMain extends GameApplication {
 	
-	protected final int gameWidth = 600;
-	protected final int gameHeight = 600;
+	protected final int gameWidth = 700;
+	protected final int gameHeight = 700;
 
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -215,7 +218,11 @@ public class AppMain extends GameApplication {
 	
 	@Override 
 	public void initUI() {
-		
+		getGameScene().setUIMouseTransparent(false);
+		getGameScene().addUINodes(
+				new AgentInfoView("test"),
+				new UserView(100, 100)
+		);
 	}
 	
 	public int getTileWidth(Tile[][] layout) {
