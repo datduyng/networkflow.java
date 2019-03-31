@@ -1,5 +1,7 @@
 package com.networkflow.component;
 
+import com.almasb.fxgl.entity.Entity;
+
 /**
  * Intersection is the Abstract Class that both StopSign and 
  * TrafficLight extend from.  Has members including: type, increment, 
@@ -13,7 +15,17 @@ package com.networkflow.component;
 
 public abstract class Intersection extends Tile {
 	
-	protected String type;
+	public Intersection(Entity mapEntity, int numCarPass, Point mapIndex, Point position, String type) {
+		super(mapEntity, numCarPass, mapIndex, position, type);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Intersection(String classType) {
+		super("intersection");
+		this.classType = classType;
+	}
+
+	protected String generalType;
 	protected int increment;
 	public String builtDirections;
 	
@@ -21,8 +33,8 @@ public abstract class Intersection extends Tile {
 	 * 
 	 * @return type of Intersection: 'stop-sign', 'traffic-light'
 	 */
-	public String getType() {
-		return this.type;
+	public String getGeneralType() {
+		return this.generalType;
 	}
 	
 	/**
@@ -52,17 +64,17 @@ public abstract class Intersection extends Tile {
 	 * Determine type of Intersection and initialize TrafficLight/Stop Sign object
 	 * w/ its index, built-in directions, etc. 
 	 * 
-	 * @param generalType 'traffic-light' 'stop-sign'
-	 * @param classType 
+	 * @param generalType 'intersection'
+	 * @param classType 'traffic-light' or 'stop-sign'
 	 * @param mapIndex map position of intersection object created
 	 * @param builtDirections allowed travel directions
 	 * @return
 	 */
-	public static Intersection initIntersectionType(String generalType, String classType, Point mapIndex, String builtDirections) {
-		if(generalType.equalsIgnoreCase("stop-sign")) {
-			return new StopSign(classType, mapIndex, builtDirections);
-		} else if(generalType.equalsIgnoreCase("traffic-light")) {
-			return new TrafficLight(classType, mapIndex, builtDirections);
+	public static Intersection initIntersectionType(String classType, Point mapIndex, String builtDirections) {
+		if(classType.equalsIgnoreCase("stop-sign")) {
+			return new StopSign(mapIndex, builtDirections);
+		} else if(classType.equalsIgnoreCase("traffic-light")) {
+			return new TrafficLight(mapIndex, builtDirections);
 		}
 		
 		System.out.println("Invalid Intesection type");
@@ -73,7 +85,7 @@ public abstract class Intersection extends Tile {
 	 * Return String w/ type map index and built-in directions
 	 */
 	public String toString() {
-		return this.type + "@"  + this.mapIndex.toString() + this.builtDirections;
+		return this.classType + "@"  + this.mapIndex.toString() + this.builtDirections;
 	}
 	
 	

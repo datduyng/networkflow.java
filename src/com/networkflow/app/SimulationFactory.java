@@ -8,9 +8,11 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.TextEntityFactory;
 import com.almasb.fxgl.texture.Texture;
+import com.networkflow.component.SimulationMap;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
@@ -39,6 +41,8 @@ public class SimulationFactory implements TextEntityFactory {
 	  
 	   @Spawns("construction-man")
 	   public Entity newConstructionMan(SpawnData data) {
+		   
+		   
 		   Rectangle rec = getNewRecWFill("assets/textures/construction-man.png");
 		   return Entities.builder()
 				   .from(data)
@@ -127,12 +131,11 @@ public class SimulationFactory implements TextEntityFactory {
 	   
 	   @Spawns("car-east")
 	   public Entity newCarEast(SpawnData data) {
-		   Rectangle rec = getNewRecWFill("assets/textures/car-east.png");
 		   return Entities.builder()
+				   .viewFromTextureWithBBox("car-east.png")
 				   .from(data)
 				   .at(data.getX(), data.getY())
 				   .type(EntityType.CAR)
-				   .viewFromNode(rec)
 				   .build();
 	    }
 	   
@@ -222,12 +225,9 @@ public class SimulationFactory implements TextEntityFactory {
 		return ' ';
 	}
 	
-	public void setTileWidth(int tileWidth) {
-		this.tileWidth = tileWidth;
-	}
-	
-	public void setTileHeight(int tileHeight) {
+	public void setTileWidthHeight(int tileWidth, int tileHeight) {
 		this.tileHeight = tileHeight;
+		this.tileWidth = tileWidth;
 	}
 
 

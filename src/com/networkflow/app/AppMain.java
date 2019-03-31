@@ -17,8 +17,10 @@ import com.almasb.fxgl.settings.GameSettings;
 
 import com.networkflow.app.ui.AgentInfoView;
 import com.networkflow.app.ui.UserView;
+import com.networkflow.component.Car;
 import com.networkflow.component.JSONProcessor;
 import com.networkflow.component.Point;
+import com.networkflow.component.SimulationMap;
 import com.networkflow.component.Tile;
 
 import javafx.scene.Node;
@@ -29,8 +31,8 @@ import javafx.scene.shape.Rectangle;
 
 public class AppMain extends GameApplication {
 	
-	protected final int gameWidth = 700;
-	protected final int gameHeight = 700;
+	protected final int gameWidth = 800;
+	protected final int gameHeight = 600;
 
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -42,96 +44,55 @@ public class AppMain extends GameApplication {
 	}
 	
 	private Entity player;
-
+	private SimulationMap simulationMap;
 	
 	@Override
 	public void initGame() {
-	
-		int tileWidth = Math.floorDiv(gameWidth, JSONProcessor.getWidth("simulation-data/map08.json"));
-		int tileHeight = Math.floorDiv(gameHeight, JSONProcessor.getHeight("simulation-data/map08.json"));
-		
-		//System.out.println("tileWidth: " + tileWidth);
-		//System.out.println("tileHeight: " + tileHeight);
+		simulationMap = new SimulationMap("src/assets/json/map10-dat.json");
 		
 		//create simulation factory and add to game world
 		SimulationFactory factory = new SimulationFactory();
 		
 		//set width and height of each constructed tile entity
-		factory.setTileWidth(tileWidth);
-		factory.setTileHeight(tileHeight);
+		factory.setTileWidthHeight(simulationMap.getPixelSize(), simulationMap.getPixelSize());
 		
 		//add factory to game world
 		getGameWorld().addEntityFactory(factory);
 		
-		initTiles("simulation-data/map09.json", tileWidth, tileHeight);
-		initCars("simulation-data/map09.json", tileWidth, tileHeight);
+		initTiles();
+		initCars();
+//		initTiles("simulation-data/map09.json", simulationMap.getPixelSize(), simulationMap.getPixelSize());
+//		initCars("simulation-data/map09.json", simulationMap.getPixelSize(), simulationMap.getPixelSize());
 
 	}
 	
-	public void initTiles(String filePath, int tileWidth, int tileHeight) {
-		//Iterate through JSON array of tiles and spawn tile entities on map
-		int y = 0, x = 0;
-		JSONArray tiles = JSONProcessor.getTiles(filePath);
-		Iterator<JSONArray> rowIterator = tiles.iterator();
-		while(rowIterator.hasNext() && y < JSONProcessor.getHeight(filePath)) {
-			JSONArray row = rowIterator.next();
-			Iterator<JSONObject> colIterator = row.iterator();
-			x = 0;
-			while(colIterator.hasNext() && x < JSONProcessor.getWidth(filePath)) {
-				int spawnX = x * tileWidth;
-				int spawnY = y * tileHeight;
-				
-				JSONObject nextObj = colIterator.next();
-				String generalType = nextObj.get("generalType").toString();
-				String classType = nextObj.get("classType").toString();
-				
-				//System.out.println("spawnX: " + spawnX);
-				//System.out.println("spawnY: " + spawnY);
-		
-				//spawn correct type of tile sized entity (w/ pic)
-				switch(classType) 
-				{
-					case "construction-man":
-						getGameWorld().spawn("construction-man", spawnX, spawnY);
-						break;
-						
-					case "construction-barrier":
-						getGameWorld().spawn("construction-barrier", spawnX, spawnY);
-						break;
-						
-					case "grass":
-						getGameWorld().spawn("grass", spawnX, spawnY);
-						break;
-					
-					case "ground":
-						getGameWorld().spawn("ground", spawnX, spawnY);
-						break;
-					
-					case "road-horizontal":
-						getGameWorld().spawn("road-horizontal", spawnX, spawnY); 
-						break;
-						
-					case "road-verticle":
-						getGameWorld().spawn("road-verticle", spawnX, spawnY);
-						break;
-						
-					case "stop-sign":
-						getGameWorld().spawn("stop-sign", spawnX, spawnY);
-						break;
-						
-					case "traffic-light":
-						getGameWorld().spawn("traffic-light", spawnX, spawnY);
-						break;
-					
-					default:
-						//default
-						break;
-						
-				}				
-				x+=1;
+	/**
+	 * Init Tiles visualization no params
+	 * @return
+	 */
+	public void initTiles() {
+		for(int y=0;y<simulationMap.getLayout().length;y++) {
+			for(int x=0;x<simulationMap.getLayout()[0].length;x++) {
+				int spawnX = x * simulationMap.getPixelSize();
+				int spawnY = y * simulationMap.getPixelSize();
+				String classType = simulationMap.getLayout()[y][x].getClassType();
+				getGameWorld().spawn(classType, spawnX, spawnY);
 			}
-			y+=1;
-		}	
+		}
+	}
+	
+	/**
+	 * Init car visualization no params
+	 */
+	public void initCars() {
+		for(Car car : this.simulationMap.getCarList()) {
+			int xIndex = car.getCurrentIndex().getX();
+			int yIndex = car.getCurrentIndex().getY();
+			int spawnX = (xIndex * simulationMap.getPixelSize());
+			int spawnY = (yIndex * simulationMap.getPixelSize());
+			getGameWorld().spawn("car-east", spawnX, spawnY);
+			
+		}
 	}
 	
 	public void initCars(String filePath, int tileWidth, int tileHeight) {
@@ -197,8 +158,6 @@ public class AppMain extends GameApplication {
 			
 		}					
 	}	
-	
-	
 	
 	@Override
 	public void initInput() {

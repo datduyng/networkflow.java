@@ -12,36 +12,32 @@ package com.networkflow.component;
 
 public class Road extends Tile {
 	
-	private String type;
-	
-	/**
-	 * Default constructor
-	 */
-	public Road() {
-		super();
-		this.type = "Road";
-	}
-	
 	/**
 	 * Road constructor w/ type
 	 * @param type 'vertical-road' or 'horizontal-road'
 	 */
-	public Road(String type) {
-		this.type = type;
+	public Road(String classType) {
+		super("road");
+		this.classType = classType;
 	}
+
 	 
 	/**
 	 * 
 	 * @return type of road
 	 */
-	public String getType() {
-		return this.type;
+	public String getGeneralType() {
+		return this.generalType;
 	}
 	
 	/**
 	 * Returns String of the type of road: 'vertical-road', or 'horizontal-road'
 	 */
 	public String toString() {
-		return this.type;
+		return this.classType;
+	}
+	
+	public String getClassType() {
+		return this.classType;
 	}
 }

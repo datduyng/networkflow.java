@@ -27,21 +27,22 @@ import org.json.simple.JSONObject;
  */
 public class SimulationMap {
 	public static Tile[][] layout;
-	private int height=30; 
-	private int width=30;
+	private int height=0; 
+	private int width=0;
 	private int numHeight; 
 	private int numWidth;
-	private int pixelSize=10;
+	public static int pixelSize=50;
 	private ArrayList<Car> carList = new ArrayList<Car>();
 	private ArrayList<Intersection> trafficComponents = new ArrayList<Intersection>();
 	
 	/**
 	 * 
-	 * @param height
-	 * @param width
+	 * @param filepath: path to JSON file export from online createMap apps
+	 * @see https://datduyng.github.io/cityboost/createMap.html (last update: 3/30/19)
 	 */
-	public SimulationMap(int height, int width) {
-		//init and then load map. 
+	public SimulationMap(String filePath) {
+		//init and then load map.
+		loadComponents(filePath);
 	}
 	
 	
@@ -107,7 +108,7 @@ public class SimulationMap {
 			int x = Integer.parseInt(componentObj.get("xIndex").toString()),
 					y = Integer.parseInt(componentObj.get("yIndex").toString());
 			Point mapIndex = new Point(x, y);
-			Intersection intersection = Intersection.initIntersectionType(generalType, classType, mapIndex, builtDirections);
+			Intersection intersection = Intersection.initIntersectionType(classType, mapIndex, builtDirections);
 			trafficComponents.add(intersection);
 		}
 	}
@@ -156,7 +157,7 @@ public class SimulationMap {
 				JSONObject nextObj = colIterator.next();
 				String generalType = nextObj.get("generalType").toString();
 				String classType = nextObj.get("classType").toString();
-				this.layout[y][x] = Tile.initTileType(generalType, classType, new Point(x, y));
+				this.layout[y][x] = Tile.initTileType(classType, new Point(x, y));
 				x+=1;
 			}
 			y+=1;

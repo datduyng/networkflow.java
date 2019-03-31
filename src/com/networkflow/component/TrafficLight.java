@@ -24,6 +24,7 @@ public class TrafficLight extends Intersection {
 	 * Default constructor
 	 */
 	public TrafficLight() {
+		super("traffic-light");
 		this.state = "empty";
 		this.increment = 0;
 		this.color = "<>"; //default starting direction - allowing E/W traffic
@@ -31,27 +32,15 @@ public class TrafficLight extends Intersection {
 		this.ewTraffic = new PriorityQueue<Car>();
 	}
 
-	/**
-	 * Constructor w/ type
-	 * @param type 'traffic-light'
-	 */
-	public TrafficLight(String type) {
-		this.type = type;
-		this.state = "empty";
-		this.increment = 0;
-		this.color = "<>"; //default starting direction - allowing E/W traffic
-		this.nsTraffic = new PriorityQueue<Car>();
-		this.ewTraffic = new PriorityQueue<Car>();
-	}
 	
 	/**
 	 * Constructor w/ type and index
 	 * @param type 'traffic-light
 	 * @param mapIndex position on map
 	 */
-	public TrafficLight(String type, Point mapIndex) {
+	public TrafficLight(Point mapIndex) {
+		super("traffic-light");
 		this.mapIndex = mapIndex;
-		this.type = type;
 		this.state = "empty";
 		this.increment = 0;
 		this.color = "<>"; //default starting direction - allowing E/W traffic
@@ -65,10 +54,10 @@ public class TrafficLight extends Intersection {
 	 * @param mapIndex position on map
 	 * @param builtDirections built-in allowed travel directions
 	 */
-	public TrafficLight(String type, Point mapIndex, String builtDirections) {
+	public TrafficLight(Point mapIndex, String builtDirections) {
+		super("traffic-light");
 		this.mapIndex = mapIndex;
 		this.builtDirections = builtDirections;
-		this.type = type;
 		this.state = "empty";
 		this.increment = 0;
 		this.color = "<>"; //default starting direction - allowing E/W traffic
@@ -178,7 +167,7 @@ public class TrafficLight extends Intersection {
 	}
  	
 	public String toString() {
-		return this.type;
+		return this.classType;
 	}
 }
 	

@@ -12,16 +12,14 @@ public class cs03_08_19_design_map_test {
 	}
 	
 	public static void test_03_22_19() {
-		SimulationMap map = new SimulationMap(30, 30);
-		map.loadComponents("./simulation-data/map03-test-load-component-json.json");
+		SimulationMap map = new SimulationMap("./simulation-data/map03-test-load-component-json.json");
 		System.out.println(map.mapToString());
 		System.out.println(map.carListToString());
 	}
 	
 	public void test_03_08_09_reid() {
-		SimulationMap map = new SimulationMap(30, 30);
+		SimulationMap map = new SimulationMap("./simulation-data/map03-test-load-component-json.json");
 		System.out.println("check");
-		map.loadComponents("./simulation-data/map02.json");
 		System.out.println(map.mapToString());
 		System.out.println(map.carListToString());
 		
@@ -33,8 +31,8 @@ public class cs03_08_19_design_map_test {
 			//update cars 
 			for(int i = 0; i < carList.size(); i++) {
 				carList.get(i).move(map.getLayout());
-				System.out.println("Current X Pos: " + carList.get(i).getCurrentPosition().getX());
-				System.out.println("Current Y Pos: " + carList.get(i).getCurrentPosition().getY());
+				System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
+				System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
 
 			}
 			//update components 

@@ -21,7 +21,7 @@ public class StopSign extends Intersection {
 	 * Default constructor
 	 */
 	public StopSign() {
-		this.type = "stop-sign";
+		super("stop-sign");
 		this.state = "empty";
 		this.increment = 0;
 		this.mapIndex = new Point(0,0);
@@ -29,41 +29,28 @@ public class StopSign extends Intersection {
 	}
 	
 	/**
-	 * Constructor with type
-	 * @param type 'stop-sign'
-	 */
-	public StopSign(String type) {
-		this.type = type;
-		this.state = "empty";
-		this.increment = 0;
-		this.mapIndex = new Point(0,0);
-		this.carEnter = new PriorityQueue<Car>();
-	
-	}
-	
-	/**
-	 * Constructor w/ type and index
+	 * Constructor w/ index
 	 * @param type
 	 * @param mapIndex
 	 */
-	public StopSign(String type, Point mapIndex) {
+	public StopSign(Point mapIndex) {
+		super("stop-sign");
 		this.mapIndex = mapIndex;
-		this.type = type;
 		this.state = "empty";
 		this.increment = 0;
 		this.carEnter = new PriorityQueue<Car>();
 	}
 	
 	/**
-	 * Constructor w/ type, index, and directions
+	 * Constructor w/index, and directions
 	 * @param type
 	 * @param mapIndex
 	 * @param builtDirections
 	 */
-	public StopSign(String type, Point mapIndex, String builtDirections) {
+	public StopSign(Point mapIndex, String builtDirections) {
+		super("stop-sign");
 		this.mapIndex = mapIndex;
 		this.builtDirections = builtDirections;
-		this.type = type;
 		this.state = "empty";
 		this.increment = 0;
 		this.carEnter = new PriorityQueue<Car>();
