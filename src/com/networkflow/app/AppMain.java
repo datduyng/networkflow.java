@@ -1,7 +1,9 @@
 package com.networkflow.app;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,15 +20,12 @@ import com.almasb.fxgl.settings.GameSettings;
 import com.networkflow.app.ui.AgentInfoView;
 import com.networkflow.app.ui.UserView;
 import com.networkflow.component.Car;
+import com.networkflow.component.Intersection;
 import com.networkflow.component.JSONProcessor;
 import com.networkflow.component.Point;
 import com.networkflow.component.SimulationMap;
+import com.networkflow.component.StopSign;
 import com.networkflow.component.Tile;
-
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
 
 
 public class AppMain extends GameApplication {
@@ -48,7 +47,7 @@ public class AppMain extends GameApplication {
 	
 	@Override
 	public void initGame() {
-		simulationMap = new SimulationMap("src/assets/json/map10-dat.json");
+		simulationMap = new SimulationMap("simulation-data/map12.json");
 		
 		//create simulation factory and add to game world
 		SimulationFactory factory = new SimulationFactory();
@@ -63,6 +62,39 @@ public class AppMain extends GameApplication {
 		initCars();
 //		initTiles("simulation-data/map09.json", simulationMap.getPixelSize(), simulationMap.getPixelSize());
 //		initCars("simulation-data/map09.json", simulationMap.getPixelSize(), simulationMap.getPixelSize());
+		
+		System.out.println(simulationMap.mapToString());
+		System.out.println(simulationMap.carListToString());
+		
+		ArrayList<Car> carList = simulationMap.getCarList();
+		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficCompList();
+		boolean running = true; 
+		int count = 0;
+		while(running && (count < 400)) {
+			//update cars 
+			for(int i = 0; i < carList.size(); i++) {
+				carList.get(i).move(simulationMap.getLayout());
+				System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
+				System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
+				System.out.println("Current State: " + carList.get(i).getState());
+				
+			}
+			
+			System.out.println();
+			//update components 
+			//TODO: 
+			for(int i  = 0; i < trafficCompList.size(); i++) {
+				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
+			}
+			System.out.println();
+			
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} //sleep for 1/2 second
+			count++;
+		}
 
 	}
 	

@@ -27,17 +27,6 @@ public class SimulationFactory implements TextEntityFactory {
 	
 	  private int tileWidth = 0;
 	  private int tileHeight = 0;
-	
-	  /*
-	   @Spawns("ground")
-	   public Entity newGround(SpawnData data) {
-		   return Entities.builder()
-				   .from(data)
-				   .type(EntityType.GROUND)
-				   .viewFromTexture("ground.jpg")
-				   .build();
-	    }
-	   */
 	  
 	   @Spawns("construction-man")
 	   public Entity newConstructionMan(SpawnData data) {
@@ -172,7 +161,7 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	     
-	   //"assets/textures/grass.png"
+	   //imagePath ex: "assets/textures/grass.png"
 	   public Rectangle getNewRecWFill(String imagePath) {
 		   Image im = new Image(imagePath);
 		   ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
@@ -181,31 +170,6 @@ public class SimulationFactory implements TextEntityFactory {
 		   rec.setFill(imP);
 		   return rec;
 	   }
-	   
-	   /*
-	   
-	   @Spawns("block")
-	   public Entity newBlock(SpawnData data) {
-		   return Entities.builder()
-				   .from(data)
-				   .at(data.getX(), data.getY())
-				   .type(EntityType.GROUND)
-				   .viewFromTexture("ground.jpg")
-				   .build();
-	    }
-	   
-	   @Spawns("grass")
-	   public Entity newGrass(SpawnData data) {
-		   return Entities.builder()
-				   .from(data)
-				   .at(data.getX(), data.getY())
-				   .type(EntityType.GRASS)
-				   .viewFromTexture("grass.png")
-				   .build();
-	    }
-	    
-	    */
-		
 
 	@Override
 	public int blockHeight() {

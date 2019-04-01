@@ -27,7 +27,7 @@ public abstract class Intersection extends Tile {
 
 	protected String generalType;
 	protected int increment;
-	public String builtDirections;
+	protected String builtDirections;
 	
 	/**
 	 * 
@@ -72,13 +72,19 @@ public abstract class Intersection extends Tile {
 	 */
 	public static Intersection initIntersectionType(String classType, Point mapIndex, String builtDirections) {
 		if(classType.equalsIgnoreCase("stop-sign")) {
+			((Intersection) SimulationMap.getTileAtIndex(mapIndex)).setBuiltDirections(builtDirections);
 			return new StopSign(mapIndex, builtDirections);
 		} else if(classType.equalsIgnoreCase("traffic-light")) {
+			((Intersection) SimulationMap.getTileAtIndex(mapIndex)).setBuiltDirections(builtDirections);
 			return new TrafficLight(mapIndex, builtDirections);
 		}
 		
 		System.out.println("Invalid Intesection type");
 		return null;
+	}
+	
+	public void deQueue() {
+		
 	}
 	
 	/**

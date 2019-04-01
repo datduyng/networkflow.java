@@ -129,10 +129,8 @@ public class SimulationMap {
 			//TODO: init car object and add to list
 			Car carComp = new Car();
 			Point currentPosition = new Point(x,y);
-			carComp.setCurrentPosition(currentPosition);
+			carComp.setCurrentIndex(currentPosition);
 			carComp.setDirection(direction);
-			carComp.setState("stopped");
-			carComp.setCurrentSpeed(0);
 			carList.add(carComp);
 		}
 	}
@@ -289,6 +287,10 @@ public class SimulationMap {
 	 */
 	public Tile[][] getLayout() {
 		return layout;
+	}
+	
+	public static Tile getTileAtIndex(Point pt) {
+		return layout[pt.getY()][pt.getX()];
 	}
 
 	public void setLayout(Tile[][] layout) {

@@ -1,6 +1,6 @@
 package com.networkflow.component;
 
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 
 /**
  * Models a Stop Sign object extending from Intersection.
@@ -17,8 +17,8 @@ public class TrafficLight extends Intersection {
 	private String state;
 	private String color;
 	
-	private PriorityQueue<Car> nsTraffic;
-	private PriorityQueue<Car> ewTraffic;
+	private LinkedList<Car> nsTraffic;
+	private LinkedList<Car> ewTraffic;
 	
 	/**
 	 * Default constructor
@@ -28,8 +28,8 @@ public class TrafficLight extends Intersection {
 		this.state = "empty";
 		this.increment = 0;
 		this.color = "<>"; //default starting direction - allowing E/W traffic
-		this.nsTraffic = new PriorityQueue<Car>();
-		this.ewTraffic = new PriorityQueue<Car>();
+		this.nsTraffic = new LinkedList<Car>();
+		this.ewTraffic = new LinkedList<Car>();
 	}
 
 	
@@ -44,8 +44,8 @@ public class TrafficLight extends Intersection {
 		this.state = "empty";
 		this.increment = 0;
 		this.color = "<>"; //default starting direction - allowing E/W traffic
-		this.nsTraffic = new PriorityQueue<Car>();
-		this.ewTraffic = new PriorityQueue<Car>();
+		this.nsTraffic = new LinkedList<Car>();
+		this.ewTraffic = new LinkedList<Car>();
 	}
 	
 	/**
@@ -61,8 +61,8 @@ public class TrafficLight extends Intersection {
 		this.state = "empty";
 		this.increment = 0;
 		this.color = "<>"; //default starting direction - allowing E/W traffic
-		this.nsTraffic = new PriorityQueue<Car>();
-		this.ewTraffic = new PriorityQueue<Car>();
+		this.nsTraffic = new LinkedList<Car>();
+		this.ewTraffic = new LinkedList<Car>();
 	}
 	
 	
@@ -88,7 +88,7 @@ public class TrafficLight extends Intersection {
 		System.out.println("Traffic Light Inc: " + this.increment);
 		this.deQueue();
 		//240 - 1/2 seconds = 120 seconds (2 min)
-		if(this.increment % 240 == 0) {
+		if(this.increment > 0 && this.increment % 240 == 0) {
 			this.increment = 0;
 			this.switchColor();
 		}
@@ -140,18 +140,16 @@ public class TrafficLight extends Intersection {
 		if (this.color.equals("^v")) {
 			car = this.nsTraffic.peek();
 			if(car != null) {
-				car.setCurrentPosition(car.moveTile());
+				this.nsTraffic.removeFirst();
+				car.setState("passing");
 				car.setIncrement(0);
-				car.setState("stopped");
-				this.nsTraffic.remove(car);
 			}
 		} else if (this.color.equals("<>")) {
 			car = this.ewTraffic.peek();
 			if(car != null) {
-				car.setCurrentPosition(car.moveTile());
+				this.ewTraffic.removeFirst();
+				car.setState("passing");
 				car.setIncrement(0);
-				car.setState("stopped");
-				this.ewTraffic.remove(car);
 			}
 		} else {
 			//default

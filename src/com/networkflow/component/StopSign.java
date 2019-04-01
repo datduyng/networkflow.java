@@ -1,6 +1,6 @@
 package com.networkflow.component;
 
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 
 /**
  * Models a Stop Sign object extending from Intersection.
@@ -12,9 +12,9 @@ import java.util.PriorityQueue;
  *
  */
 
-public class StopSign extends Intersection {
+public class StopSign extends Intersection{
 	
-	private PriorityQueue<Car> carEnter;
+	private LinkedList<Car> carEnter;
 	private String state;
 	
 	/**
@@ -25,7 +25,7 @@ public class StopSign extends Intersection {
 		this.state = "empty";
 		this.increment = 0;
 		this.mapIndex = new Point(0,0);
-		this.carEnter = new PriorityQueue<Car>();
+		this.carEnter = new LinkedList<Car>();
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class StopSign extends Intersection {
 		this.mapIndex = mapIndex;
 		this.state = "empty";
 		this.increment = 0;
-		this.carEnter = new PriorityQueue<Car>();
+		this.carEnter = new LinkedList<Car>();
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class StopSign extends Intersection {
 		this.builtDirections = builtDirections;
 		this.state = "empty";
 		this.increment = 0;
-		this.carEnter = new PriorityQueue<Car>();
+		this.carEnter = new LinkedList<Car>();
 	}
 	
 	/**
@@ -63,6 +63,7 @@ public class StopSign extends Intersection {
 	 */
 	public boolean addCarToQueue(Car car) {
 		boolean carAdded = this.carEnter.add(car);
+		System.out.println("carAdded: " + carAdded);
 		if(this.carEnter.isEmpty() == false) {
 			this.setState("passing");
 		}
@@ -76,11 +77,11 @@ public class StopSign extends Intersection {
 	 */
 	public void deQueue() {
 		Car car = this.carEnter.peek();
+		//System.out.println(this.getCarEnter().size());
 		if(car != null) {
-			car.setCurrentPosition(car.moveTile());
+			car.setState("passing");
 			car.setIncrement(0);
-			car.setState("stopped");
-			this.carEnter.remove();
+			this.carEnter.removeFirst();
 		}
 		if(this.carEnter.isEmpty()) {
 			this.setState("empty");
@@ -96,11 +97,11 @@ public class StopSign extends Intersection {
 		this.deQueue();	
 	}
 	
-	public PriorityQueue<Car> getCarEnter() {
+	public LinkedList<Car> getCarEnter() {
 		return this.carEnter;
 	}
 	
-	public void setCarEnter(PriorityQueue<Car> carEnter) {
+	public void setCarEnter(LinkedList<Car> carEnter) {
 		this.carEnter = carEnter;
 	}
 	
