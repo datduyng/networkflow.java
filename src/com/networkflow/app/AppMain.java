@@ -9,13 +9,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.GameSettings;
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.physics.box2d.collision.shapes.Shape;
-
+import com.almasb.fxgl.settings.GameSettings;
 import com.networkflow.app.ui.AgentInfoView;
 import com.networkflow.app.ui.UserView;
 import com.networkflow.component.Car;
@@ -56,7 +54,7 @@ public class AppMain extends GameApplication {
 		factory.setTileWidthHeight(simulationMap.getPixelSize(), simulationMap.getPixelSize());
 		
 		//add factory to game world
-		FXGL.getGameWorld().addEntityFactory((EntityFactory) factory);
+		getGameWorld().addEntityFactory((EntityFactory) factory);
 		
 		initTiles();
 		initCars();
@@ -71,7 +69,7 @@ public class AppMain extends GameApplication {
 		ArrayList<Car> carList = simulationMap.getCarList();
 		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficCompList();
 		
-		FXGL.getMasterTimer().runAtInterval(() ->{
+		getMasterTimer().runAtInterval(() ->{
 			
 			//update cars
 			for(int i = 0; i < carList.size(); i++) {
@@ -89,7 +87,6 @@ public class AppMain extends GameApplication {
 			}
 			System.out.println();
 			
-			stop();
 			
 		}, Duration.seconds(.4));//0.4 seconds
 
@@ -105,7 +102,7 @@ public class AppMain extends GameApplication {
 				int spawnX = x * simulationMap.getPixelSize();
 				int spawnY = y * simulationMap.getPixelSize();
 				String classType = simulationMap.getLayout()[y][x].getClassType();
-				FXGL.getGameWorld().spawn(classType, spawnX, spawnY);
+				getGameWorld().spawn(classType, spawnX, spawnY);
 			}
 		}
 	}
@@ -119,7 +116,7 @@ public class AppMain extends GameApplication {
 			int yIndex = car.getCurrentIndex().getY();
 			int spawnX = (xIndex * simulationMap.getPixelSize());
 			int spawnY = (yIndex * simulationMap.getPixelSize());
-			FXGL.getGameWorld().spawn("car-east", spawnX, spawnY);
+			getGameWorld().spawn("car-east", spawnX, spawnY);
 			
 		}
 	}
@@ -152,28 +149,28 @@ public class AppMain extends GameApplication {
 					//spawn east car
 					spawnX = (xIndex * tileWidth) + adjX;
 					spawnY = (yIndex * tileHeight) + adjY;
-					FXGL.getGameWorld().spawn("car-east", spawnX, spawnY);
+					getGameWorld().spawn("car-east", spawnX, spawnY);
 					break;
 			
 				case "^":
 					//spawn north car
 					spawnX = (xIndex * tileWidth) + adjX;
 					spawnY = (yIndex * tileHeight) + adjY;
-					FXGL.getGameWorld().spawn("car-north", spawnX, spawnY);
+					getGameWorld().spawn("car-north", spawnX, spawnY);
 					break;
 				
 				case "<":
 					//spawn west car
 					spawnX = (xIndex * tileWidth) + adjX;
 					spawnY = (yIndex * tileHeight) - adjY;
-					FXGL.getGameWorld().spawn("car-west", spawnX, spawnY);
+					getGameWorld().spawn("car-west", spawnX, spawnY);
 					break;
 				
 				case "v":
 					//spawn south car
 					spawnX = (xIndex * tileWidth) - adjX;
 					spawnY = (yIndex * tileHeight) + adjY;
-					FXGL.getGameWorld().spawn("car-south", spawnX, spawnY);
+					getGameWorld().spawn("car-south", spawnX, spawnY);
 					break;
 				
 				default:
@@ -191,9 +188,7 @@ public class AppMain extends GameApplication {
 	
 
 	@Override
-	public void onUpdate(double tpf) {
-		System.out.println("tpf "+tpf);
-		
+	public void onUpdate(double tpf) {	
 	}
 
 	
@@ -204,11 +199,11 @@ public class AppMain extends GameApplication {
 	
 	@Override 
 	public void initUI() {
-		FXGL.getGameScene().setUIMouseTransparent(false);
-		FXGL.getGameScene().addUINodes(
-//				new AgentInfoView("test"),
-//				new UserView(100, 100)
-		);
+		getGameScene().setUIMouseTransparent(false);
+		getGameScene().addUINodes(
+				new AgentInfoView("Agent Info"),
+				new UserView("UserView", 100, 100)
+	);
 	}
 	
 	public int getTileWidth(Tile[][] layout) {
