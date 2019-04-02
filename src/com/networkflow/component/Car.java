@@ -333,6 +333,10 @@ public class Car extends Entity {
 	 */
 	public String turn(String builtDirections) {
 		String oldDir = this.getDirection();
+		
+		//TODO: allow U-Turns if built directions is size 2
+		//currently keeps looping until it finds a valid non uturn
+		//infinite loop occurs if uturn is only possible turn
 		String oppDir;
 		
 		if(this.getDirection().equals("<")) {
@@ -347,9 +351,11 @@ public class Car extends Entity {
 			oppDir = null;
 		}
 		
+		
 		int randInt = (int) (Math.random() * builtDirections.length());
 		String newDirection = Character.toString(builtDirections.charAt(randInt));
 		while(newDirection.equals(oppDir)) {
+	
 			randInt = (int) (Math.random() * builtDirections.length());
 			newDirection = Character.toString(builtDirections.charAt(randInt));
 		}
@@ -360,10 +366,16 @@ public class Car extends Entity {
 		return newDirection;
 	}
 	
+	/**
+	 * rotates car entity's direction after it has turned
+	 * @param oldDir
+	 * @param newDir
+	 */
 	public void rotateCarEntity(String oldDir, String newDir) {
+		double currRotAng = this.getCarEntity().getRotation();
 		double rotAngDeg = RotationMapper.getRotationMapping().get(oldDir + newDir).doubleValue();
 		System.out.println("rotAngDeg: " + rotAngDeg);
-		this.getCarEntity().setRotation(rotAngDeg);
+		this.getCarEntity().setRotation(currRotAng + rotAngDeg);
 	}
 	
 	/**

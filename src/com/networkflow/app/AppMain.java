@@ -53,11 +53,11 @@ public class AppMain extends GameApplication {
 		settings.setVersion("0.1");
 	}
 	
-	private Entity player;
+	//private Entity player;
 	private SimulationMap simulationMap;
 	
 	public void initAssets() {
-		simulationMap = new SimulationMap("simulation-data/map12.json");
+		simulationMap = new SimulationMap("simulation-data/multTurns_test.json");
 		
 		//create simulation factory and add to game world
 		SimulationFactory factory = new SimulationFactory();
@@ -100,7 +100,7 @@ public class AppMain extends GameApplication {
 			System.out.println();
 			
 			
-		}, Duration.seconds(.4));//0.4 seconds
+		}, Duration.seconds(.1));//0.4 seconds
 	}
 
 	
@@ -156,8 +156,8 @@ public class AppMain extends GameApplication {
 		for(Car car : this.simulationMap.getCarList()) {
 			int xIndex = car.getCurrentIndex().getX();
 			int yIndex = car.getCurrentIndex().getY();
-			int spawnX = (xIndex * simulationMap.getPixelSize());
-			int spawnY = (yIndex * simulationMap.getPixelSize());
+			double spawnX = (xIndex * simulationMap.getPixelSize());
+			double spawnY = (yIndex * simulationMap.getPixelSize());
 			
 			//Entity newCar = getNewCarWFill("assets/textures/car-east.png", direction, spawnX, spawnY);
 			Entity newCar = null;
@@ -169,7 +169,7 @@ public class AppMain extends GameApplication {
 				
 				case ">":
 					//spawn east car
-					spawnX = ((xIndex - 1) * pixSize);
+					spawnX = ((xIndex - 0.5) * pixSize);
 					spawnY = (yIndex * pixSize) + (pixSize/2);
 					newCar = getGameWorld().spawn("car-east", spawnX, spawnY);
 					break;
@@ -191,7 +191,7 @@ public class AppMain extends GameApplication {
 				case "v":
 					//spawn south car
 					spawnX = (xIndex * pixSize);
-					spawnY = ((yIndex - 1) * pixSize);
+					spawnY = ((yIndex - 0.5) * pixSize);
 					newCar = getGameWorld().spawn("car-south", spawnX, spawnY);
 					break;
 				

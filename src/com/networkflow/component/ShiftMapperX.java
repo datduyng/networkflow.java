@@ -8,22 +8,24 @@ public class ShiftMapperX {
 	
 	private static HashMap<String, Double> shiftMappingX = new HashMap<String, Double>() {
 		{
-			put(">>", new Double(pixSize)* 1.5);
-			put(">^", new Double(pixSize * 1.5));
-			put("><", new Double(0));
-			put(">v", new Double(pixSize));
+			put(">>", new Double(pixSize));
+			put(">^", new Double(pixSize));
+			put("><", new Double(pixSize/2));
+			put(">v", new Double(pixSize/2));
 			
-			put("^>", new Double(90));
+			put("^>", new Double(0));
 			put("^^", new Double(0));
-			put("^<", new Double(270));
-			put("^v", new Double(180));
-			put("<>", new Double(180));
-			put("<^", new Double(90));
-			put("<<", new Double(0));
-			put("<v", new Double(270));
-			put("v>", new Double(270));
-			put("v^", new Double(180));
-			put("v<", new Double(90));
+			put("^<", new Double(-pixSize/2));
+			put("^v", new Double(-pixSize/2));
+			
+			put("<>", new Double(-pixSize/2));
+			put("<^", new Double(-pixSize/2));
+			put("<<", new Double(-pixSize));
+			put("<v", new Double(-pixSize));
+			
+			put("v>", new Double(pixSize/2));
+			put("v^", new Double(pixSize/2));
+			put("v<", new Double(0));
 			put("vv", new Double(0));
 		
 		}
