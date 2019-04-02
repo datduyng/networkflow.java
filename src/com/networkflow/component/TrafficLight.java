@@ -136,6 +136,7 @@ public class TrafficLight extends Intersection {
 	 * traffic-light direction, resets its state to 'stopped' 
 	 */
 	public void deQueue() {
+		System.out.println("deQueue() (traffic light): ");
 		Car car = null;
 		if (this.color.equals("^v")) {
 			car = this.nsTraffic.peek();

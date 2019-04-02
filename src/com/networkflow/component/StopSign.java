@@ -94,7 +94,7 @@ public class StopSign extends Intersection{
 	 * to pass through.
 	 */
 	public void updateIncrement() {
-		this.deQueue();	
+		//no increment needed yet for stop sign
 	}
 	
 	public LinkedList<Car> getCarEnter() {
