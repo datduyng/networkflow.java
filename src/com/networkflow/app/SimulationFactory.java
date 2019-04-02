@@ -15,6 +15,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 
 public class SimulationFactory implements TextEntityFactory {
 	
@@ -27,6 +29,8 @@ public class SimulationFactory implements TextEntityFactory {
 	
 	  private int tileWidth = 0;
 	  private int tileHeight = 0;
+	  
+	  private static int carCount = 0;
 	  
 	   @Spawns("construction-man")
 	   public Entity newConstructionMan(SpawnData data) {
@@ -118,13 +122,30 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	   
+	   /* 
 	   @Spawns("car-east")
 	   public Entity newCarEast(SpawnData data) {
-		   return Entities.builder()
+		   Entity newCar = Entities.builder()
 				   .viewFromTextureWithBBox("car-east.png")
 				   .from(data)
 				   .at(data.getX(), data.getY())
 				   .type(EntityType.CAR)
+				   .build();
+		   
+		   
+		   
+		   return newCar;
+	    } */
+	   
+	   @Spawns("car-east")
+	   public Entity newCarEast(SpawnData data) {
+		   //Rectangle rec = getNewRecWFill("assets/textures/car-east.png");
+		   return Entities.builder()
+				   .from(data)
+				   .viewFromTextureWithBBox("car-east.png")
+				   //.at(data.getX(), data.getY())
+				   .type(EntityType.CAR)
+				   //.viewFromNode(rec)
 				   .build();
 	    }
 	   
@@ -170,17 +191,27 @@ public class SimulationFactory implements TextEntityFactory {
 		   rec.setFill(imP);
 		   return rec;
 	   }
+	   
+	   //imagePath ex: "assets/textures/grass.png"
+	   public Rectangle getNewCarWFill(String imagePath) {
+		   Image im = new Image(imagePath);
+		   ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
+		   //Texture text = FXGL.getAssetLoader().loadTexture("grass.png");
+		   Rectangle rec = new Rectangle(this.tileWidth/2, this.tileHeight/2);
+		   rec.setFill(imP);
+		   return rec;
+	   }
 
 	@Override
 	public int blockHeight() {
 		// TODO Auto-generated method stub
-		return 50;
+		return 60;
 	}
 
 	@Override
 	public int blockWidth() {
 		// TODO Auto-generated method stub
-		return 50;
+		return 60;
 	}
 
 	@Override

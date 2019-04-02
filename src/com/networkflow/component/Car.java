@@ -33,6 +33,7 @@ public class Car extends Entity {
 	Point startIndex;
 	Point stopIndex;
 	Point currentIndex; /* same as the tile position */
+	Entity carEntity;
 
 	/**
 	 * Parameterized Car object Constructor
@@ -331,7 +332,9 @@ public class Car extends Entity {
 	 * @return the car's new traveling direction, chosen randomly
 	 */
 	public String turn(String builtDirections) {
+		String oldDir = this.getDirection();
 		String oppDir;
+		
 		if(this.getDirection().equals("<")) {
 			oppDir = ">";
 		} else if(this.getDirection().equals(">")) {
@@ -350,8 +353,17 @@ public class Car extends Entity {
 			randInt = (int) (Math.random() * builtDirections.length());
 			newDirection = Character.toString(builtDirections.charAt(randInt));
 		}
+		
+		this.rotateCarEntity(oldDir, newDirection);
+		this.updateCarEntityTilePos(oldDir, newDirection);
 		System.out.println("New Direction: " + newDirection);
 		return newDirection;
+	}
+	
+	public void rotateCarEntity(String oldDir, String newDir) {
+		double rotAngDeg = RotationMapper.getRotationMapping().get(oldDir + newDir).doubleValue();
+		System.out.println("rotAngDeg: " + rotAngDeg);
+		this.getCarEntity().setRotation(rotAngDeg);
 	}
 	
 	/**
@@ -438,8 +450,63 @@ public class Car extends Entity {
 		// only update increment if car is not waiting at intersection or at a deadend
 		if(this.state.equals("waiting") == false && this.state.equals("stopped") == false) {
 			this.increment++;
+			this.updateCarEntityPos();
 		}
 	}
+	
+	/**
+	 * updates the position of the car objects entity (gui) representation based on dir
+	 */
+	public void updateCarEntityPos() {
+		double carEntX = this.getCarEntity().getX();
+		double carEntY = this.getCarEntity().getY();
+		
+		int addVal = 0;
+		if(this.getState().equals("accel") || this.getState().equals("passing") ) {
+			addVal = 1;
+		} else if(this.state.equals("moving")) {
+			addVal = 2;
+		}
+			
+		if(this.state.equals("passing") == false) {
+			switch(this.getDirection()) 
+			{
+			case ">":
+				this.getCarEntity().setX(carEntX + addVal);
+				break;
+			case "^":
+				this.getCarEntity().setY(carEntY - addVal);
+				break;
+			case "<":
+				this.getCarEntity().setX(carEntX - addVal);
+				break;
+			case "v":
+				this.getCarEntity().setY(carEntY + addVal);
+				break;
+				
+			default:
+				//default
+				break;
+			}
+		
+		}
+	}
+	
+	/**
+	 * updates car entity position after car performs a turn
+	 */
+	public void updateCarEntityTilePos(String oldDir, String newDir) {
+		
+		double carEntX = this.getCarEntity().getX();
+		double carEntY = this.getCarEntity().getY();
+		
+		double shiftX = ShiftMapperX.getShiftMappingX().get(oldDir + newDir);
+		double shiftY = ShiftMapperY.getShiftMappingY().get(oldDir + newDir);
+	
+		this.getCarEntity().setX(carEntX + shiftX);
+		this.getCarEntity().setY(carEntY + shiftY);
+	}
+	
 	
 	/**
 	 * 
@@ -499,6 +566,14 @@ public class Car extends Entity {
 
 	public void setCurrentIndex(Point currentIndex) {
 		this.currentIndex = currentIndex;
+	}
+	
+	public Entity getCarEntity() {
+		return carEntity;
+	}
+
+	public void setCarEntity(Entity carEntity) {
+		this.carEntity = carEntity;
 	}
 	
 	/**

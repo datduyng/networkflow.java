@@ -4,6 +4,8 @@ package com.networkflow.app;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -27,11 +29,20 @@ import com.networkflow.component.SimulationMap;
 import com.networkflow.component.StopSign;
 import com.networkflow.component.Tile;
 
+import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
+
 
 public class AppMain extends GameApplication {
 	
-	protected final int gameWidth = 800;
-	protected final int gameHeight = 600;
+	protected final int gameWidth = 960;
+	protected final int gameHeight = 720;
 
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -45,8 +56,7 @@ public class AppMain extends GameApplication {
 	private Entity player;
 	private SimulationMap simulationMap;
 	
-	@Override
-	public void initGame() {
+	public void initAssets() {
 		simulationMap = new SimulationMap("simulation-data/map12.json");
 		
 		//create simulation factory and add to game world
@@ -56,28 +66,29 @@ public class AppMain extends GameApplication {
 		factory.setTileWidthHeight(simulationMap.getPixelSize(), simulationMap.getPixelSize());
 		
 		//add factory to game world
-		getGameWorld().addEntityFactory(factory);
+		getGameWorld().addEntityFactory((EntityFactory) factory);
 		
 		initTiles();
 		initCars();
-//		initTiles("simulation-data/map09.json", simulationMap.getPixelSize(), simulationMap.getPixelSize());
-//		initCars("simulation-data/map09.json", simulationMap.getPixelSize(), simulationMap.getPixelSize());
+	}
+	
+	@Override
+	public void initGame() {
+
 		
-		System.out.println(simulationMap.mapToString());
-		System.out.println(simulationMap.carListToString());
+		initAssets();
 		
 		ArrayList<Car> carList = simulationMap.getCarList();
 		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficCompList();
-		boolean running = true; 
-		int count = 0;
-		while(running && (count < 400)) {
-			//update cars 
+		
+		getMasterTimer().runAtInterval(() ->{
+			
+			//update cars
 			for(int i = 0; i < carList.size(); i++) {
 				carList.get(i).move(simulationMap.getLayout());
 				System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
 				System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
 				System.out.println("Current State: " + carList.get(i).getState());
-				
 			}
 			
 			System.out.println();
@@ -88,15 +99,10 @@ public class AppMain extends GameApplication {
 			}
 			System.out.println();
 			
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} //sleep for 1/2 second
-			count++;
-		}
-
+			
+		}, Duration.seconds(.4));//0.4 seconds
 	}
+
 	
 	/**
 	 * Init Tiles visualization no params
@@ -113,6 +119,36 @@ public class AppMain extends GameApplication {
 		}
 	}
 	
+	  //imagePath ex: "assets/textures/grass.png"
+	  public Entity getNewCarWFill(String imagePath, String direction, double spawnX, double spawnY) {
+		  Image im = new Image(imagePath);
+		  ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
+		  //Texture text = FXGL.getAssetLoader().loadTexture("grass.png");
+		  Rectangle rec = new Rectangle(simulationMap.getPixelSize()/2, simulationMap.getPixelSize()/2);
+		  rec.setFill(imP);
+		  
+		  switch (direction)
+		  {	  
+		  case "^":
+			  rec.getTransforms().add(new Rotate(90, 0, 0));
+			  break;
+		  case "<":
+			  rec.getTransforms().add(new Rotate(180, 0, 0));
+			  break;
+		  case "v":
+			  rec.getTransforms().add(new Rotate(270, 0, 0));
+			  break;
+		  default:
+			  // east 
+			  break;
+		  }
+		  return Entities.builder()
+				   .at(spawnX, spawnY)
+				   .type(EntityType.CAR)
+				   .viewFromNode(rec)
+				   .build();
+	  }
+	
 	/**
 	 * Init car visualization no params
 	 */
@@ -122,7 +158,50 @@ public class AppMain extends GameApplication {
 			int yIndex = car.getCurrentIndex().getY();
 			int spawnX = (xIndex * simulationMap.getPixelSize());
 			int spawnY = (yIndex * simulationMap.getPixelSize());
-			getGameWorld().spawn("car-east", spawnX, spawnY);
+			
+			//Entity newCar = getNewCarWFill("assets/textures/car-east.png", direction, spawnX, spawnY);
+			Entity newCar = null;
+			int pixSize = simulationMap.getPixelSize();	
+			String direction = car.getDirection();
+			
+			switch (direction)
+			{
+				
+				case ">":
+					//spawn east car
+					spawnX = ((xIndex - 1) * pixSize);
+					spawnY = (yIndex * pixSize) + (pixSize/2);
+					newCar = getGameWorld().spawn("car-east", spawnX, spawnY);
+					break;
+			
+				case "^":
+					//spawn north car
+					spawnX = (xIndex * pixSize) + (pixSize/2);
+					spawnY = ((yIndex + 1) * pixSize);
+					newCar = getGameWorld().spawn("car-north", spawnX, spawnY);
+					break;
+				
+				case "<":
+					//spawn west car
+					spawnX = ((xIndex + 1) * pixSize);
+					spawnY = (yIndex * pixSize); 
+					newCar = getGameWorld().spawn("car-west", spawnX, spawnY);
+					break;
+				
+				case "v":
+					//spawn south car
+					spawnX = (xIndex * pixSize);
+					spawnY = ((yIndex - 1) * pixSize);
+					newCar = getGameWorld().spawn("car-south", spawnX, spawnY);
+					break;
+				
+				default:
+					//default
+					break;
+				
+			}
+			
+			car.setCarEntity(newCar);
 			
 		}
 	}
@@ -196,11 +275,56 @@ public class AppMain extends GameApplication {
 		
 	}
 	
+	
+	
+	 @Override
+	 protected void initGameVars(Map<String, Object> vars) {
+		 /*
+		 for(int i = 1; i <= simulationMap.getCarList().size(); i++) {
+			 
+			 String carnX = "car" + i + "x";
+			 String carnY = "car" + i + "y";
+			 
+			 int initPixValX = simulationMap.getPixelSize() * simulationMap.getCarList().get(i-1).getCurrentIndex().getX();
+			 int initPixValY = simulationMap.getPixelSize() * simulationMap.getCarList().get(i-1).getCurrentIndex().getY();
+
+			 vars.put(carnX, initPixValX);
+			 vars.put(carnY, initPixValY);
+
+			 
+			 //carPosX.textProperty().bind(simulationMap.getCarList().get(i).getCurrentIndex().getX());
+		 }
+		 */
+	 }
+	
 
 	@Override
 	public void onUpdate(double tpf) {
 		
+		/*
+		for(int i = 1; i < simulationMap.getCarList().size(); i++) {
+			 String carnX = "car" + i + "x"; 
+			 String carnY = "car" + i + "y"; 
+			 
+			int carnXPixVal = getGameState().getInt(carnX).intValue();
+			int carnYPixVal = getGameState().getInt(carnY).intValue();
+			
+			int carnXCurrPixVal = simulationMap.getPixelSize() * simulationMap.getCarList().get(i).getCurrentIndex().getX();
+			int carnYCurrPixVal = simulationMap.getPixelSize() * simulationMap.getCarList().get(i).getCurrentIndex().getY();
+			
+			if(carnXPixVal != carnXCurrPixVal) {
+				getGameState().setValue(carnX, carnXCurrPixVal);
+			}
+			
+			if(carnYPixVal != carnYCurrPixVal) {
+				getGameState().setValue(carnY, carnYCurrPixVal);
+			}
+		*/
+			
+			
+			
 	}
+		
 	
 	@Override
 	public void initPhysics() {
@@ -215,16 +339,7 @@ public class AppMain extends GameApplication {
 				new UserView(100, 100)
 		);
 	}
-	
-	public int getTileWidth(Tile[][] layout) {
-		return (int) Math.floor(gameWidth / layout[0].length);
-	}
-	
-	public int getTileHeight(Tile[][] layout) {
-		return gameHeight / layout.length;
-	}
-	
-	
+
 	public void initLayout(Tile[][] layout) {
 		
 	}

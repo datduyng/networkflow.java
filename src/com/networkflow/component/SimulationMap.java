@@ -31,7 +31,7 @@ public class SimulationMap {
 	private int width=0;
 	private int numHeight; 
 	private int numWidth;
-	public static int pixelSize=50;
+	public static int pixelSize=60;
 	private ArrayList<Car> carList = new ArrayList<Car>();
 	private ArrayList<Intersection> trafficComponents = new ArrayList<Intersection>();
 	
