@@ -18,7 +18,7 @@ import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.parser.tiled.TiledMap;
 import com.almasb.fxgl.physics.box2d.collision.shapes.Shape;
 import com.almasb.fxgl.settings.GameSettings;
-
+import com.almasb.fxgl.time.TimerAction;
 import com.networkflow.app.ui.AgentInfoView;
 import com.networkflow.app.ui.UserView;
 import com.networkflow.component.Car;
@@ -38,6 +38,13 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+class Timer{
+	TimerAction timerAction;
+	
+	public Timer(TimerAction timerAction){
+		this.timerAction  = timerAction;
+	}
+}
 
 public class AppMain extends GameApplication {
 	
@@ -72,6 +79,7 @@ public class AppMain extends GameApplication {
 		initCars();
 	}
 	
+	
 	@Override
 	public void initGame() {
 
@@ -81,7 +89,7 @@ public class AppMain extends GameApplication {
 		ArrayList<Car> carList = simulationMap.getCarList();
 		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficCompList();
 		
-		getMasterTimer().runAtInterval(() ->{
+		timerAction = getMasterTimer().runAtInterval(() ->{
 			
 			//update cars
 			for(int i = 0; i < carList.size(); i++) {
