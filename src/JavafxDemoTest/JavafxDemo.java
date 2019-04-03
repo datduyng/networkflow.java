@@ -23,7 +23,9 @@ public class JavafxDemo extends Application {
 	Button button;
 	private final Integer startSecond = 0;
 	private Integer seconds;
-
+	public Double updateSpeed;
+	
+	 
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -47,7 +49,7 @@ public class JavafxDemo extends Application {
 
 		//TODO:
 		//Double timerUpdateSpeed = Double.valueOf(input.getText());
-		Double timerUpdateSpeed = 1000.00;
+		updateSpeed = 1000.00;
 		
 		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) 
@@ -58,7 +60,7 @@ public class JavafxDemo extends Application {
 					l.setText("   start button   selected    "); 
 					System.out.println("Start Simulation");
 					timeline.setCycleCount(Timeline.INDEFINITE);
-					KeyFrame frame = new KeyFrame(Duration.millis(timerUpdateSpeed), new EventHandler<ActionEvent>() {
+					KeyFrame frame = new KeyFrame(Duration.millis(updateSpeed), new EventHandler<ActionEvent>() {
 						@Override
 						public void handle(ActionEvent event) {
 							// TODO Auto-generated method stub
@@ -68,13 +70,15 @@ public class JavafxDemo extends Application {
 					});
 					timeline.getKeyFrames().add(frame);
 					timeline.play();
+					//startTimer();
+					System.out.println("current second: " +seconds);
 				}
 				else if(e.getSource() == stopBtn){
 					l.setText("   stop button   selected    "); 
 					System.out.println("Stop Simulation");
 					System.out.println("total time used: " +(seconds-startSecond));
-					seconds = 0;
-					timeline.stop();
+					seconds = -1;
+					//timeline.stop();
 				}		
 			} 
 		}; 
@@ -113,20 +117,25 @@ public class JavafxDemo extends Application {
 	}
 
 
-//	private void startTimer(){
-//		Timeline time = new Timeline();
-//		time.setCycleCount(Timeline.INDEFINITE);
-//		KeyFrame frame = new KeyFrame(Duration.millis(timerUpdateSpeed), new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent event) {
-//				// TODO Auto-generated method stub
-//				seconds++;
-//				System.out.println("current second: " +seconds);
-//			} 
-//		});
-//		time.getKeyFrames().add(frame);
-//		time.play();
-//	}
+	private void startTimer(){
+		Timeline time = new Timeline();
+		if(seconds>=0){
+			time.setCycleCount(Timeline.INDEFINITE);
+			KeyFrame frame = new KeyFrame(Duration.millis(1000), new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					// TODO Auto-generated method stub
+					seconds++;
+					System.out.println("current second: " +seconds);
+				} 
+			});
+			time.getKeyFrames().add(frame);
+			time.play();
+		}else{
+			time.stop();
+		}
+		
+	}
 //	
 //	private void stoptimer(){
 //		

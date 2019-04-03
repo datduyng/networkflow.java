@@ -31,6 +31,13 @@ import javafx.util.Duration;
 import javafx.scene.layout.VBox;
 
 
+class IntValue{
+	int i = 0;
+	public IntValue(int i){
+		this.i  = i;
+	}
+}
+
 public class UserView extends InGameWindow{
 	public UserView(double width, double height) {
 		super("User View", WindowDecor.MINIMIZE);
@@ -104,19 +111,20 @@ public class UserView extends InGameWindow{
 		
 		attrBox.getChildren().add(box2);
 
-
+		IntValue i = new IntValue(3);
 
 		//load map button--------------------------------------
 		Button loadMapBtn = new Button("Load Map");
 		EventHandler<ActionEvent> eventLoadMap = new EventHandler<ActionEvent>() { 
 			public void handle(ActionEvent e) 
 			{ 
+				i.i ++;
 				System.out.println("loading new map...");
 				DirectoryChooser chooser = new DirectoryChooser();
 				chooser.setTitle("JavaFX Projects");
 				//TODO: how to showDialog on scene
-				chooser.showDialog(primaryStage);
-				System.out.println(chooser.showDialog(primaryStage).getAbsolutePath());
+				//chooser.showDialog(primaryStage);
+				//System.out.println(chooser.showDialog(primaryStage).getAbsolutePath());
 			} 
 		}; 
 		loadMapBtn.setOnAction(eventLoadMap);
@@ -126,8 +134,8 @@ public class UserView extends InGameWindow{
 		attrBox.getChildren().add(boxLoadMap);
 
 		
-
-
+		
+		
 
 		//Simulation speed button--------------------------------------
 
@@ -179,7 +187,7 @@ public class UserView extends InGameWindow{
 //		primaryStage.setScene(scene);
 //		primaryStage.show();
 		
-	
+		
 		
 	}
 }
