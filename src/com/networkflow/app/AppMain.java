@@ -26,12 +26,11 @@ import com.networkflow.component.Tile;
 
 import javafx.util.Duration;
 
-
 public class AppMain extends GameApplication {
 	
 	protected final int gameWidth = 800;
 	protected final int gameHeight = 600;
-
+	
 	@Override
 	protected void initSettings(GameSettings settings) {
 		// TODO Auto-generated method stub
@@ -58,8 +57,8 @@ public class AppMain extends GameApplication {
 		
 		initTiles();
 		initCars();
+//		getGameWorld().addEntity(agent.activeProperty());
 	}
-	
 	@Override
 	public void initGame() {
 
@@ -68,15 +67,15 @@ public class AppMain extends GameApplication {
 		
 		ArrayList<Car> carList = simulationMap.getCarList();
 		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficCompList();
-		
+
 		getMasterTimer().runAtInterval(() ->{
 			
-			//update cars
+		//update cars
 			for(int i = 0; i < carList.size(); i++) {
 				carList.get(i).move(simulationMap.getLayout());
-				System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
-				System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
-				System.out.println("Current State: " + carList.get(i).getState());
+//				System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
+//				System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
+//				System.out.println("Current State: " + carList.get(i).getState());
 			}
 			
 			System.out.println();

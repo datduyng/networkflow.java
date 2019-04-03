@@ -110,6 +110,7 @@ public class SimulationFactory implements TextEntityFactory {
 	   @Spawns("traffic-light")
 	   public Entity newTrafficLight(SpawnData data) {
 		   Rectangle rec = getNewRecWFill("assets/textures/traffic-light-we.png");
+		   
 		   return Entities.builder()
 				   .from(data)
 				   .at(data.getX(), data.getY())
@@ -118,8 +119,11 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	   
+	   
 	   @Spawns("car-east")
 	   public Entity newCarEast(SpawnData data) {
+		   
+		   
 		   return Entities.builder()
 				   .viewFromTextureWithBBox("car-east.png")
 				   .from(data)

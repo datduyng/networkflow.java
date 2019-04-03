@@ -16,6 +16,7 @@ import com.networkflow.component.Point;
  */
 
 public class Car extends Entity {
+	
 	public Car(String id, String direction, Point startIndex) {
 		super();
 		this.id = id;
@@ -33,6 +34,8 @@ public class Car extends Entity {
 	Point startIndex;
 	Point stopIndex;
 	Point currentIndex; /* same as the tile position */
+	
+	
 
 	/**
 	 * Parameterized Car object Constructor
@@ -435,6 +438,8 @@ public class Car extends Entity {
 	}
 	
 	public void updateIncrement() {
+
+		this.setPosition(this.getX()+10, this.getY());
 		// only update increment if car is not waiting at intersection or at a deadend
 		if(this.state.equals("waiting") == false && this.state.equals("stopped") == false) {
 			this.increment++;

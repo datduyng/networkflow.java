@@ -83,6 +83,8 @@ public class UserView extends InGameWindow{
         Label opacityValue = new Label(
                 Double.toString(opacityLevel.getValue()));
         opacityValue.setFont(font);
+        
+        
         opacityLevel.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
