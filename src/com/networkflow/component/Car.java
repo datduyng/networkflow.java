@@ -15,7 +15,7 @@ import com.networkflow.component.Point;
  *
  */
 
-public class Car extends Entity {
+public class Car {
 	public Car(String id, String direction, Point startIndex) {
 		super();
 		this.id = id;
@@ -109,11 +109,8 @@ public class Car extends Entity {
 		case "passing":
 			//get current intersection 
 			Point intersectionTile = this.getNextTile(this.currentIndex);
-			System.out.println("x: " + intersectionTile.getX());
-			System.out.println("x: " + intersectionTile.getY());
 			//get possible turning directions
 			String builtDirections = ((Intersection) SimulationMap.getTileAtIndex(intersectionTile)).getBuiltDirections();
-			System.out.println("builtDirections: " + builtDirections);
 			//5 seconds, through intersection, turn, move tile
 			if(this.increment > 0 && (this.increment % 10) == 0) {
 				this.direction = this.turn(builtDirections); // turn (change dir)

@@ -57,7 +57,7 @@ public class AppMain extends GameApplication {
 	private SimulationMap simulationMap;
 	
 	public void initAssets() {
-		simulationMap = new SimulationMap("simulation-data/multTurns_test.json");
+		simulationMap = new SimulationMap("simulation-data/map14.json");
 		
 		//create simulation factory and add to game world
 		SimulationFactory factory = new SimulationFactory();
@@ -86,9 +86,6 @@ public class AppMain extends GameApplication {
 			//update cars
 			for(int i = 0; i < carList.size(); i++) {
 				carList.get(i).move(simulationMap.getLayout());
-				System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
-				System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
-				System.out.println("Current State: " + carList.get(i).getState());
 			}
 			
 			System.out.println();
@@ -100,7 +97,7 @@ public class AppMain extends GameApplication {
 			System.out.println();
 			
 			
-		}, Duration.seconds(.1));//0.4 seconds
+		}, Duration.seconds(.001));//0.4 seconds
 	}
 
 	

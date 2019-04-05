@@ -2,6 +2,8 @@ package com.networkflow.component;
 
 import java.util.LinkedList;
 
+import com.almasb.fxgl.entity.Entity;
+
 /**
  * Models a Stop Sign object extending from Intersection.
  * Uses FIFO data structure to allow cars to pass through.  
@@ -16,6 +18,7 @@ public class TrafficLight extends Intersection {
 
 	private String state;
 	private String color;
+	Entity trafficLightEntity;
 	
 	private LinkedList<Car> nsTraffic;
 	private LinkedList<Car> ewTraffic;
@@ -85,10 +88,9 @@ public class TrafficLight extends Intersection {
 	 */
 	public void updateIncrement() {
 		this.increment++;
-		System.out.println("Traffic Light Inc: " + this.increment);
 		this.deQueue();
 		//240 - 1/2 seconds = 120 seconds (2 min)
-		if(this.increment > 0 && this.increment % 240 == 0) {
+		if(this.increment > 0 && this.increment % 2 == 0) {
 			this.increment = 0;
 			this.switchColor();
 		}
@@ -98,6 +100,7 @@ public class TrafficLight extends Intersection {
 	 * Switches traffic-light color
 	 */
 	public void switchColor() {
+		System.out.println("switch color");
 		if(this.color.equals("<>")) {
 			this.color =  "^v";
 		} else if(this.color.equals("^v")) {
@@ -136,7 +139,6 @@ public class TrafficLight extends Intersection {
 	 * traffic-light direction, resets its state to 'stopped' 
 	 */
 	public void deQueue() {
-		System.out.println("deQueue() (traffic light): ");
 		Car car = null;
 		if (this.color.equals("^v")) {
 			car = this.nsTraffic.peek();
