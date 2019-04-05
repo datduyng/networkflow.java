@@ -5,6 +5,11 @@ import java.util.LinkedList;
 import com.almasb.fxgl.entity.Entity;
 import com.networkflow.component.Point;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * Models a Car object and its members/methods for traveling 
  * on roads from a starting to a stopping destination. 
@@ -34,6 +39,29 @@ public class Car extends Entity {
 	Point stopIndex;
 	Point currentIndex; /* same as the tile position */
 	Entity carEntity;
+	
+	private IntegerProperty speedStr = new SimpleIntegerProperty();
+	private StringProperty stateStr = new SimpleStringProperty(this, state, "stopped");
+	
+	public IntegerProperty speedProperty(){
+		return speedStr;
+	}
+	public StringProperty stateProperty(){
+		return stateStr;
+	}
+	public int getSpeedStr(){
+		return speedStr.get();
+	}
+	public void setSpeedStr(int speed){
+		speedStr.set(speed);
+	}
+	public String getSatetStr(){
+		return stateStr.get();
+	}
+	public void setStateStr(String state){
+		stateStr.set(state);
+	}
+	
 
 	/**
 	 * Parameterized Car object Constructor
