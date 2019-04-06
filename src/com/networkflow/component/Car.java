@@ -259,15 +259,23 @@ public class Car extends Entity {
 			Point currentIndex = this.getCurrentIndex();
 			int currentXIndex  = currentIndex.getX();
 			int currentYIndex = currentIndex.getY(); 
+			String oldDir;
+			String newDir;
 			if(this.getDirection().equals("<") || this.getDirection().equals(">")) {
 				//can either turn north or south
 				//check north tile
 				if(layout[currentYIndex - 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
-					this.setDirection("^");
+					oldDir = this.getDirection();
+					newDir = "^";
+					this.rotateCarEntity(oldDir, newDir);
+					this.setDirection(newDir);
 					return true;
 				//check south tile
-				} else  if (layout[currentYIndex + 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
-					this.setDirection("v");
+				} else if (layout[currentYIndex + 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
+					oldDir = this.getDirection();
+					newDir = "v";
+					this.rotateCarEntity(oldDir, newDir);
+					this.setDirection(newDir);
 					return true;
 				} else {
 					//default
@@ -277,11 +285,17 @@ public class Car extends Entity {
 				//can either turn east or west 
 				//check east tile
 				if(layout[currentYIndex][currentXIndex + 1].getClass().getSimpleName().equals("Road")) {
-					this.setDirection(">");
+					oldDir = this.getDirection();
+					newDir = ">";
+					this.rotateCarEntity(oldDir, newDir);
+					this.setDirection(newDir);
 					return true;
 				//check west tile
 				} else  if (layout[currentYIndex][currentXIndex - 1].getClass().getSimpleName().equals("Road")) {
-					this.setDirection("<");
+					oldDir = this.getDirection();
+					newDir = "<";
+					this.rotateCarEntity(oldDir, newDir);
+					this.setDirection(newDir);
 					return true;
 				} else {
 					//default

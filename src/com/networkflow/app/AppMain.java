@@ -95,6 +95,7 @@ public class AppMain extends GameApplication {
 			//update components 
 			//TODO: 
 			for(int i  = 0; i < trafficCompList.size(); i++) {
+				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).updateIncrement();
 				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
 			}
 			System.out.println();
@@ -279,50 +280,12 @@ public class AppMain extends GameApplication {
 	
 	 @Override
 	 protected void initGameVars(Map<String, Object> vars) {
-		 /*
-		 for(int i = 1; i <= simulationMap.getCarList().size(); i++) {
-			 
-			 String carnX = "car" + i + "x";
-			 String carnY = "car" + i + "y";
-			 
-			 int initPixValX = simulationMap.getPixelSize() * simulationMap.getCarList().get(i-1).getCurrentIndex().getX();
-			 int initPixValY = simulationMap.getPixelSize() * simulationMap.getCarList().get(i-1).getCurrentIndex().getY();
-
-			 vars.put(carnX, initPixValX);
-			 vars.put(carnY, initPixValY);
-
-			 
-			 //carPosX.textProperty().bind(simulationMap.getCarList().get(i).getCurrentIndex().getX());
-		 }
-		 */
+		 
 	 }
 	
 
 	@Override
 	public void onUpdate(double tpf) {
-		
-		/*
-		for(int i = 1; i < simulationMap.getCarList().size(); i++) {
-			 String carnX = "car" + i + "x"; 
-			 String carnY = "car" + i + "y"; 
-			 
-			int carnXPixVal = getGameState().getInt(carnX).intValue();
-			int carnYPixVal = getGameState().getInt(carnY).intValue();
-			
-			int carnXCurrPixVal = simulationMap.getPixelSize() * simulationMap.getCarList().get(i).getCurrentIndex().getX();
-			int carnYCurrPixVal = simulationMap.getPixelSize() * simulationMap.getCarList().get(i).getCurrentIndex().getY();
-			
-			if(carnXPixVal != carnXCurrPixVal) {
-				getGameState().setValue(carnX, carnXCurrPixVal);
-			}
-			
-			if(carnYPixVal != carnYCurrPixVal) {
-				getGameState().setValue(carnY, carnYCurrPixVal);
-			}
-		*/
-			
-			
-			
 	}
 		
 	
