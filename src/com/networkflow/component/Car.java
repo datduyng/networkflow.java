@@ -354,10 +354,12 @@ public class Car extends Entity {
 		
 		int randInt = (int) (Math.random() * builtDirections.length());
 		String newDirection = Character.toString(builtDirections.charAt(randInt));
-		while(newDirection.equals(oppDir)) {
-	
+		int count = 0;
+		while(newDirection.equals(oppDir) && count <= 4) {
+			
 			randInt = (int) (Math.random() * builtDirections.length());
 			newDirection = Character.toString(builtDirections.charAt(randInt));
+			count++;
 		}
 		
 		this.rotateCarEntity(oldDir, newDirection);

@@ -135,9 +135,9 @@ public class TrafficLight extends Intersection {
 			car = this.nsTraffic.peek();
 			if(car != null) {
 				this.nsTraffic.removeFirst();
-				System.out.println("size: " + this.nsTraffic.size());
+				//System.out.println("size: " + this.nsTraffic.size());
 				car.setState("passing");
-				System.out.println("dequeud car state: " + car.getState());
+				//System.out.println("dequeud car state: " + car.getState());
 				car.setIncrement(0);
 			}
 		} else if (this.color.equals("<>")) {
