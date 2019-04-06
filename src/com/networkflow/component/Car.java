@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.almasb.fxgl.entity.Entity;
 import com.networkflow.component.Point;
+import java.lang.StringBuilder;
 
 /**
  * Models a Car object and its members/methods for traveling 
@@ -34,7 +35,7 @@ public class Car extends Entity {
 	Point stopIndex;
 	Point currentIndex; /* same as the tile position */
 	Entity carEntity;
-
+	StringBuilder logger;/*Log car status, help debug, also junit test*/
 	/**
 	 * Parameterized Car object Constructor
 	 * @param id car identification number
@@ -64,7 +65,7 @@ public class Car extends Entity {
 	 */
 	public Car(){
 		this.increment = 0;
-		this.state = "idel";
+		this.state = "idle";
 	}
 
 
@@ -75,8 +76,6 @@ public class Car extends Entity {
 	 * @param layout current map layout
 	 */
 	public void move(Tile[][] layout){
-		System.out.println("increment: " + this.increment);
-		
 		//stop car if it has reached its destination 
 		//this.checkCurrentIndex(); TODO: Implement end point
 		
@@ -90,15 +89,12 @@ public class Car extends Entity {
 
 		switch (this.state) {
 		case "stopped":
-			
-			
 			break;
 			
 		case "waiting":
-			
 			break;
 			
-		case "idel":
+		case "idle":
 			//one-half second has passed, begin moving
 			if((this.increment % stopDelay) == 0) {
 				this.increment = 0;
@@ -108,16 +104,13 @@ public class Car extends Entity {
 			
 		case "passing":
 			//get current intersection 
-			Point intersectionTile = this.getNextTile(this.currentIndex);
-			System.out.println("x: " + intersectionTile.getX());
-			System.out.println("x: " + intersectionTile.getY());
+			Point intersectionTile = this.getCarNextPoint(this.currentIndex);
 			//get possible turning directions
 			String builtDirections = ((Intersection) SimulationMap.getTileAtIndex(intersectionTile)).getBuiltDirections();
-			System.out.println("builtDirections: " + builtDirections);
 			//5 seconds, through intersection, turn, move tile
 			if(this.increment > 0 && (this.increment % 10) == 0) {
 				this.direction = this.turn(builtDirections); // turn (change dir)
-				nextTile = this.getNextTile(intersectionTile);
+				nextTile = this.getCarNextPoint(intersectionTile);
 				//update position if next tile is valid
 				if(this.checkTile(nextTile, layout) == true) {
 					this.currentIndex = nextTile;
@@ -132,7 +125,7 @@ public class Car extends Entity {
 		case "accel":
 			//30 seconds, move tile
 			if(this.increment > 0 && (this.increment % 60) == 0) {
-				nextTile = this.getNextTile(this.currentIndex);
+				nextTile = this.getCarNextPoint(this.currentIndex);
 				//update position if next tile is valid
 				if(this.checkTile(nextTile, layout) == true) {
 					this.currentIndex = nextTile;
@@ -150,7 +143,7 @@ public class Car extends Entity {
 		case "moving":
 			//15 seconds, move tile
 			if(this.increment > 0 && (this.increment % 30) == 0) {
-				nextTile = this.getNextTile(this.currentIndex);
+				nextTile = this.getCarNextPoint(this.currentIndex);
 				//update position if next tile is valid
 				if(this.checkTile(nextTile, layout) == true) {
 					this.currentIndex = nextTile;
@@ -178,7 +171,7 @@ public class Car extends Entity {
 	 */
 	public void enQueue(Tile[][] layout) {
 		if(this.state.equals("waiting")) {
-			Point nextPoint = this.getNextTile(this.currentIndex);
+			Point nextPoint = this.getCarNextPoint(this.currentIndex);
 			int nextX = nextPoint.getX();
 			int nextY = nextPoint.getY();
 			String className = layout[nextY][nextX].getClass().getSimpleName();
@@ -202,9 +195,9 @@ public class Car extends Entity {
 	 * 
 	 * @return the next tile point
 	 */
-	public Point getNextTile(Point currentTile) {
-		int currentXIndex = currentTile.getX();
-		int currentYindex = currentTile.getY();
+	public Point getCarNextPoint(Point currentIndex) {
+		int currentXIndex = currentIndex.getX();
+		int currentYindex = currentIndex.getY();
 		switch (this.direction) {
 		case ">":
 			//go right
@@ -235,8 +228,6 @@ public class Car extends Entity {
 	 */
 	public boolean checkTile(Point nextTile, Tile[][] layout) {
 		Tile tile = layout[nextTile.getY()][nextTile.getX()];
-		System.out.println(tile.getClass().getSimpleName());
-		
 		/*
 		 * Make sure road direction allows car's current travel direction
 		 */
@@ -365,6 +356,14 @@ public class Car extends Entity {
 		System.out.println("New Direction: " + newDirection);
 		return newDirection;
 	}
+	/**
+	 * Log car infomation as json string.
+	 * @param log
+	 */
+	public void logCarInfo(String log) {
+		System.out.println(log);
+		this.logger.append("|"+log+"|");
+	}
 	
 	/**
 	 * rotates car entity's direction after it has turned
@@ -392,6 +391,15 @@ public class Car extends Entity {
 		if(currX == stopX && currY == stopY) {
 			this.state = "stopped";
 		}
+	}
+	
+	
+	/**
+	 * For advance debug
+	 * @return car logging status in string
+	 */
+	public String getLogger() {
+		return this.logger.toString();
 	}
 	
 	/**
@@ -593,7 +601,10 @@ public class Car extends Entity {
 	 * Returns a string showing the direction and current position of the car.
 	 */
 	public String toString(){ 
-		return "direction is " + direction + ", current position is " + "<" + this.getCurrentIndex().getX() +"," + this.getCurrentIndex().getY() + ">"; 
+		return "direction is " + direction +
+				", current position is " + "<" + this.getCurrentIndex().getX() +"," + this.getCurrentIndex().getY() + ">" +
+				"state " + this.state +
+				"increment " + this.increment; 
 	}
 	
 }

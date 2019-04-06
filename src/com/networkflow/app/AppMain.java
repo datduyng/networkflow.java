@@ -21,6 +21,7 @@ import com.almasb.fxgl.settings.GameSettings;
 
 import com.networkflow.app.ui.AgentInfoView;
 import com.networkflow.app.ui.UserView;
+import com.networkflow.apputils.AppException;
 import com.networkflow.component.Car;
 import com.networkflow.component.Intersection;
 import com.networkflow.component.JSONProcessor;
@@ -52,12 +53,16 @@ public class AppMain extends GameApplication {
 		settings.setHeight(gameHeight);
 		settings.setVersion("0.1");
 	}
-	
-	//private Entity player;
+
 	private SimulationMap simulationMap;
 	
 	public void initAssets() {
-		simulationMap = new SimulationMap("simulation-data/multTurns_test.json");
+		try {
+			simulationMap = new SimulationMap("simulation-data/multTurns_test.json");
+		} catch (AppException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//create simulation factory and add to game world
 		SimulationFactory factory = new SimulationFactory();
@@ -79,25 +84,20 @@ public class AppMain extends GameApplication {
 		initAssets();
 		
 		ArrayList<Car> carList = simulationMap.getCarList();
-		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficCompList();
+		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficComponents();
 		
 		getMasterTimer().runAtInterval(() ->{
 			
 			//update cars
 			for(int i = 0; i < carList.size(); i++) {
 				carList.get(i).move(simulationMap.getLayout());
-				System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
-				System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
-				System.out.println("Current State: " + carList.get(i).getState());
 			}
 			
-			System.out.println();
 			//update components 
 			//TODO: 
 			for(int i  = 0; i < trafficCompList.size(); i++) {
 				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
 			}
-			System.out.println();
 			
 			
 		}, Duration.seconds(.1));//0.4 seconds
@@ -264,9 +264,6 @@ public class AppMain extends GameApplication {
 				
 			}
 			
-			//System.out.println("spawnX: " + spawnX);
-			//System.out.println("spawnY: " + spawnY);
-			
 		}					
 	}	
 	
@@ -300,29 +297,7 @@ public class AppMain extends GameApplication {
 
 	@Override
 	public void onUpdate(double tpf) {
-		
-		/*
-		for(int i = 1; i < simulationMap.getCarList().size(); i++) {
-			 String carnX = "car" + i + "x"; 
-			 String carnY = "car" + i + "y"; 
-			 
-			int carnXPixVal = getGameState().getInt(carnX).intValue();
-			int carnYPixVal = getGameState().getInt(carnY).intValue();
-			
-			int carnXCurrPixVal = simulationMap.getPixelSize() * simulationMap.getCarList().get(i).getCurrentIndex().getX();
-			int carnYCurrPixVal = simulationMap.getPixelSize() * simulationMap.getCarList().get(i).getCurrentIndex().getY();
-			
-			if(carnXPixVal != carnXCurrPixVal) {
-				getGameState().setValue(carnX, carnXCurrPixVal);
-			}
-			
-			if(carnYPixVal != carnYCurrPixVal) {
-				getGameState().setValue(carnY, carnYCurrPixVal);
-			}
-		*/
-			
-			
-			
+
 	}
 		
 	

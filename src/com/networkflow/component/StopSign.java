@@ -22,6 +22,7 @@ public class StopSign extends Intersection{
 	 */
 	public StopSign() {
 		super("stop-sign");
+		this.generalType = "stop-sign";
 		this.state = "empty";
 		this.increment = 0;
 		this.mapIndex = new Point(0,0);
@@ -35,6 +36,7 @@ public class StopSign extends Intersection{
 	 */
 	public StopSign(Point mapIndex) {
 		super("stop-sign");
+		this.generalType = "stop-sign";
 		this.mapIndex = mapIndex;
 		this.state = "empty";
 		this.increment = 0;
@@ -49,6 +51,7 @@ public class StopSign extends Intersection{
 	 */
 	public StopSign(Point mapIndex, String builtDirections) {
 		super("stop-sign");
+		this.generalType = "stop-sign";
 		this.mapIndex = mapIndex;
 		this.builtDirections = builtDirections;
 		this.state = "empty";
@@ -114,7 +117,7 @@ public class StopSign extends Intersection{
 	}
 	
 	public String toString() {
-		return this.state;
+		return this.classType;
 	}
 
 }
