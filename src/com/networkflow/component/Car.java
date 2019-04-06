@@ -84,6 +84,10 @@ public class Car extends Entity {
 		this.updateIncrement();
 	}
 	
+	/**
+	 * Update the state of the current car.
+	 * @param layout map layout
+	 */
 	public void updateState(Tile[][] layout) {
 		Point nextTile = null;
 

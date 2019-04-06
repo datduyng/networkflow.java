@@ -6,6 +6,14 @@ public class ShiftMapperY {
 	
 	private static final int pixSize = 60;
 	
+/**
+ * Uses a hashmap to map the y direction shift for the car entity 
+ * object when performing a turn in an intersection.
+ *  
+ * @author Reid
+ *
+ */
+	
 	private static HashMap<String, Double> shiftMappingY = new HashMap<String, Double>() {
 		{
 			put(">>", new Double(0));

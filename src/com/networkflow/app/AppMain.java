@@ -59,7 +59,7 @@ public class AppMain extends GameApplication {
 	
 	public void initAssets() {
 		try {
-			simulationMap = new SimulationMap("simulation-data/traffic_light_test2.json");
+			simulationMap = new SimulationMap("simulation-data/map09.json");
 		} catch (AppException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,36 +124,6 @@ public class AppMain extends GameApplication {
 		}
 	}
 	
-	  //imagePath ex: "assets/textures/grass.png"
-	  public Entity getNewCarWFill(String imagePath, String direction, double spawnX, double spawnY) {
-		  Image im = new Image(imagePath);
-		  ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
-		  //Texture text = FXGL.getAssetLoader().loadTexture("grass.png");
-		  Rectangle rec = new Rectangle(simulationMap.getPixelSize()/2, simulationMap.getPixelSize()/2);
-		  rec.setFill(imP);
-		  
-		  switch (direction)
-		  {	  
-		  case "^":
-			  rec.getTransforms().add(new Rotate(90, 0, 0));
-			  break;
-		  case "<":
-			  rec.getTransforms().add(new Rotate(180, 0, 0));
-			  break;
-		  case "v":
-			  rec.getTransforms().add(new Rotate(270, 0, 0));
-			  break;
-		  default:
-			  // east 
-			  break;
-		  }
-		  return Entities.builder()
-				   .at(spawnX, spawnY)
-				   .type(EntityType.CAR)
-				   .viewFromNode(rec)
-				   .build();
-	  }
-	
 	/**
 	 * Init car visualization no params
 	 */
@@ -211,6 +181,12 @@ public class AppMain extends GameApplication {
 		}
 	}
 	
+	/**
+	 * Initialize cars from json file format
+	 * @param filePath json path
+	 * @param tileWidth tile pixel width
+	 * @param tileHeight tile pixel height
+	 */
 	public void initCars(String filePath, int tileWidth, int tileHeight) {
 		//Iterate through JSON array of tiles and spawn tile entities on map
 		int y = 0, x = 0;
@@ -281,22 +257,7 @@ public class AppMain extends GameApplication {
 	
 	 @Override
 	 protected void initGameVars(Map<String, Object> vars) {
-		 /*
-		 for(int i = 1; i <= simulationMap.getCarList().size(); i++) {
-			 
-			 String carnX = "car" + i + "x";
-			 String carnY = "car" + i + "y";
-			 
-			 int initPixValX = simulationMap.getPixelSize() * simulationMap.getCarList().get(i-1).getCurrentIndex().getX();
-			 int initPixValY = simulationMap.getPixelSize() * simulationMap.getCarList().get(i-1).getCurrentIndex().getY();
 
-			 vars.put(carnX, initPixValX);
-			 vars.put(carnY, initPixValY);
-
-			 
-			 //carPosX.textProperty().bind(simulationMap.getCarList().get(i).getCurrentIndex().getX());
-		 }
-		 */
 	 }
 	
 

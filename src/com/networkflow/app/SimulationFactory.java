@@ -122,24 +122,9 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	   
-	   /* 
 	   @Spawns("car-east")
 	   public Entity newCarEast(SpawnData data) {
-		   Entity newCar = Entities.builder()
-				   .viewFromTextureWithBBox("car-east.png")
-				   .from(data)
-				   .at(data.getX(), data.getY())
-				   .type(EntityType.CAR)
-				   .build();
-		   
-		   
-		   
-		   return newCar;
-	    } */
-	   
-	   @Spawns("car-east")
-	   public Entity newCarEast(SpawnData data) {
-		   Rectangle rec = getNewCarEWFill("resources/textures/car-east.png");
+		   Rectangle rec = getNewCarFill("resources/textures/car-east.png");
 		   return Entities.builder()
 				   .from(data)
 				   //.viewFromTextureWithBBox("car-east.png")
@@ -151,7 +136,7 @@ public class SimulationFactory implements TextEntityFactory {
 	   
 	   @Spawns("car-north")
 	   public Entity newCarNorth(SpawnData data) {
-		   Rectangle rec = getNewCarNSFill("resources/textures/car-north.png");
+		   Rectangle rec = getNewCarFill("resources/textures/car-north.png");
 		   return Entities.builder()
 				   .from(data)
 				   //.viewFromTextureWithBBox("car-north.png")
@@ -163,7 +148,7 @@ public class SimulationFactory implements TextEntityFactory {
 	   
 	   @Spawns("car-west")
 	   public Entity newCarWest(SpawnData data) {
-		   Rectangle rec = getNewCarEWFill("resources/textures/car-west.png");
+		   Rectangle rec = getNewCarFill("resources/textures/car-west.png");
 		   return Entities.builder()
 				   .from(data)
 				   //.viewFromTextureWithBBox("car-west.png")
@@ -175,7 +160,7 @@ public class SimulationFactory implements TextEntityFactory {
 	   
 	   @Spawns("car-south")
 	   public Entity newCarSouth(SpawnData data) {
-		   Rectangle rec = getNewCarNSFill("resources/textures/car-south.png");
+		   Rectangle rec = getNewCarFill("resources/textures/car-south.png");
 		   return Entities.builder()
 				   .from(data)
 				   //.viewFromTextureWithBBox("car-west.png")
@@ -195,26 +180,24 @@ public class SimulationFactory implements TextEntityFactory {
 		   return rec;
 	   }
 	   
-	   //imagePath ex: "resources/textures/grass.png"
-	   public Rectangle getNewCarEWFill(String imagePath) {
-		   Image im = new Image(imagePath);
-		   ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
-		   //Texture text = FXGL.getAssetLoader().loadTexture("grass.png");
-		   Rectangle rec = new Rectangle(this.tileWidth/2, this.tileHeight/2);
-		   rec.setFill(imP);
-		   return rec;
-	   }
+	   /**
+		 * Returns a rectangle Entity filled with a car  picture.
+		 * 
+		 * @param imagePath ex: "assets/textures/grass.png"
+		 * @param direction car's traveling direction
+		 * @param spawnX x pos
+		 * @param spawnY y pos
+		 * @return
+		 */
+	 public Rectangle getNewCarFill(String imagePath) {
+	   Image im = new Image(imagePath);
+	   ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
+	   //Texture text = FXGL.getAssetLoader().loadTexture("grass.png");
+	   Rectangle rec = new Rectangle(this.tileWidth/2, this.tileHeight/2);
+	   rec.setFill(imP);
+	   return rec;
+	 }
 	   
-	   //imagePath ex: "resources/textures/grass.png"
-	   public Rectangle getNewCarNSFill(String imagePath) {
-		   Image im = new Image(imagePath);
-		   ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
-		   //Texture text = FXGL.getAssetLoader().loadTexture("grass.png");
-		   Rectangle rec = new Rectangle(this.tileWidth/2, this.tileHeight/2);
-		   rec.setFill(imP);
-		   return rec;
-	   }
-
 	@Override
 	public int blockHeight() {
 		// TODO Auto-generated method stub

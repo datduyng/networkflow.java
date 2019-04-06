@@ -18,6 +18,7 @@ public class TrafficLight extends Intersection {
 
 	private String state;
 	private String color;
+	private int passingInc;
 	
 	private LinkedList<Car> nsTraffic;
 	private LinkedList<Car> ewTraffic;
@@ -34,6 +35,7 @@ public class TrafficLight extends Intersection {
 		this.color = "<>"; //default starting direction - allowing E/W traffic
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
+		this.passingInc = 0;
 	}
 
 	/**
@@ -49,6 +51,8 @@ public class TrafficLight extends Intersection {
 		this.color = "<>"; //default starting direction - allowing E/W traffic
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
+		this.passingInc = 0;
+
 	}
 	
 	/**
@@ -66,6 +70,8 @@ public class TrafficLight extends Intersection {
 		this.color = "<>"; //default starting direction - allowing E/W traffic
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
+		this.passingInc = 0;
+
 	}
 	
 	/**
@@ -74,10 +80,21 @@ public class TrafficLight extends Intersection {
 	 * Switches traffic-light color every 2 minutes.
 	 */
 	public void updateIncrement() {
-		System.out.println("size: " + this.nsTraffic.size());
+		//System.out.println("size: " + this.nsTraffic.size());
 		this.increment++;
+		
+		//allow 5 seconds for car to pass through light
+		if(this.state.equals("passing")) {
+			this.passingInc++;
+			if(this.passingInc > 0 && this.passingInc % 10 == 0) {
+				this.state = "empty";
+				this.passingInc = 0;
+			}
+		}
 		//System.out.println("Traffic Light Inc: " + this.increment);
-		this.deQueue();
+		if(this.state.equals("empty")) {
+			this.deQueue();
+		}
 		//240 - 1/2 seconds = 120 seconds (2 min)
 		if(this.increment > 0 && this.increment % 240 == 0) {
 			this.increment = 0;
@@ -137,6 +154,7 @@ public class TrafficLight extends Intersection {
 				this.nsTraffic.removeFirst();
 				//System.out.println("size: " + this.nsTraffic.size());
 				car.setState("passing");
+				this.state = "passing";
 				//System.out.println("dequeud car state: " + car.getState());
 				car.setIncrement(0);
 			}
@@ -145,6 +163,7 @@ public class TrafficLight extends Intersection {
 			if(car != null) {
 				this.ewTraffic.removeFirst();
 				car.setState("passing");
+				this.state = "passing";
 				car.setIncrement(0);
 			}
 		} else {
