@@ -104,6 +104,7 @@ public class Car extends Entity {
 			
 		case "passing":
 			//get current intersection 
+			System.out.println("increment: " + this.increment); // TODO: remove debug statement
 			Point intersectionTile = this.getCarNextPoint(this.currentIndex);
 			//get possible turning directions
 			String builtDirections = ((Intersection) SimulationMap.getTileAtIndex(intersectionTile)).getBuiltDirections();
@@ -178,9 +179,11 @@ public class Car extends Entity {
 			
 			if(className.equals("StopSign")) {
 				((StopSign) layout[nextY][nextX]).addCarToQueue(this);
+				this.state = "queued";
 					
 			} else if (className.equals("TrafficLight")) {
 				((TrafficLight) layout[nextY][nextX]).enQueue(this);
+				this.state = "queued";
 				
 			} else {
 				//default

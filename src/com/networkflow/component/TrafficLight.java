@@ -2,6 +2,8 @@ package com.networkflow.component;
 
 import java.util.LinkedList;
 
+import com.almasb.fxgl.entity.Entity;
+
 /**
  * Models a Stop Sign object extending from Intersection.
  * Uses FIFO data structure to allow cars to pass through.  
@@ -20,6 +22,8 @@ public class TrafficLight extends Intersection {
 	private LinkedList<Car> nsTraffic;
 	private LinkedList<Car> ewTraffic;
 	
+	Entity trafficLightEntity;
+	
 	/**
 	 * Default constructor
 	 */
@@ -32,7 +36,6 @@ public class TrafficLight extends Intersection {
 		this.ewTraffic = new LinkedList<Car>();
 	}
 
-	
 	/**
 	 * Constructor w/ type and index
 	 * @param type 'traffic-light
@@ -65,32 +68,22 @@ public class TrafficLight extends Intersection {
 		this.ewTraffic = new LinkedList<Car>();
 	}
 	
-	
-	public String getState() {
-		return state;
-	}
-	
-	public void setState(String state) {
-		this.state = state;
-	}
-	
-	public int getIncrement() {
-		return increment;
-	}
-	
 	/**
 	 * @override overrides the  update Increment of Intersection
 	 * Adds 1 to increment and dequeues applicable cars based on traffic light color.
 	 * Switches traffic-light color every 2 minutes.
 	 */
 	public void updateIncrement() {
+		System.out.println("size: " + this.nsTraffic.size());
 		this.increment++;
-		System.out.println("Traffic Light Inc: " + this.increment);
+		//System.out.println("Traffic Light Inc: " + this.increment);
 		this.deQueue();
 		//240 - 1/2 seconds = 120 seconds (2 min)
 		if(this.increment > 0 && this.increment % 240 == 0) {
 			this.increment = 0;
 			this.switchColor();
+			this.rotateTrafficLightEntity();
+
 		}
 	}
 	
@@ -136,13 +129,15 @@ public class TrafficLight extends Intersection {
 	 * traffic-light direction, resets its state to 'stopped' 
 	 */
 	public void deQueue() {
-		System.out.println("deQueue() (traffic light): ");
+		//System.out.println("deQueue() (traffic light): ");
 		Car car = null;
 		if (this.color.equals("^v")) {
 			car = this.nsTraffic.peek();
 			if(car != null) {
 				this.nsTraffic.removeFirst();
+				System.out.println("size: " + this.nsTraffic.size());
 				car.setState("passing");
+				System.out.println("dequeud car state: " + car.getState());
 				car.setIncrement(0);
 			}
 		} else if (this.color.equals("<>")) {
@@ -157,12 +152,38 @@ public class TrafficLight extends Intersection {
 		}
 	}
 	
+	public void rotateTrafficLightEntity() {
+		double oldRotAng = this.trafficLightEntity.getRotation();
+		this.trafficLightEntity.setRotation(oldRotAng + 90);
+	}
+	
+	public String getState() {
+		return state;
+	}
+	
+	public void setState(String state) {
+		this.state = state;
+	}
+	
+	public int getIncrement() {
+		return increment;
+	}
+	
 	public String getColor() {
 		return this.color;
 	}
 	
 	public void setColor(String color) {
 		this.color = color;
+	}
+	
+	public Entity getTrafficLightEntity() {
+		return trafficLightEntity;
+	}
+
+
+	public void setTrafficLightEntity(Entity trafficLightEntity) {
+		this.trafficLightEntity = trafficLightEntity;
 	}
  	
 	public String toString() {

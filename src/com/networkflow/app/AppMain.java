@@ -29,6 +29,7 @@ import com.networkflow.component.Point;
 import com.networkflow.component.SimulationMap;
 import com.networkflow.component.StopSign;
 import com.networkflow.component.Tile;
+import com.networkflow.component.TrafficLight;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -58,7 +59,7 @@ public class AppMain extends GameApplication {
 	
 	public void initAssets() {
 		try {
-			simulationMap = new SimulationMap("simulation-data/multTurns_test.json");
+			simulationMap = new SimulationMap("simulation-data/traffic_light_test2.json");
 		} catch (AppException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,7 +97,7 @@ public class AppMain extends GameApplication {
 			//update components 
 			//TODO: 
 			for(int i  = 0; i < trafficCompList.size(); i++) {
-				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
+				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).updateIncrement();
 			}
 			
 			
@@ -114,7 +115,11 @@ public class AppMain extends GameApplication {
 				int spawnX = x * simulationMap.getPixelSize();
 				int spawnY = y * simulationMap.getPixelSize();
 				String classType = simulationMap.getLayout()[y][x].getClassType();
-				getGameWorld().spawn(classType, spawnX, spawnY);
+				Entity tileEntity = getGameWorld().spawn(classType, spawnX, spawnY);
+				//set traffic-light entity for visually updating traffic directions
+				if(classType.equals("traffic-light")) {
+					((TrafficLight) simulationMap.getLayout()[y][x]).setTrafficLightEntity(tileEntity);
+				}
 			}
 		}
 	}

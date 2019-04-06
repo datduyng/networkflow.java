@@ -38,10 +38,9 @@ public abstract class Intersection extends Tile {
 	}
 	
 	/**
-	 * Increase increment by 1
+	 * Increases increment, overriden in applicable subclasses
 	 */
 	public void updateIncrement() {
-		this.increment++;
 	}
 	
 	/**
