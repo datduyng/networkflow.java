@@ -95,6 +95,12 @@ public class Car extends Entity {
 			break;
 			
 		case "idle":
+			//stop car if not initialized on a road
+			int currX = this.getCurrentIndex().getX();
+			int currY = this.getCurrentIndex().getY();
+			if(layout[currY][currX].getClass().getSimpleName().equals("Road") == false) {
+				this.state = "stopped";
+			}
 			//one-half second has passed, begin moving
 			if((this.increment % stopDelay) == 0) {
 				this.increment = 0;
