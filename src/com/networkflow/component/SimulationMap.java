@@ -110,6 +110,63 @@ public class SimulationMap {
 		return StatusMessage.Valid;
 	}
 	
+	/**
+	 * This function take a File Object as input(main use for Chooser)
+	 * This function load map components take input as filePath to 
+	 * a JSON file. the format of json file will include
+	 * the map format as csv file. delimit end of each row as a ';'. 
+	 * seperate each tile as a ','.
+	 * Tiles map can be creates on project website. netflot.github.io
+	 * 
+	 * @see https://netflow.github.io
+	 * @see (last update:3/24/19) https://datduyng.github.io/cityboost/createMap.html
+	 * @see https://www.mkyong.com/java/json-simple-example-read-and-write-json/
+	 * @param jsonFile
+	 * @throws AppException 
+	 * @throws ParseException 
+	 * @throws IOException 
+	 */
+	public StatusMessage loadComponents(File jsonFile) throws AppException {
+		StatusMessage status = null;
+		//check if given files extension is valid. 
+		if(!Utils.getFileExtension(jsonFile.getAbsolutePath()).equalsIgnoreCase("json")) {
+			throw new AppException("Not JSON file");
+		}
+		
+		JSONParser parser = new JSONParser();
+		try {
+		    FileReader file= new FileReader(jsonFile);
+			Object obj = parser.parse(file);
+			JSONObject jsonObject = (JSONObject) obj;
+			
+			//Process map tiles
+			JSONArray tiles = (JSONArray) jsonObject.get("tiles");
+			JSONArray cars = (JSONArray) jsonObject.get("cars");
+			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
+			
+			this.numHeight = Integer.parseInt(jsonObject.get("numHeight").toString());
+			this.numWidth = Integer.parseInt(jsonObject.get("numWidth").toString());
+			
+			//load tiles and cars given JSON objects
+			status = this._loadTiles(tiles);
+			if(status != StatusMessage.Valid) return status;
+			
+			status = this._loadCars(cars);
+			if(status != StatusMessage.Valid) return status;
+			
+			status = this._loadTrafficComponents(trafficComponents);
+			if(status != StatusMessage.Valid) return status;
+			
+		}catch(FileNotFoundException e) {
+			System.out.println("FileNotFoundException");
+		}catch(IOException e) {
+			System.out.println("IOException");
+		}catch(ParseException e) {
+			System.out.println("ParseException");
+		}
+		return StatusMessage.Valid;
+	}
+	
 	
 	/**
 	 * Load traffic components List given JSONArray parsed from 
@@ -181,6 +238,9 @@ public class SimulationMap {
 				JSONObject nextObj = colIterator.next();
 				String generalType = nextObj.get("generalType").toString();
 				String classType = nextObj.get("classType").toString();
+				
+				System.out.println("========================");
+				System.out.println("x" + x + " y "+ y);
 				this.layout[y][x] = Tile.initTileType(classType, new Point(x, y));
 				x+=1;
 			}

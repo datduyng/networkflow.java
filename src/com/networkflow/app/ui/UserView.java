@@ -5,33 +5,55 @@ package com.networkflow.app.ui;
  * https://docs.oracle.com/javafx/2/ui_controls/file-chooser.htm
  */
 import com.almasb.fxgl.ui.InGameWindow;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.almasb.fxgl.ui.FXGLButton;
 import com.almasb.fxgl.ui.FXGLChoiceBox;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.util.Callback;
 import javafx.scene.layout.VBox;
 
 
 public class UserView extends InGameWindow{
-	public UserView(double width, double height) {
+	
+	private int viewWidth = 202; 
+	private int viewHeight = 315;
+	
+	private String tiledMapResources = "src/resources/tiledmaps/";
+	public <T> UserView(double gameWidth, double gameHeight) {
 		super("User View", WindowDecor.MINIMIZE);
 		
-		relocate(width - 202 - 202, height - 315);
+		relocate(gameWidth - viewWidth, 0);
 		
         setBackgroundColor(Color.rgb(25, 25, 10, 0.4));
-        setPrefSize(202, 315);
+        setPrefSize(viewWidth, viewHeight);
         setCanResize(false);
         
         VBox attrBox = new VBox(6);
@@ -81,6 +103,9 @@ public class UserView extends InGameWindow{
                 Number old_val, Number new_val) {
                     System.out.println("New Slider Values" + new_val.doubleValue());
                     opacityValue.setText(String.format("%.2f", new_val));
+                    
+                    
+//                this.get
             }
         });
 
@@ -102,13 +127,77 @@ public class UserView extends InGameWindow{
         Pane box3 = new Pane();
         box3.setPrefSize(160, 15);
         box3.getChildren().addAll(grid);
+        
+        
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        
+
+        final Button chooseBtn = new Button("Open a files..");
+        chooseBtn.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        File selectedFile = fileChooser.showOpenDialog(null);
+                        
+                        if (selectedFile != null) {
+                        	System.out.println("Fiile Selected" + selectedFile.getName());
+                        }
+                        else {
+                            System.out.println("File selection cancelled.");
+                        }
+                    }
+        });
+        
+        GridPane.setConstraints(chooseBtn, 0, 2);//width, height	
+        grid.getChildren().add(chooseBtn);
+        
+        /***SET UP DROP DOWN MENU**/
+        ArrayList<String> fileNames = this.getAllFileNameUnder(this.tiledMapResources);
+        System.out.println(fileNames);
+        ObservableList<String> options = 
+        	    FXCollections.observableArrayList(fileNames);
+        final ComboBox comboBox = new ComboBox(options);
+        
+        //make nice display
+        //thanks to: https://stackoverflow.com/questions/22190370/how-to-set-width-of-drop-down-of-combobox-in-java-fx
+        comboBox.setPromptText("pre-setup map");
+        comboBox.setValue(Font.getDefault().getFamily());
+        
+        comboBox.setStyle("-fx-pref-width: 150;");
+
+        GridPane.setConstraints(comboBox, 0, 3);//width, height	
+        grid.getChildren().add(comboBox);
+        
         attrBox.getChildren().add(box3);
-        
-        
-        
         Pane pane = new Pane();
         pane.getChildren().addAll(attrBox);
+        
         setContentPane(pane);
+	}
+	static String readFile(String path, Charset encoding) 
+			  throws IOException 
+			{
+			  byte[] encoded = Files.readAllBytes(Paths.get(path));
+			  return new String(encoded, encoding);
+			}
+	/**
+	 * Thanks to:https://stackoverflow.com/questions/5694385/getting-the-filenames-of-all-files-in-a-folder
+	 * @param pathToDirs
+	 * @return
+	 */
+	public ArrayList<String> getAllFileNameUnder(String pathToDirs){
+		ArrayList<String> results = new ArrayList<String>();
+		File[] files = new File(pathToDirs).listFiles();
+		System.out.println("files" + files.toString()); 
+		//If this pathname does not denote a directory, then listFiles() returns null. 
+		if(files != null)
+			for (File file : files) {
+			    if (file.isFile()) {
+			        results.add(file.getName());
+			    }
+			}
+		return results;
 	}
 }
 

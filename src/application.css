@@ -1,0 +1,15 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+/**If have warning see:
+ * https://stackoverflow.com/questions/36270145/how-can-i-disable-unknown-property-error-in-eclipse-while-writing-javafx-css
+ */
+/** file: combo-size.css */
+
+/** Size the combo-box button. */
+.combo-box {
+    /**-fx-pref-width: 100;*/
+}
+
+/** Size the combo-box drop down list. */
+.combo-box-popup > .list-view {-fx-pref-width: 100;}
+

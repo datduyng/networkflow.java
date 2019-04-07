@@ -2,6 +2,7 @@ package com.networkflow.app.ui;
 
 import com.almasb.fxgl.ui.InGameWindow;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -21,7 +22,7 @@ public class AgentInfoView extends InGameWindow{
 	
 	StringProperty speedStr = new SimpleStringProperty();
 	StringProperty stateStr = new SimpleStringProperty();
-	
+
 	double speedDouble = 0.0;
 	
 	public AgentInfoView(String title) {
@@ -87,6 +88,10 @@ public class AgentInfoView extends InGameWindow{
         
         Pane root = new Pane(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox));
         setContentPane(root);
+	}
+	
+	public static void setViewingObject(Object obj) {
+		
 	}
 
 }

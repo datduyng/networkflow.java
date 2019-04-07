@@ -85,7 +85,6 @@ public class TrafficLight extends Intersection {
 	 */
 	public void updateIncrement() {
 		this.increment++;
-		System.out.println("Traffic Light Inc: " + this.increment);
 		this.deQueue();
 		//240 - 1/2 seconds = 120 seconds (2 min)
 		if(this.increment > 0 && this.increment % 240 == 0) {
@@ -136,7 +135,6 @@ public class TrafficLight extends Intersection {
 	 * traffic-light direction, resets its state to 'stopped' 
 	 */
 	public void deQueue() {
-		System.out.println("deQueue() (traffic light): ");
 		Car car = null;
 		if (this.color.equals("^v")) {
 			car = this.nsTraffic.peek();

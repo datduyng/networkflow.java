@@ -44,7 +44,8 @@ public class AppMain extends GameApplication {
 	
 	protected final int gameWidth = 960;
 	protected final int gameHeight = 720;
-
+	ArrayList<Intersection> trafficCompList;
+	ArrayList<Car> carList;
 	@Override
 	protected void initSettings(GameSettings settings) {
 		// TODO Auto-generated method stub
@@ -77,15 +78,34 @@ public class AppMain extends GameApplication {
 		initCars();
 	}
 	
+	
+//	public static void setNewSimulationTimer(int duration) {
+//		this.simulationTimer = ;
+////		this.simulationTimer
+//		this.simulationTimer = getMasterTimer().runAtInterval(() ->{
+//			
+//			//update cars
+//			for(int i = 0; i < carList.size(); i++) {
+//				carList.get(i).move(simulationMap.getLayout());
+//			}
+//			
+//			//update components 
+//			//TODO: 
+//			for(int i  = 0; i < trafficCompList.size(); i++) {
+//				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
+//			}
+			
+			
+//		}, Duration.seconds(.1));//0.4 seconds
+//	}
+	
 	@Override
 	public void initGame() {
-
-		
+//		this.simulationTimer.
 		initAssets();
 		
-		ArrayList<Car> carList = simulationMap.getCarList();
-		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficComponents();
-		
+		carList = simulationMap.getCarList();
+		trafficCompList = simulationMap.getTrafficComponents();
 		getMasterTimer().runAtInterval(() ->{
 			
 			//update cars
@@ -99,11 +119,26 @@ public class AppMain extends GameApplication {
 				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
 			}
 			
-			
+			System.out.println("Running timer");
 		}, Duration.seconds(.1));//0.4 seconds
 	}
 
-	
+	public SimulationMap getSimulationMap() {
+		return simulationMap;
+	}
+
+	public void setSimulationMap(SimulationMap simulationMap) {
+		this.simulationMap = simulationMap;
+	}
+
+	public int getGameWidth() {
+		return gameWidth;
+	}
+
+	public int getGameHeight() {
+		return gameHeight;
+	}
+
 	/**
 	 * Init Tiles visualization no params
 	 * @return
@@ -210,7 +245,6 @@ public class AppMain extends GameApplication {
 		//Iterate through JSON array of tiles and spawn tile entities on map
 		int y = 0, x = 0;
 		JSONArray cars = JSONProcessor.getCars(filePath);
-		//System.out.println("cars.size(): " + cars.size());
 		Iterator<JSONObject> iter = cars.iterator();
 		while(iter.hasNext()) {
 			JSONObject nextObj = iter.next();
@@ -221,9 +255,6 @@ public class AppMain extends GameApplication {
 			int adjX =  Math.toIntExact(Math.round((tileWidth) / 4.00));
 			int adjY =  Math.toIntExact(Math.round((tileHeight) / 4.00));
 			
-			//System.out.println("adjX: " + adjX);
-			//System.out.println("adjY: " + adjY);
-				
 			String direction = nextObj.get("direction").toString();
 			int spawnX;
 			int spawnY;
@@ -311,7 +342,7 @@ public class AppMain extends GameApplication {
 		getGameScene().setUIMouseTransparent(false);
 		getGameScene().addUINodes(
 				new AgentInfoView("test"),
-				new UserView(100, 100)
+				new UserView(this.gameWidth, this.gameHeight)
 		);
 	}
 
