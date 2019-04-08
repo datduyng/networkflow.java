@@ -1,6 +1,7 @@
 package com.networkflow.app;
 
 
+import java.awt.Event;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,11 +9,13 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
+import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.settings.GameSettings;
-
+import com.almasb.fxgl.ui.FXGLButton;
 import com.networkflow.app.ui.AgentInfoView;
 import com.networkflow.app.ui.UserView;
 import com.networkflow.apputils.AppException;
@@ -28,6 +31,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 
 
 public class AppMain extends GameApplication {
@@ -179,8 +188,32 @@ public class AppMain extends GameApplication {
 				
 			}
 			
-			car.setCarEntity(newCar);
+			car.setCarEntity(newCar); // set car's display entity
 			
+			//event handler for clicking on car
+			EventHandler<MouseEvent> carClicked = new EventHandler<MouseEvent> () {
+				 public void handle(MouseEvent e){ 
+					 String currCarState = car.getState();
+					 AgentInfoView.getStateStr().set(currCarState);
+					 switch(currCarState) {
+					 case "accel" : 
+						 AgentInfoView.getSpeedStr().set("15 mph");
+						 break;
+						 
+					 case "moving" : 
+						 AgentInfoView.getSpeedStr().set("30 mph");
+						 break;
+						 
+					 default : 
+						 AgentInfoView.getSpeedStr().set("0 mph");
+						 break;
+					 }
+				 }
+			};
+			
+			//add event handler for car entity
+			car.getCarEntity().getView().setOnMouseClicked(carClicked);
+		
 		}
 	}
 	

@@ -20,9 +20,9 @@ import javafx.beans.value.ObservableValue;
 
 public class AgentInfoView extends InGameWindow{
 	
-	StringProperty speedStr = new SimpleStringProperty();
-	StringProperty stateStr = new SimpleStringProperty();
-
+	private static StringProperty speedStr = new SimpleStringProperty();
+	private static StringProperty stateStr = new SimpleStringProperty();
+	
 	double speedDouble = 0.0;
 	
 	public AgentInfoView(String title) {
@@ -89,6 +89,26 @@ public class AgentInfoView extends InGameWindow{
         Pane root = new Pane(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox));
         setContentPane(root);
 	}
+	
+	public static StringProperty getSpeedStr() {
+		return speedStr;
+	}
+
+
+	public static void setSpeedStr(StringProperty speedStr) {
+		AgentInfoView.speedStr = speedStr;
+	}
+
+
+	public static StringProperty getStateStr() {
+		return stateStr;
+	}
+
+
+	public static void setStateStr(StringProperty stateStr) {
+		AgentInfoView.stateStr = stateStr;
+	}
+
 	
 	public static void setViewingObject(Object obj) {
 		

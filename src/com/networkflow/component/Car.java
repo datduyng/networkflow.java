@@ -1,7 +1,5 @@
 package com.networkflow.component;
 
-import java.util.LinkedList;
-
 import com.almasb.fxgl.entity.Entity;
 import com.networkflow.component.Point;
 import java.lang.StringBuilder;
@@ -25,6 +23,7 @@ public class Car {
 	}
 
 	private static final int stopDelay = 1;
+	private static final int passDelay = 10;
 	
 	private String id;
 	private String direction;
@@ -106,7 +105,7 @@ public class Car {
 				this.state = "stopped";
 			}
 			//one-half second has passed, begin moving
-			if((this.increment % stopDelay) == 0) {
+			if(this.increment > 0 && ((this.increment % stopDelay) == 0)) {
 				this.increment = 0;
 				this.state = "accel"; // change state to accel
 			}
@@ -119,7 +118,7 @@ public class Car {
 			//get possible turning directions
 			String builtDirections = ((Intersection) SimulationMap.getTileAtIndex(intersectionTile)).getBuiltDirections();
 			//5 seconds, through intersection, turn, move tile
-			if(this.increment > 0 && (this.increment % 10) == 0) {
+			if(this.increment > 0 && (this.increment % passDelay) == 0) {
 				this.direction = this.turn(builtDirections); // turn (change dir)
 				nextTile = this.getCarNextPoint(intersectionTile);
 				//update position if next tile is valid

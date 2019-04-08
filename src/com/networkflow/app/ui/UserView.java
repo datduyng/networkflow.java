@@ -132,7 +132,6 @@ public class UserView extends InGameWindow{
                 Number old_val, Number new_val) {
                     System.out.println("New Slider Values" + new_val.doubleValue());
                     opacityValue.setText(String.format("%.2f", new_val));
-                    double oldTimeVal = AppMain.getTimeUnit();
                     double newScaledVal = (0.5) * (1 - new_val.doubleValue());
                     System.out.println("New Scaled Slider Value" + newScaledVal);
                     AppMain.setTimeUnit(newScaledVal);
@@ -205,7 +204,7 @@ public class UserView extends InGameWindow{
         	 new EventHandler<ActionEvent>() {
                  @Override
                  public void handle(final ActionEvent e) {
-                	 String chosenMapPath = "src/resources/tiledmaps/" + comboBox.getValue().toString();
+                	 String chosenMapPath = tiledMapResources + comboBox.getValue().toString();
                 	 System.out.println(chosenMapPath);
                 	 
                 	 AppMain am = (AppMain) FXGL.getApp();
