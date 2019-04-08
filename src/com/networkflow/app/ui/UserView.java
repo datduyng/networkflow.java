@@ -6,19 +6,22 @@ package com.networkflow.app.ui;
  */
 import com.almasb.fxgl.ui.InGameWindow;
 import com.networkflow.app.AppMain;
+import com.networkflow.apputils.AppException;
+import com.networkflow.component.SimulationMap;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
+import com.almasb.fxgl.app.FXGL;
+import com.almasb.fxgl.entity.Entities;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.ui.FXGLButton;
-import com.almasb.fxgl.ui.FXGLChoiceBox;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -74,8 +77,8 @@ public class UserView extends InGameWindow{
         box.getChildren().addAll(fooBtn);
         attrBox.getChildren().add(box);
 
-        Button startBtn = new Button("Stopping"); 
-        startBtn.setStyle("-fx-text-fill: red");
+        Button startBtn = new Button("Start"); 
+        startBtn.setStyle("-fx-text-fill: green");
         
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) 
@@ -83,11 +86,11 @@ public class UserView extends InGameWindow{
                 AppMain.setSimulationRunning(!AppMain.getSimulationRunnning());
                 
                 if(AppMain.getSimulationRunnning()) {
-                	startBtn.setText("Running");
-                	startBtn.setStyle("-fx-text-fill: green");
-                }else {
-                	startBtn.setText("Stopping");
+                	startBtn.setText("Pause");
                 	startBtn.setStyle("-fx-text-fill: red");
+                }else {
+                	startBtn.setText("Start");
+                	startBtn.setStyle("-fx-text-fill: green");
                 }
            
             } 
@@ -98,7 +101,9 @@ public class UserView extends InGameWindow{
         Button restartBtn = new Button("Restart"); 
         EventHandler<ActionEvent> restartBtnEvent = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e){ 
-            	
+            	AppMain am = (AppMain) FXGL.getApp();
+            	am.getGameWorld().clear();
+            	am.initGame();
             } 
         }; 
         restartBtn.setOnAction(restartBtnEvent);
@@ -157,7 +162,7 @@ public class UserView extends InGameWindow{
         fileChooser.setTitle("Open Resource File");
         
 
-        final Button chooseBtn = new Button("Open a files..");
+        final Button chooseBtn = new Button("Choose file..");
         chooseBtn.setOnAction(
                 new EventHandler<ActionEvent>() {
                     @Override
@@ -165,7 +170,13 @@ public class UserView extends InGameWindow{
                         File selectedFile = fileChooser.showOpenDialog(null);
                         
                         if (selectedFile != null) {
-                        	System.out.println("Fiile Selected" + selectedFile.getName());
+                        	System.out.println("File Selected" + selectedFile.getName());
+                        	/*
+                        	AppMain am = (AppMain) FXGL.getApp();
+                        	am.getGameWorld().clear();
+                        	am.setMapPath(newMapPath);
+                        	am.initGame();
+                        	*/
                         }
                         else {
                             System.out.println("File selection cancelled.");
@@ -187,8 +198,28 @@ public class UserView extends InGameWindow{
         //thanks to: https://stackoverflow.com/questions/22190370/how-to-set-width-of-drop-down-of-combobox-in-java-fx
         comboBox.setPromptText("pre-setup map");
         comboBox.setValue(Font.getDefault().getFamily());
-        
         comboBox.setStyle("-fx-pref-width: 150;");
+        
+        comboBox.setOnAction(
+        	 new EventHandler<ActionEvent>() {
+                 @Override
+                 public void handle(final ActionEvent e) {
+                     File selectedFile = fileChooser.showOpenDialog(null);
+                     
+                     if (selectedFile != null) {
+                     	System.out.println("File Selected" + selectedFile.getName());
+                     	/*
+                     	AppMain am = (AppMain) FXGL.getApp();
+                     	am.getGameWorld().clear();
+                     	am.setMapPath(newMapPath);
+                     	am.initGame();
+                     	*/
+                     }
+                     else {
+                         System.out.println("File selection cancelled.");
+                     }
+                 }	
+        });
 
         GridPane.setConstraints(comboBox, 0, 3);//width, height	
         grid.getChildren().add(comboBox);
