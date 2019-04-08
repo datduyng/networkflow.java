@@ -1,3 +1,7 @@
+**Note**:<br>
+- *src* code is under `/src`
+- *junit src* is under `/src/com/networkflow/junitesting/`
+
 ## NetFlow 
 - [**Web App demo**](https://datduyng.github.io/cityboost/createMap.html)
 - Team website: [datduyng.github.io/cityboost](https://datduyng.github.io/cityboost/)
