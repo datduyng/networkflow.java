@@ -38,6 +38,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 
 public class AppMain extends GameApplication {
@@ -79,25 +83,6 @@ public class AppMain extends GameApplication {
 	}
 	
 	
-//	public static void setNewSimulationTimer(int duration) {
-//		this.simulationTimer = ;
-////		this.simulationTimer
-//		this.simulationTimer = getMasterTimer().runAtInterval(() ->{
-//			
-//			//update cars
-//			for(int i = 0; i < carList.size(); i++) {
-//				carList.get(i).move(simulationMap.getLayout());
-//			}
-//			
-//			//update components 
-//			//TODO: 
-//			for(int i  = 0; i < trafficCompList.size(); i++) {
-//				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
-//			}
-			
-			
-//		}, Duration.seconds(.1));//0.4 seconds
-//	}
 	
 	@Override
 	public void initGame() {
@@ -106,21 +91,8 @@ public class AppMain extends GameApplication {
 		
 		carList = simulationMap.getCarList();
 		trafficCompList = simulationMap.getTrafficComponents();
-		getMasterTimer().runAtInterval(() ->{
-			
-			//update cars
-			for(int i = 0; i < carList.size(); i++) {
-				carList.get(i).move(simulationMap.getLayout());
-			}
-			
-			//update components 
-			//TODO: 
-			for(int i  = 0; i < trafficCompList.size(); i++) {
-				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
-			}
-			
-			System.out.println("Running timer");
-		}, Duration.seconds(.1));//0.4 seconds
+		
+		this.setTimeUnit(0.03);//default values
 	}
 
 	public SimulationMap getSimulationMap() {
@@ -325,10 +297,55 @@ public class AppMain extends GameApplication {
 		 */
 	 }
 	
+	 
+	private static BooleanProperty simulationRunning = new SimpleBooleanProperty(false);
+	public static DoubleProperty TIME_UNIT = new SimpleDoubleProperty();
+	private double tick = 0.0;//keep track of total tpf per ticks
+	
+	
+	public static void setSimulationRunning(boolean running) {
+		AppMain.simulationRunning.set(running);
+	}
+	
+	public static boolean getSimulationRunnning() {
+		return AppMain.simulationRunning.get();
+	}
+	
+	public static void setTimeUnit(double timeUnit) {
+		AppMain.TIME_UNIT.set(timeUnit);
+	}
+	
+	public static double getTimeUnit() {
+		return AppMain.TIME_UNIT.get();
+	}
 
+	
+	
+	private void updateSimulation() {
+		//update cars
+		for(int i = 0; i < carList.size(); i++) {
+			carList.get(i).move(simulationMap.getLayout());
+		}
+		
+		//update components 
+		//TODO: 
+		for(int i  = 0; i < trafficCompList.size(); i++) {
+			((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
+		}
+		
+//		System.out.println("Running timer");
+	}
+	
 	@Override
 	public void onUpdate(double tpf) {
-
+		
+		if(this.getSimulationRunnning()) {
+			this.tick += tpf;
+			if(tick > AppMain.getTimeUnit()) {
+				this.tick = 0.0;
+				this.updateSimulation();
+			}
+		}
 	}
 		
 	

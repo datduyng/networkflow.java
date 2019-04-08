@@ -5,6 +5,7 @@ package com.networkflow.app.ui;
  * https://docs.oracle.com/javafx/2/ui_controls/file-chooser.htm
  */
 import com.almasb.fxgl.ui.InGameWindow;
+import com.networkflow.app.AppMain;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,20 +74,43 @@ public class UserView extends InGameWindow{
         box.getChildren().addAll(fooBtn);
         attrBox.getChildren().add(box);
 
-        Button startBtn = new Button("Start button"); 
-        Label l = new Label("button not selected");
+        Button startBtn = new Button("Stopping"); 
+        startBtn.setStyle("-fx-text-fill: red");
+        
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) 
             { 
-                l.setText("  cancel  button    selected    "); 
+                AppMain.setSimulationRunning(!AppMain.getSimulationRunnning());
+                
+                if(AppMain.getSimulationRunnning()) {
+                	startBtn.setText("Running");
+                	startBtn.setStyle("-fx-text-fill: green");
+                }else {
+                	startBtn.setText("Stopping");
+                	startBtn.setStyle("-fx-text-fill: red");
+                }
+           
             } 
         }; 
-        
         startBtn.setOnAction(event);
+        
+        
+        Button restartBtn = new Button("Restart"); 
+        EventHandler<ActionEvent> restartBtnEvent = new EventHandler<ActionEvent>() { 
+            public void handle(ActionEvent e){ 
+            	
+            } 
+        }; 
+        restartBtn.setOnAction(restartBtnEvent);
+        
         Pane box2 = new Pane();
         box2.setPrefSize(160, 15);
         box2.getChildren().addAll(startBtn);
-        attrBox.getChildren().add(box2);
+        
+        Pane box33 = new Pane();
+        box33.setPrefSize(160, 15);
+        box33.getChildren().addAll(restartBtn);
+        attrBox.getChildren().addAll(box2, box33);
         
 //        attrBox.setMargin(box, new Insets(50));
 //        attrBox.setMargin(box2, new Insets(50));
@@ -104,11 +128,11 @@ public class UserView extends InGameWindow{
                     System.out.println("New Slider Values" + new_val.doubleValue());
                     opacityValue.setText(String.format("%.2f", new_val));
                     
-                    
-//                this.get
+                    AppMain.setTimeUnit(new_val.doubleValue());
+//                this.g
             }
         });
-
+        
         
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
