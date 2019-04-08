@@ -17,6 +17,7 @@ import com.networkflow.app.ui.AgentInfoView;
 import com.networkflow.app.ui.UserView;
 import com.networkflow.apputils.AppException;
 import com.networkflow.component.Car;
+import com.networkflow.component.Boat;
 import com.networkflow.component.Intersection;
 import com.networkflow.component.JSONProcessor;
 import com.networkflow.component.SimulationMap;
@@ -45,7 +46,7 @@ public class AppMain extends GameApplication {
 	}
 
 	private static SimulationMap simulationMap;
-	private static String mapPath = "simulation-data/multTurns_test.json"; 
+	private static String mapPath = "src/resources/tiledmaps/map_full_test.json"; 
 	
 	public void initAssets() {
 		try {
@@ -66,6 +67,7 @@ public class AppMain extends GameApplication {
 		
 		initTiles();
 		initCars();
+		initBoats();
 	}
 	
 	
@@ -78,7 +80,7 @@ public class AppMain extends GameApplication {
 		carList = simulationMap.getCarList();
 		trafficCompList = simulationMap.getTrafficComponents();
 		
-		this.setTimeUnit(0.03);//default values
+		this.setTimeUnit(0.05);//default values
 	}
 
 	public static SimulationMap getSimulationMap() {
@@ -180,6 +182,26 @@ public class AppMain extends GameApplication {
 			car.setCarEntity(newCar);
 			
 		}
+	}
+	
+	/**
+	 * Init boat visualization no params
+	 */
+	public void initBoats() {
+		for(Boat boat : this.simulationMap.getBoatList()) {
+			
+			int xIndex = boat.getCurrentIndex().getX();
+			int yIndex = boat.getCurrentIndex().getY();
+			double spawnX = (xIndex * simulationMap.getPixelSize());
+			double spawnY = (yIndex * simulationMap.getPixelSize());
+			
+			//Entity newCar = getNewCarWFill("assets/textures/car-east.png", direction, spawnX, spawnY);
+			Entity newBoat = null;
+			int pixSize = simulationMap.getPixelSize();	
+			newBoat = getGameWorld().spawn("boat", spawnX, spawnY);
+			
+		}
+		
 	}
 	
 	@Override

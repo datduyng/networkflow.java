@@ -54,6 +54,9 @@ public abstract class Tile{
 		
 		case "ground":
 			return new Ground(classType);
+			
+		case "water":
+			return new Ground(classType);
 		
 		case "road-horizontal":
 			return new Road(classType);

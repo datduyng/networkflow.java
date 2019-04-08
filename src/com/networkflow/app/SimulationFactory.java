@@ -78,6 +78,17 @@ public class SimulationFactory implements TextEntityFactory {
 				   .build();
 	    }
 	   
+	   @Spawns("water")
+	   public Entity newWater(SpawnData data) {
+		   Rectangle rec = getNewRecFill("resources/textures/water.png");
+		   return Entities.builder()
+				   .from(data)
+				   .at(data.getX(), data.getY())
+				   .type(EntityType.WATER)
+				   .viewFromNode(rec)
+				   .build();
+	    }
+	   
 	   @Spawns("road-horizontal")
 	   public Entity newHorizontalRoad(SpawnData data) {
 		   Rectangle rec = getNewRecFill("resources/textures/road-horizontal.png");
@@ -166,6 +177,17 @@ public class SimulationFactory implements TextEntityFactory {
 				   //.viewFromTextureWithBBox("car-west.png")
 				   .at(data.getX(), data.getY())
 				   .type(EntityType.CAR)
+				   .viewFromNode(rec)
+				   .build();
+	    }
+	   
+	   @Spawns("boat")
+	   public Entity newBoat(SpawnData data) {
+		   Rectangle rec = getNewCarFill("resources/textures/boat.png");
+		   return Entities.builder()
+				   .from(data)
+				   .at(data.getX(), data.getY())
+				   .type(EntityType.BOAT)
 				   .viewFromNode(rec)
 				   .build();
 	    }

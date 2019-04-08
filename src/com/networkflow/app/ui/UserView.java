@@ -123,7 +123,7 @@ public class UserView extends InGameWindow{
         
         Label opacityCaption = new Label("Simulation Speed");
         opacityCaption.setFont(font);
-        Slider opacityLevel = new Slider(0, 1, 1);
+        Slider opacityLevel = new Slider(0, 1, 0.90);
         Label opacityValue = new Label(
                 Double.toString(opacityLevel.getValue()));
         opacityValue.setFont(font);
@@ -132,8 +132,10 @@ public class UserView extends InGameWindow{
                 Number old_val, Number new_val) {
                     System.out.println("New Slider Values" + new_val.doubleValue());
                     opacityValue.setText(String.format("%.2f", new_val));
-                    
-                    AppMain.setTimeUnit(new_val.doubleValue());
+                    double oldTimeVal = AppMain.getTimeUnit();
+                    double newScaledVal = (0.5) * (1 - new_val.doubleValue());
+                    System.out.println("New Scaled Slider Value" + newScaledVal);
+                    AppMain.setTimeUnit(newScaledVal);
 //                this.g
             }
         });
@@ -170,13 +172,12 @@ public class UserView extends InGameWindow{
                         File selectedFile = fileChooser.showOpenDialog(null);
                         
                         if (selectedFile != null) {
-                        	System.out.println("File Selected" + selectedFile.getName());
-                        	/*
+                        	String newMapPath = selectedFile.getAbsolutePath();
+                        	System.out.println("File Selected: " + newMapPath);
                         	AppMain am = (AppMain) FXGL.getApp();
                         	am.getGameWorld().clear();
                         	am.setMapPath(newMapPath);
                         	am.initGame();
-                        	*/
                         }
                         else {
                             System.out.println("File selection cancelled.");
@@ -204,23 +205,21 @@ public class UserView extends InGameWindow{
         	 new EventHandler<ActionEvent>() {
                  @Override
                  public void handle(final ActionEvent e) {
-                     File selectedFile = fileChooser.showOpenDialog(null);
-                     
-                     if (selectedFile != null) {
-                     	System.out.println("File Selected" + selectedFile.getName());
-                     	/*
-                     	AppMain am = (AppMain) FXGL.getApp();
+                	 String chosenMapPath = "src/resources/tiledmaps/" + comboBox.getValue().toString();
+                	 System.out.println(chosenMapPath);
+                	 
+                	 AppMain am = (AppMain) FXGL.getApp();
+                	 String currMapPath = AppMain.getMapPath();
+                	 
+                	 //reinitialize if different map is chosen
+                	 if(chosenMapPath.equals(currMapPath) == false) {
+                     	AppMain.setMapPath(chosenMapPath);
                      	am.getGameWorld().clear();
-                     	am.setMapPath(newMapPath);
                      	am.initGame();
-                     	*/
-                     }
-                     else {
-                         System.out.println("File selection cancelled.");
-                     }
+                	 }	 
                  }	
         });
-
+        
         GridPane.setConstraints(comboBox, 0, 3);//width, height	
         grid.getChildren().add(comboBox);
         

@@ -16,7 +16,7 @@ import java.lang.StringBuilder;
  *
  */
 
-public class Car extends Entity {
+public class Car {
 	public Car(String id, String direction, Point startIndex) {
 		super();
 		this.id = id;

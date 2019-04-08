@@ -36,6 +36,7 @@ public class SimulationMap {
 	private int numWidth;
 	public static int pixelSize=60;
 	private ArrayList<Car> carList = new ArrayList<Car>();
+	private ArrayList<Boat> boatList = new ArrayList<Boat>();
 	private ArrayList<Intersection> trafficComponents = new ArrayList<Intersection>();
 	
 	/**
@@ -85,6 +86,7 @@ public class SimulationMap {
 			//Process map tiles
 			JSONArray tiles = (JSONArray) jsonObject.get("tiles");
 			JSONArray cars = (JSONArray) jsonObject.get("cars");
+			JSONArray boats = (JSONArray) jsonObject.get("boats");
 			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
 			
 			this.numHeight = Integer.parseInt(jsonObject.get("numHeight").toString());
@@ -96,6 +98,11 @@ public class SimulationMap {
 			
 			status = this._loadCars(cars);
 			if(status != StatusMessage.Valid) return status;
+			
+			if(boats != null) {
+				status = this._loadBoats(boats);
+				if(status != StatusMessage.Valid) return status;
+			}
 			
 			status = this._loadTrafficComponents(trafficComponents);
 			if(status != StatusMessage.Valid) return status;
@@ -214,6 +221,23 @@ public class SimulationMap {
 			carComp.setCurrentIndex(currentPosition);
 			carComp.setDirection(direction);
 			carList.add(carComp);
+		}
+		return StatusMessage.Valid;
+	}
+	
+	public StatusMessage _loadBoats(JSONArray JSONBoats) {
+		int i = 0; 
+		Iterator<JSONObject> iterator = JSONBoats.iterator();
+		while(iterator.hasNext()) {
+			JSONObject boatObj = iterator.next();	
+			int x = Integer.parseInt(boatObj.get("xIndex").toString()),
+				y = Integer.parseInt(boatObj.get("yIndex").toString());
+			String direction = boatObj.get("direction").toString();
+			Boat boatComp = new Boat();
+			Point currentPosition = new Point(x,y);
+			boatComp.setCurrentIndex(currentPosition);
+			boatComp.setDirection(direction);
+			boatList.add(boatComp);
 		}
 		return StatusMessage.Valid;
 	}
@@ -350,6 +374,22 @@ public class SimulationMap {
 	 */
 	public void setCarList(ArrayList<Car> carList) {
 		this.carList = carList;
+	}
+	
+	/**
+	 * get boat list
+	 * @return
+	 */
+	public ArrayList<Boat> getBoatList() {
+		return boatList;
+	}
+
+	/**
+	 * set boatList(ArrayList)
+	 * @param boatList
+	 */
+	public void setBoatList(ArrayList<Boat> boatList) {
+		this.boatList = boatList;
 	}
 	
 	/**
