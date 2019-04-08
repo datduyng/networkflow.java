@@ -8,6 +8,9 @@ import com.almasb.fxgl.ui.InGameWindow;
 //import com.almasb.fxgl.GameApplication;
 //import com.almasb.fxgl.GameSettings;
 import com.networkflow.app.AppMain;
+
+import java.util.Timer;
+
 import com.almasb.fxgl.time.TimerAction;
 import com.almasb.fxgl.ui.FXGLButton;
 import com.almasb.fxgl.ui.FXGLChoiceBox;
@@ -43,7 +46,7 @@ public class UserView extends InGameWindow{
 
 	public static boolean isLoading;
 	public static boolean isActive;
-	
+
 	public static VBox attrBox;
 
 	//	public static Button startBtn;
@@ -63,9 +66,9 @@ public class UserView extends InGameWindow{
 		VBox attrBox = new VBox(10);
 		//30
 		attrBox.setSpacing(40); 
-		
-		
-		
+
+
+
 
 		//foo button--------------------------------------
 		FXGLButton fooBtn = new FXGLButton("foo button");
@@ -82,34 +85,34 @@ public class UserView extends InGameWindow{
 		attrBox.getChildren().add(box);
 
 
-		//load map button--------------------------------------
-		Button reLoadMap = new Button("Re-LoadMap");
-		Label inputLoadMap = new Label("Load Map:");
-		TextField input = new TextField("simulation-data/multTurns_test.json");
-		loadMap = input.getText();
+//		//load map button--------------------------------------
+//		Button reLoadMap = new Button("Re-LoadMap");
+//		Label inputLoadMap = new Label("Load Map:");
+//		TextField input = new TextField("simulation-data/multTurns_test.json");
+//		loadMap = input.getText();
+//
+//		EventHandler<ActionEvent> eventReloading = new EventHandler<ActionEvent>() { 
+//			public void handle(ActionEvent e) 
+//			{ 
+//				if(e.getSource() == reLoadMap){
+//					isLoading = true;
+//					System.out.println("Map reLoading...");
+//					//					try {
+//					//						wait();
+//					//					} catch (InterruptedException e1) {
+//					//						// TODO Auto-generated catch block
+//					//						e1.printStackTrace();
+//					//					}
+//				}
+//			}
+//		};
+//		reLoadMap.setOnAction(eventReloading);
 
-		EventHandler<ActionEvent> eventReloading = new EventHandler<ActionEvent>() { 
-			public void handle(ActionEvent e) 
-			{ 
-				if(e.getSource() == reLoadMap){
-					isLoading = true;
-					System.out.println("Map reLoading...");
-//					try {
-//						wait();
-//					} catch (InterruptedException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-				}
-			}
-		};
-		reLoadMap.setOnAction(eventReloading);
-		
-		TilePane boxLoadMap = new TilePane();
-		boxLoadMap.setPrefSize(160, 15);
-		boxLoadMap.getChildren().add(reLoadMap);
-		boxLoadMap.getChildren().addAll(inputLoadMap, input);
-		attrBox.getChildren().add(boxLoadMap);
+//		TilePane boxLoadMap = new TilePane();
+//		boxLoadMap.setPrefSize(160, 15);
+//		boxLoadMap.getChildren().add(reLoadMap);
+//		boxLoadMap.getChildren().addAll(inputLoadMap, input);
+//		attrBox.getChildren().add(boxLoadMap);
 
 
 		//Simulation speed button--------------------------------------
@@ -121,18 +124,23 @@ public class UserView extends InGameWindow{
 		Label opacityCaption = new Label("Simulation Speed");
 		opacityCaption.setFont(font);
 		//TODO: check default value = 0.1
-		Slider opacityLevel = new Slider(0, 1, 0.1);
+		Slider opacityLevel = new Slider(0, 1, 1);
 		Label opacityValue = new Label(
 				Double.toString(opacityLevel.getValue()));
 		//TODO: double check 
-		opacityNum = Double.valueOf(opacityLevel.getValue());
-
+		opacityNum = opacityLevel.getValue();
+		
 		opacityValue.setFont(font);
 		opacityLevel.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 				System.out.println("New Slider Values" + new_val.doubleValue());
 				opacityValue.setText(String.format("%.2f", new_val));
+				System.out.println("new value:            "+new_val.doubleValue());
+				opacityNum = new_val.doubleValue();
+				AppMain.getTimer().update(new_val.doubleValue());
+
+
 			}
 		});
 
@@ -173,12 +181,12 @@ public class UserView extends InGameWindow{
 					l.setText("   start button   selected    "); 
 					Duration.seconds(timerUpdateSpeed);
 					System.out.println("Start Simulation");
-					AppMain.getTimer().resume();;
+					//AppMain.getTimer().resume();
 				}
 				else if(e.getSource() == stopBtn){
-					//isActive = true;
+					isActive = false;
 					l.setText("   stop button   selected    "); 
-					AppMain.getTimer().pause();
+					//AppMain.getTimer().pause();
 				}		
 			} 
 		}; 

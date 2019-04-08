@@ -15,9 +15,13 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
-import com.almasb.fxgl.input.Input;
+import com.almasb.fxgl.extra.scene.menu.GTAVMenu;
 import com.almasb.fxgl.parser.tiled.TiledMap;
 import com.almasb.fxgl.physics.box2d.collision.shapes.Shape;
+import com.almasb.fxgl.scene.FXGLMenu;
+import com.almasb.fxgl.scene.FXGLScene;
+import com.almasb.fxgl.scene.SceneFactory;
+import com.almasb.fxgl.scene.menu.MenuType;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.time.TimerAction;
 import com.networkflow.app.ui.AgentInfoView;
@@ -29,127 +33,92 @@ import com.networkflow.component.Point;
 import com.networkflow.component.SimulationMap;
 import com.networkflow.component.StopSign;
 import com.networkflow.component.Tile;
+import com.networkflow.menu.MainMenuTest;
 
+import javafx.application.Application;
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 
 public class AppMain extends GameApplication {
-
 	public static TimerAction timer;
 	public static SimulationMap simulationMap;
 
-
 	protected final int gameWidth = 960;
 	protected final int gameHeight = 720;
-
-	//TODO:
-	protected void initMainMenu(Pane mainMenuRoot){
-		Rectangle bg = new Rectangle(gameWidth,gameHeight);
-		Font font = Font.font(72);
-		
-		Button btnGameStart = new Button("Start Simulation");
-		btnGameStart.setFont(font);
-		//btnGameStart.setOnAction(event -> startNewGame());
-		
-		Button btnGameStop = new Button("Exit Simulation");
-		btnGameStop.setFont(font);
-		//btnGameStop.setOnAction(event -> exit());
-		
-//		UserView.getAttrBox().setTranslateX(300);
-//		UserView.getAttrBox().setTranslateY(300);
-		
-		VBox box = new VBox(50,btnGameStart,btnGameStop);
-		
-//		UserView.getAttrBox().getChildren().add(btnGameStart);
-//		UserView.getAttrBox().getChildren().add(btnGameStop);
-//		mainMenuRoot.getChildren().addAll(bg,vbox,UserView.getAttrBox());
-		mainMenuRoot.getChildren().addAll(bg,box);
-	}
+	
+	public static SimulationFactory simulationFactory;
+	
 
 	@Override
 	protected void initSettings(GameSettings settings) {
+		// TODO Auto-generated method stub
 		settings.setTitle("FXGL");
 		settings.setWidth(gameWidth);
 		settings.setHeight(gameHeight);
 		settings.setVersion("0.1");
+		settings.setProfilingEnabled(false);  
+		settings.setCloseConfirmation(false);
+		settings.setMenuEnabled(true);
 	}
-	
-	
-
-	//private Entity player;
-	
 
 	public void initAssets() {
-		if(UserView.getIsLoading() == true){
-			simulationMap = new SimulationMap(UserView.getLoadMap());
-		}else{
-			simulationMap = new SimulationMap("simulation-data/multTurns_test.json");
-		}
+		//MainMenuTest.getMap();
+		simulationMap = new SimulationMap("simulation-data/map08.json");
+		
 		//create simulation factory and add to game world
 		SimulationFactory factory = new SimulationFactory();
+		simulationFactory = factory;
 		//set width and height of each constructed tile entity
 		factory.setTileWidthHeight(simulationMap.getPixelSize(), simulationMap.getPixelSize());
+
 		//add factory to game world
 		getGameWorld().addEntityFactory((EntityFactory) factory);
-
 		initTiles();
 		initCars();
 	}
 
 	//Pane gameRoot
 	public void initGame() {
+
+
 		initAssets();
 
 		ArrayList<Car> carList = simulationMap.getCarList();
 		ArrayList<Intersection> trafficCompList = simulationMap.getTrafficCompList();
 
-		timer = getMasterTimer().runAtInterval(() ->{
-			if(UserView.getIsActive() == true){
+		getMasterTimer().runAtInterval(() ->{
 
-				/*update cars: click start button, 
-				 * if car is not in destination then move it
-				 * else restart it
-				 */
-
+			//update cars
+			if(UserView.isActive == true){
 				for(int i = 0; i < carList.size(); i++) {
-					if(carList.get(i).getCurrentIndex() != carList.get(i).getStopIndex() ){
-						carList.get(i).move(simulationMap.getLayout());
-						System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
-						System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
-						System.out.println("Current State: " + carList.get(i).getState());
-					}else{
-						carList.get(i).setCurrentIndex(carList.get(i).getStartIndex());
-						carList.get(i).move(simulationMap.getLayout());
-						System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
-						System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
-						System.out.println("Current State: " + carList.get(i).getState());
-					}
+					carList.get(i).move(simulationMap.getLayout());
+					System.out.println("Current X Pos: " + carList.get(i).getCurrentIndex().getX());
+					System.out.println("Current Y Pos: " + carList.get(i).getCurrentIndex().getY());
+					System.out.println("Current State: " + carList.get(i).getState());
 				}
-
-				System.out.println();
-				//update components 
-				//TODO: 
-				for(int i  = 0; i < trafficCompList.size(); i++) {
-					((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
-				}
-				System.out.println();
-
 			}
-			//TODO: UserView.getOpacityNum()
+
+			System.out.println();
+			//update components 
+			//TODO: 
+			for(int i  = 0; i < trafficCompList.size(); i++) {
+				((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
+			}
+			System.out.println();
+
+
 		}, Duration.seconds(.1));//0.4 seconds
-	
 	}
 
 
@@ -321,10 +290,7 @@ public class AppMain extends GameApplication {
 
 	@Override
 	public void initInput() {
-		Input input = getInput();
-		if(input.isHeld(KeyCode.ESCAPE)){
-			//openMainMenu();
-		}
+
 	}
 
 
@@ -383,31 +349,38 @@ public class AppMain extends GameApplication {
 
 	}
 
-	@Override 
+	//Pane uiRoot
 	public void initUI() {
 		getGameScene().setUIMouseTransparent(false);
+		
 		getGameScene().addUINodes(
 				new AgentInfoView("test"),
 				new UserView(100, 100)
 				);
-		//getGameScene().addGameView(view);
 	}
 
 	public void initLayout(Tile[][] layout) {
 
 	}
+	
+	
+//	public class MySceneFactory extends SceneFactory {
+//		public FXGLMenu newMainMenu(GameApplication app) {
+//			return new MenuTest(app, MenuType.MAIN_MENU);
+//		}
+//		public FXGLMenu newGameMenu(GameApplication app) {
+//			return new GTAVMenu(app, MenuType.GAME_MENU);
+//		}
+//	}
 
-
-
-
-
+	
 	public static TimerAction getTimer() {
 		return timer;
 	}
 	public static SimulationMap getSimulationMap() {
 		return simulationMap;
 	}
-
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);

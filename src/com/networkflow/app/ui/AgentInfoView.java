@@ -28,8 +28,8 @@ public class AgentInfoView extends InGameWindow{
 	StringProperty stateStr = new SimpleStringProperty();
 	
 	
-	ArrayList<Car> carList = AppMain.getSimulationMap().getCarList();
-	ArrayList<Intersection> trafficCompList = AppMain.getSimulationMap().getTrafficCompList();
+	//ArrayList<Car> carList = AppMain.getSimulationMap().getCarList();
+	//ArrayList<Intersection> trafficCompList = AppMain.getSimulationMap().getTrafficCompList();
 
 	double speedDouble = 0.0;
 

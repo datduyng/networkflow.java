@@ -624,5 +624,13 @@ public class Car extends Entity {
 		return "direction is " + direction + ", current position is " + "<" + this.getCurrentIndex().getX() +"," + this.getCurrentIndex().getY() + ">"; 
 	}
 	
+	
+	
+	
+//	Arraylist StringProperty carProperties;
+//	public StringProperty getCarProperties(){
+//		for i -> arraylist: 
+//			carproperties.add((StringProperties) this.state);
+//	}
 }
 
