@@ -29,6 +29,7 @@ import com.networkflow.component.Point;
 import com.networkflow.component.SimulationMap;
 import com.networkflow.component.StopSign;
 import com.networkflow.component.Tile;
+import com.networkflow.component.TrafficLight;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -121,40 +122,15 @@ public class AppMain extends GameApplication {
 				int spawnX = x * simulationMap.getPixelSize();
 				int spawnY = y * simulationMap.getPixelSize();
 				String classType = simulationMap.getLayout()[y][x].getClassType();
-				getGameWorld().spawn(classType, spawnX, spawnY);
+				Entity tileEntity = getGameWorld().spawn(classType, spawnX, spawnY);
+				//set traffic-light entity for visually updating traffic directions
+				if(classType.equals("traffic-light")) {
+					((TrafficLight) simulationMap.getLayout()[y][x]).setTrafficLightEntity(tileEntity);
+				}
+
 			}
 		}
 	}
-	
-	  //imagePath ex: "assets/textures/grass.png"
-	  public Entity getNewCarWFill(String imagePath, String direction, double spawnX, double spawnY) {
-		  Image im = new Image(imagePath);
-		  ImagePattern imP = new ImagePattern(im, 0, 0, 1, 1, true);
-		  //Texture text = FXGL.getAssetLoader().loadTexture("grass.png");
-		  Rectangle rec = new Rectangle(simulationMap.getPixelSize()/2, simulationMap.getPixelSize()/2);
-		  rec.setFill(imP);
-		  
-		  switch (direction)
-		  {	  
-		  case "^":
-			  rec.getTransforms().add(new Rotate(90, 0, 0));
-			  break;
-		  case "<":
-			  rec.getTransforms().add(new Rotate(180, 0, 0));
-			  break;
-		  case "v":
-			  rec.getTransforms().add(new Rotate(270, 0, 0));
-			  break;
-		  default:
-			  // east 
-			  break;
-		  }
-		  return Entities.builder()
-				   .at(spawnX, spawnY)
-				   .type(EntityType.CAR)
-				   .viewFromNode(rec)
-				   .build();
-	  }
 	
 	/**
 	 * Init car visualization no params
@@ -330,7 +306,7 @@ public class AppMain extends GameApplication {
 		//update components 
 		//TODO: 
 		for(int i  = 0; i < trafficCompList.size(); i++) {
-			((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).deQueue();
+			((Intersection) SimulationMap.getTileAtIndex(trafficCompList.get(i).getMapIndex())).updateIncrement();
 		}
 		
 //		System.out.println("Running timer");

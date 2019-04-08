@@ -66,10 +66,8 @@ public class StopSign extends Intersection{
 	 */
 	public boolean addCarToQueue(Car car) {
 		boolean carAdded = this.carEnter.add(car);
-		System.out.println("carAdded: " + carAdded);
-		if(this.carEnter.isEmpty() == false) {
-			this.setState("passing");
-		}
+		//System.out.println("carAdded: " + carAdded);
+		//System.out.println("Size of queue: " + this.carEnter.size());
 		return carAdded;
 	}
 
@@ -79,15 +77,15 @@ public class StopSign extends Intersection{
 	 * @return Car
 	 */
 	public void deQueue() {
-		Car car = this.carEnter.peek();
-		//System.out.println(this.getCarEnter().size());
-		if(car != null) {
-			car.setState("passing");
-			car.setIncrement(0);
-			this.carEnter.removeFirst();
-		}
-		if(this.carEnter.isEmpty()) {
-			this.setState("empty");
+		if(this.state.equals("empty")) {
+			Car car = this.carEnter.peek();
+			//System.out.println(this.getCarEnter().size());
+			if(car != null) {
+				car.setState("passing");
+				this.state = "passing";
+				car.setIncrement(0);
+				this.carEnter.removeFirst();
+			}
 		}
 	}
 
@@ -97,7 +95,18 @@ public class StopSign extends Intersection{
 	 * to pass through.
 	 */
 	public void updateIncrement() {
-		//no increment needed yet for stop sign
+		
+		this.deQueue(); // dequeue car 
+		
+		//Let car pass for 5 seconds before getting the next one 
+		if(this.state.equals("passing")) {
+			this.increment++;
+			
+			if(this.increment > 0 && this.increment % 10 == 0) {
+				this.increment = 0;
+				this.state = "empty";
+			}
+		}
 	}
 	
 	public LinkedList<Car> getCarEnter() {

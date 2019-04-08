@@ -84,6 +84,10 @@ public class Car extends Entity {
 		this.updateIncrement();
 	}
 	
+	/**
+	 * Update the state of the current car.
+	 * @param layout map layout
+	 */
 	public void updateState(Tile[][] layout) {
 		Point nextTile = null;
 
@@ -95,6 +99,12 @@ public class Car extends Entity {
 			break;
 			
 		case "idle":
+			//stop car if not initialized on a road
+			int currX = this.getCurrentIndex().getX();
+			int currY = this.getCurrentIndex().getY();
+			if(layout[currY][currX].getClass().getSimpleName().equals("Road") == false) {
+				this.state = "stopped";
+			}
 			//one-half second has passed, begin moving
 			if((this.increment % stopDelay) == 0) {
 				this.increment = 0;
@@ -104,6 +114,7 @@ public class Car extends Entity {
 			
 		case "passing":
 			//get current intersection 
+			System.out.println("increment: " + this.increment); // TODO: remove debug statement
 			Point intersectionTile = this.getCarNextPoint(this.currentIndex);
 			//get possible turning directions
 			String builtDirections = ((Intersection) SimulationMap.getTileAtIndex(intersectionTile)).getBuiltDirections();
@@ -178,9 +189,11 @@ public class Car extends Entity {
 			
 			if(className.equals("StopSign")) {
 				((StopSign) layout[nextY][nextX]).addCarToQueue(this);
+				this.state = "queued";
 					
 			} else if (className.equals("TrafficLight")) {
 				((TrafficLight) layout[nextY][nextX]).enQueue(this);
+				this.state = "queued";
 				
 			} else {
 				//default
@@ -345,10 +358,12 @@ public class Car extends Entity {
 		
 		int randInt = (int) (Math.random() * builtDirections.length());
 		String newDirection = Character.toString(builtDirections.charAt(randInt));
-		while(newDirection.equals(oppDir)) {
-	
+		int count = 0;
+		while(newDirection.equals(oppDir) && count <= 4) {
+			
 			randInt = (int) (Math.random() * builtDirections.length());
 			newDirection = Character.toString(builtDirections.charAt(randInt));
+			count++;
 		}
 		
 		this.rotateCarEntity(oldDir, newDirection);
