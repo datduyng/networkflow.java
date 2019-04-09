@@ -1,0 +1,5 @@
+package com.networkflow.app;
+
+public enum EntityType {
+	 CONSTRUCTIONMAN, CONSTRUCTIONBARRIER, GRASS, GROUND, WATER, HORIZRD, VERTRD, STOPSIGN, TRAFFICLIGHT, CAR, BOAT  
+}

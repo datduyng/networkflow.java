@@ -8,6 +8,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.networkflow.apputils.AppException;
+import com.networkflow.apputils.StatusMessage;
+import com.networkflow.apputils.Utils;
 import com.networkflow.component.Point;
 
 import java.io.File;
@@ -27,21 +30,28 @@ import org.json.simple.JSONObject;
  */
 public class SimulationMap {
 	public static Tile[][] layout;
-	private int height=30; 
-	private int width=30;
+	private int height=0; 
+	private int width=0;
 	private int numHeight; 
 	private int numWidth;
-	private int pixelSize=10;
+	public static int pixelSize=60;
 	private ArrayList<Car> carList = new ArrayList<Car>();
+	private ArrayList<Boat> boatList = new ArrayList<Boat>();
 	private ArrayList<Intersection> trafficComponents = new ArrayList<Intersection>();
 	
 	/**
 	 * 
-	 * @param height
-	 * @param width
+	 * @param filepath: path to JSON file export from online createMap apps
+	 * @see https://datduyng.github.io/cityboost/createMap.html (last update: 3/30/19)
 	 */
-	public SimulationMap(int height, int width) {
-		//init and then load map. 
+	public SimulationMap(String filePath) throws AppException{
+		//init and then load map.
+		loadComponents(filePath);
+	}
+	/**
+	 * Default
+	 */
+	public SimulationMap() {
 	}
 	
 	
@@ -56,12 +66,18 @@ public class SimulationMap {
 	 * @see (last update:3/24/19) https://datduyng.github.io/cityboost/createMap.html
 	 * @see https://www.mkyong.com/java/json-simple-example-read-and-write-json/
 	 * @param filePath
+	 * @throws AppException 
 	 * @throws ParseException 
 	 * @throws IOException 
 	 */
-	public void loadComponents(String filePath) {
+	public StatusMessage loadComponents(String filePath) throws AppException {
+		StatusMessage status = null;
+		//check if given files extension is valid. 
+		if(!Utils.getFileExtension(filePath).equalsIgnoreCase("json")) {
+			throw new AppException("Not JSON file");
+		}
+		
 		JSONParser parser = new JSONParser();
-		System.out.println("File exist check" + new File(filePath).exists());
 		try {
 		    FileReader file= new FileReader(filePath);
 			Object obj = parser.parse(file);
@@ -70,16 +86,26 @@ public class SimulationMap {
 			//Process map tiles
 			JSONArray tiles = (JSONArray) jsonObject.get("tiles");
 			JSONArray cars = (JSONArray) jsonObject.get("cars");
+			JSONArray boats = (JSONArray) jsonObject.get("boats");
 			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
 			
-			System.out.println(jsonObject);
 			this.numHeight = Integer.parseInt(jsonObject.get("numHeight").toString());
 			this.numWidth = Integer.parseInt(jsonObject.get("numWidth").toString());
 			
 			//load tiles and cars given JSON objects
-			this._loadTiles(tiles);
-			this._loadCars(cars);
-			this._loadTrafficComponents(trafficComponents);
+			status = this._loadTiles(tiles);
+			if(status != StatusMessage.Valid) return status;
+			
+			status = this._loadCars(cars);
+			if(status != StatusMessage.Valid) return status;
+			
+			if(boats != null) {
+				status = this._loadBoats(boats);
+				if(status != StatusMessage.Valid) return status;
+			}
+			
+			status = this._loadTrafficComponents(trafficComponents);
+			if(status != StatusMessage.Valid) return status;
 			
 		}catch(FileNotFoundException e) {
 			System.out.println("FileNotFoundException");
@@ -88,6 +114,64 @@ public class SimulationMap {
 		}catch(ParseException e) {
 			System.out.println("ParseException");
 		}
+		return StatusMessage.Valid;
+	}
+	
+	/**
+	 * This function take a File Object as input(main use for Chooser)
+	 * This function load map components take input as filePath to 
+	 * a JSON file. the format of json file will include
+	 * the map format as csv file. delimit end of each row as a ';'. 
+	 * seperate each tile as a ','.
+	 * Tiles map can be creates on project website. netflot.github.io
+	 * 
+	 * @see https://netflow.github.io
+	 * @see (last update:3/24/19) https://datduyng.github.io/cityboost/createMap.html
+	 * @see https://www.mkyong.com/java/json-simple-example-read-and-write-json/
+	 * @param jsonFile
+	 * @throws AppException 
+	 * @throws ParseException 
+	 * @throws IOException 
+	 */
+	public StatusMessage loadComponents(File jsonFile) throws AppException {
+		StatusMessage status = null;
+		//check if given files extension is valid. 
+		if(!Utils.getFileExtension(jsonFile.getAbsolutePath()).equalsIgnoreCase("json")) {
+			throw new AppException("Not JSON file");
+		}
+		
+		JSONParser parser = new JSONParser();
+		try {
+		    FileReader file= new FileReader(jsonFile);
+			Object obj = parser.parse(file);
+			JSONObject jsonObject = (JSONObject) obj;
+			
+			//Process map tiles
+			JSONArray tiles = (JSONArray) jsonObject.get("tiles");
+			JSONArray cars = (JSONArray) jsonObject.get("cars");
+			JSONArray trafficComponents = (JSONArray) jsonObject.get("trafficComponents");
+			
+			this.numHeight = Integer.parseInt(jsonObject.get("numHeight").toString());
+			this.numWidth = Integer.parseInt(jsonObject.get("numWidth").toString());
+			
+			//load tiles and cars given JSON objects
+			status = this._loadTiles(tiles);
+			if(status != StatusMessage.Valid) return status;
+			
+			status = this._loadCars(cars);
+			if(status != StatusMessage.Valid) return status;
+			
+			status = this._loadTrafficComponents(trafficComponents);
+			if(status != StatusMessage.Valid) return status;
+			
+		}catch(FileNotFoundException e) {
+			System.out.println("FileNotFoundException");
+		}catch(IOException e) {
+			System.out.println("IOException");
+		}catch(ParseException e) {
+			System.out.println("ParseException");
+		}
+		return StatusMessage.Valid;
 	}
 	
 	
@@ -96,20 +180,26 @@ public class SimulationMap {
 	 * JSON inputs.
 	 * @param JSONTraffic
 	 */
-	public void _loadTrafficComponents(JSONArray JSONTraffic) {
+	public StatusMessage _loadTrafficComponents(JSONArray JSONTraffic) {
 		int i = 0;
 		Iterator<JSONObject> iterator = JSONTraffic.iterator();
+		StatusMessage status = StatusMessage.Valid;
 		while(iterator.hasNext()) {
 			JSONObject componentObj = iterator.next();
 			String generalType = componentObj.get("generalType").toString();
 			String classType = componentObj.get("classType").toString();
 			String builtDirections = componentObj.get("builtDirections").toString();
+			
+			if(builtDirections.equals("")) {
+				status = StatusMessage.NoBuiltInDirection;
+			}
 			int x = Integer.parseInt(componentObj.get("xIndex").toString()),
 					y = Integer.parseInt(componentObj.get("yIndex").toString());
 			Point mapIndex = new Point(x, y);
-			Intersection intersection = Intersection.initIntersectionType(generalType, classType, mapIndex, builtDirections);
+			Intersection intersection = Intersection.initIntersectionType(classType, mapIndex, builtDirections);
 			trafficComponents.add(intersection);
 		}
+		return status;
 	}
 	
 	/**
@@ -117,7 +207,7 @@ public class SimulationMap {
 	 * @see (last update:3/24/19) https://netflow.github.io/createmap.html
 	 * @param JSONCars
 	 */
-	public void _loadCars(JSONArray JSONCars) {
+	public StatusMessage _loadCars(JSONArray JSONCars) {
 		int i = 0; 
 		Iterator<JSONObject> iterator = JSONCars.iterator();
 		while(iterator.hasNext()) {
@@ -128,12 +218,28 @@ public class SimulationMap {
 			//TODO: init car object and add to list
 			Car carComp = new Car();
 			Point currentPosition = new Point(x,y);
-			carComp.setCurrentPosition(currentPosition);
+			carComp.setCurrentIndex(currentPosition);
 			carComp.setDirection(direction);
-			carComp.setState("stopped");
-			carComp.setCurrentSpeed(0);
 			carList.add(carComp);
 		}
+		return StatusMessage.Valid;
+	}
+	
+	public StatusMessage _loadBoats(JSONArray JSONBoats) {
+		int i = 0; 
+		Iterator<JSONObject> iterator = JSONBoats.iterator();
+		while(iterator.hasNext()) {
+			JSONObject boatObj = iterator.next();	
+			int x = Integer.parseInt(boatObj.get("xIndex").toString()),
+				y = Integer.parseInt(boatObj.get("yIndex").toString());
+			String direction = boatObj.get("direction").toString();
+			Boat boatComp = new Boat();
+			Point currentPosition = new Point(x,y);
+			boatComp.setCurrentIndex(currentPosition);
+			boatComp.setDirection(direction);
+			boatList.add(boatComp);
+		}
+		return StatusMessage.Valid;
 	}
 	
 	/**
@@ -141,7 +247,7 @@ public class SimulationMap {
 	 * @see (last update:3/24/19) https://netflow.github.io/createmap.html 
 	 * @param JSONTiles
 	 */
-	public void _loadTiles(JSONArray JSONTiles) {
+	public StatusMessage _loadTiles(JSONArray JSONTiles) {
 		//init map layout size
 		this.layout = new Tile[this.numHeight][this.numWidth];
 		
@@ -156,11 +262,15 @@ public class SimulationMap {
 				JSONObject nextObj = colIterator.next();
 				String generalType = nextObj.get("generalType").toString();
 				String classType = nextObj.get("classType").toString();
-				this.layout[y][x] = Tile.initTileType(generalType, classType, new Point(x, y));
+				
+				System.out.println("========================");
+				System.out.println("x" + x + " y "+ y);
+				this.layout[y][x] = Tile.initTileType(classType, new Point(x, y));
 				x+=1;
 			}
 			y+=1;
 		}
+		return StatusMessage.Valid;
 	}
 	
 	/**
@@ -267,19 +377,35 @@ public class SimulationMap {
 	}
 	
 	/**
+	 * get boat list
+	 * @return
+	 */
+	public ArrayList<Boat> getBoatList() {
+		return boatList;
+	}
+
+	/**
+	 * set boatList(ArrayList)
+	 * @param boatList
+	 */
+	public void setBoatList(ArrayList<Boat> boatList) {
+		this.boatList = boatList;
+	}
+	
+	/**
 	 * get traffic component list
 	 * @return
 	 */
-	public ArrayList<Intersection> getTrafficCompList() {
+	public ArrayList<Intersection> getTrafficComponents() {
 		return this.trafficComponents;
 	}
 
 	/**
 	 * set traffic component list
-	 * @param trafficCompList list of traffic components
+	 * @param trafficComponents list of traffic components
 	 */
-	public void setTrafficCompList(ArrayList<Intersection> trafficCompList) {
-		this.trafficComponents = trafficCompList;
+	public void setTrafficCompList(ArrayList<Intersection> trafficComponents) {
+		this.trafficComponents = trafficComponents;
 	}
 	
 	/**
@@ -288,6 +414,10 @@ public class SimulationMap {
 	 */
 	public Tile[][] getLayout() {
 		return layout;
+	}
+	
+	public static Tile getTileAtIndex(Point pt) {
+		return layout[pt.getY()][pt.getX()];
 	}
 
 	public void setLayout(Tile[][] layout) {

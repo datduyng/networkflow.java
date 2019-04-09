@@ -1,6 +1,8 @@
 package com.networkflow.component;
 
+import com.almasb.fxgl.entity.Entity;
 import com.networkflow.component.Point;
+import java.lang.StringBuilder;
 
 /**
  * Models a Car object and its members/methods for traveling 
@@ -13,16 +15,26 @@ import com.networkflow.component.Point;
  */
 
 public class Car {
+	public Car(String id, String direction, Point startIndex) {
+		super();
+		this.id = id;
+		this.direction = direction;
+		this.startIndex = startIndex;
+	}
+
+	private static final int stopDelay = 1;
+	private static final int passDelay = 10;
+	
 	private String id;
 	private String direction;
 	private int currentSpeed;
 	private int increment; /* increments in one tile */
 	private String state;
-	Point start;
-	Point stop;
-	Point currentPosition; /* same as the tile position */
-
-
+	Point startIndex;
+	Point stopIndex;
+	Point currentIndex; /* same as the tile position */
+	Entity carEntity;
+	StringBuilder logger;/*Log car status, help debug, also junit test*/
 	/**
 	 * Parameterized Car object Constructor
 	 * @param id car identification number
@@ -33,17 +45,17 @@ public class Car {
 	 * @param stop the car's stopping position on the map
 	 * @param currentPosition the car's current position on the map
 	 */
-	public Car(String id,String direction, int increment, String state, Point start, Point stop,
-			Point currentPosition) {
+	public Car(String id,String direction, int increment, String state, 
+			Point startIndex, Point stopIndex, Point currentIndex) {
 		super();
 		this.id = id;
 		this.direction = direction;
 		this.currentSpeed = 0;
 		this.increment = increment;
 		this.state = state;
-		this.start = start;
-		this.stop = stop;
-		this.currentPosition = currentPosition;
+		this.startIndex = startIndex;
+		this.stopIndex = stopIndex;
+		this.currentIndex = currentIndex;
 	}
 
 	/**
@@ -52,16 +64,8 @@ public class Car {
 	 */
 	public Car(){
 		this.increment = 0;
-		this.state = "stopped";
+		this.state = "idle";
 	}
-
-	/**
-	 * Overrides the default toString() method
-	 * Returns a string showing the direction and current position of the car.
-	 */
-	public String toString(){ 
-		return "direction is " + direction + ", current position is " + "<" + this.getCurrentPosition().getX() +"," + this.getCurrentPosition().getY() + ">"; 
-	} 
 
 
 	/**
@@ -71,128 +75,130 @@ public class Car {
 	 * @param layout current map layout
 	 */
 	public void move(Tile[][] layout){
-		System.out.println("increment: " + this.increment);
+		//stop car if it has reached its destination 
+		//this.checkCurrentIndex(); TODO: Implement end point
 		
-		
-		//First, check current state of car
-		//car is stopped, delay 1/2 second before moving
-		if(this.state.equals("stopped")) {
-			final int stopDelay = 1;
+		this.updateState(layout);
+		this.enQueue(layout);
+		this.updateIncrement();
+	}
+	
+	/**
+	 * Update the state of the current car.
+	 * @param layout map layout
+	 */
+	public void updateState(Tile[][] layout) {
+		Point nextTile = null;
+
+		switch (this.state) {
+		case "stopped":
+			break;
+			
+		case "waiting":
+			break;
+			
+		case "idle":
+			//stop car if not initialized on a road
+			int currX = this.getCurrentIndex().getX();
+			int currY = this.getCurrentIndex().getY();
+			if(layout[currY][currX].getClass().getSimpleName().equals("Road") == false) {
+				this.state = "stopped";
+			}
 			//one-half second has passed, begin moving
-			if((this.increment % stopDelay) == 0) {
-				String currPosClassName = layout[this.getCurrentPosition().getY()][this.getCurrentPosition().getX()].getClass().getSimpleName();
-				//car is currently in intersection, 'passing'
-				if(currPosClassName.equals("TrafficLight") || currPosClassName.equals("StopSign")) {
-					this.setState("passing");
-				//car is moving on road
-				} else {
-					this.setState("moving"); // change state to  moving
-				}
-				this.increment = 0; // reset increment
-				this.currentSpeed = 15;
+			if(this.increment > 0 && ((this.increment % stopDelay) == 0)) {
+				this.increment = 0;
+				this.state = "accel"; // change state to accel
 			}
+			break;
 			
-		//passing through intersection
-		} else if(this.state.equals("passing")) {
-			//get current tile position
-			int currX = this.getCurrentPosition().getX();
-			int currY = this.getCurrentPosition().getY();
-			Tile currTile = layout[currY][currX];
-			String currTileClassName = currTile.getClass().getSimpleName();
+		case "passing":
+			//get current intersection 
+			System.out.println("increment: " + this.increment); // TODO: remove debug statement
+			Point intersectionTile = this.getCarNextPoint(this.currentIndex);
 			//get possible turning directions
-			String builtDirections = ((Intersection) currTile).getBuiltDirections();
-			Point nextTile = null; // next tile to check based on current direction
-			/*
-			 * TODO: Change so that car waits at beginning of intersection for 
-			 * full length of intersection passage, then turns and updates positions.
-			 * 
-			 */
-			if(this.currentSpeed == 15) {
-				//5 seconds, through intersection, turn, move tile
-				if((this.increment % 10) == 0) {
-					this.setDirection(this.turn(builtDirections)); // turn (change dir)
-					nextTile = this.moveTile();
-					//update position if next tile is valid
-					if(this.checkTile(nextTile, layout) == true) {
-						this.setCurrentPosition(this.moveTile());
-						this.setState("moving");
-						this.setIncrement(0);
-					} else {
-						this.setState("deadend"); // road ends
-					}
+			String builtDirections = ((Intersection) SimulationMap.getTileAtIndex(intersectionTile)).getBuiltDirections();
+			//5 seconds, through intersection, turn, move tile
+			if(this.increment > 0 && (this.increment % passDelay) == 0) {
+				this.direction = this.turn(builtDirections); // turn (change dir)
+				nextTile = this.getCarNextPoint(intersectionTile);
+				//update position if next tile is valid
+				if(this.checkTile(nextTile, layout) == true) {
+					this.currentIndex = nextTile;
+					this.state = "accel";
+					this.increment = 0;
+				} else {
+					this.state = "stopped"; // road ends
 				}
-			} else if(this.currentSpeed == 30) {
-				//5 seconds, through intersection, turn, move tile
-				if((this.increment % 5) == 0) {
-					this.setDirection(this.turn(builtDirections)); // turn (change dir)
-					nextTile = this.moveTile();
-					//update position if next tile is valid
-					if(this.checkTile(nextTile, layout) == true) {
-						this.setCurrentPosition(this.moveTile());
-						this.setState("moving");
-						this.setIncrement(0);
-					} else {
-						this.setState("deadend");
-					}
-				}
-			}
+			} 
+			break;
 			
-		//car is moving on road
-		} else if(this.state.equals("moving")) {
-			Point nextTile = null;
-			if(this.currentSpeed == 15) {
-				//30 seconds, move tile
-				if((this.increment % 60) == 0) {
-					nextTile = this.moveTile();
-					//update position if next tile is valid
-					if(this.checkTile(nextTile, layout) == true) {
-						this.setCurrentPosition(this.moveTile());
-						this.currentSpeed = 30; //increase speed
-						this.increment = 0; // reset increment
-					} else {
-						this.setState("deadend"); //road ends
-					}
-				}
-			} else if(this.currentSpeed == 30) {
-				//15 seconds, move tile
-				if((this.increment % 30) == 0) {
-					nextTile = this.moveTile();
-					//update position if next tile is valid
-					if(this.checkTile(nextTile, layout) == true) {
-						this.setCurrentPosition(this.moveTile());
-						this.increment = 0; // reset increment
-					} else {
-						this.setState("deadend");
+		case "accel":
+			//30 seconds, move tile
+			if(this.increment > 0 && (this.increment % 60) == 0) {
+				nextTile = this.getCarNextPoint(this.currentIndex);
+				//update position if next tile is valid
+				if(this.checkTile(nextTile, layout) == true) {
+					this.currentIndex = nextTile;
+					this.state = "moving"; //increase speed
+					this.increment = 0; // reset increment
+				} else {
+					//next tile isn't valid and not waiting/passing at intersection
+					if(this.state.equals("accel")) {
+						this.state = "stopped"; // road ends
 					}
 				}
 			}
+			break;
+			
+		case "moving":
+			//15 seconds, move tile
+			if(this.increment > 0 && (this.increment % 30) == 0) {
+				nextTile = this.getCarNextPoint(this.currentIndex);
+				//update position if next tile is valid
+				if(this.checkTile(nextTile, layout) == true) {
+					this.currentIndex = nextTile;
+					this.increment = 0; // reset increment
+				} else {
+					//next tile isn't valid and not waiting/passing at intersection
+					if(this.state.equals("moving")) {
+						this.state = "stopped"; // road ends
+					}
+				}
+			}
+			break;
+		
+		default:
+			//default
+			break;
 		}
 		
-		// only update increment if car is not waiting at intersection or at a deadend
-		if(this.state.equals("waiting") == false && this.state.equals("deadend") == false) {
-			this.increment++;
+		
+	}
+	
+	/**
+	 * Adds car to appropriate queue if currently waiting at intersection
+	 * @param layout current map layout
+	 */
+	public void enQueue(Tile[][] layout) {
+		if(this.state.equals("waiting")) {
+			Point nextPoint = this.getCarNextPoint(this.currentIndex);
+			int nextX = nextPoint.getX();
+			int nextY = nextPoint.getY();
+			String className = layout[nextY][nextX].getClass().getSimpleName();
+			
+			if(className.equals("StopSign")) {
+				((StopSign) layout[nextY][nextX]).addCarToQueue(this);
+				this.state = "queued";
+					
+			} else if (className.equals("TrafficLight")) {
+				((TrafficLight) layout[nextY][nextX]).enQueue(this);
+				this.state = "queued";
+				
+			} else {
+				//default
+			}
 		}
-	}
-	
-	/**
-	 * Changes car's current state to 'stopped' which is used to indicate
-	 * to delay for 1/2 second before beginning to move.
-	 * 
-	 * Also sets current speed to 0.
-	 */
-	public void stop() {
-		this.state =  "stopped";
-		this.currentSpeed = 0;
-	}
-	
-	/**
-	 * Changes current car's state to 'waiting' for waiting at an intersection. 
-	 * 
-	 * Also sets current speed to 0.
-	 */
-	public void waiting() {
-		this.state =  "waiting";
-		this.currentSpeed = 0;
+				
 	}
 	
 	/**
@@ -201,22 +207,22 @@ public class Car {
 	 * 
 	 * @return the next tile point
 	 */
-	public Point moveTile() {
-		int currentX = this.getCurrentPosition().getX();
-		int currentY = this.getCurrentPosition().getY();
+	public Point getCarNextPoint(Point currentIndex) {
+		int currentXIndex = currentIndex.getX();
+		int currentYindex = currentIndex.getY();
 		switch (this.direction) {
 		case ">":
 			//go right
-			return new Point((currentX + 1), currentY);
+			return new Point((currentXIndex + 1), currentYindex);
 		case "<":
 			//go left
-			return new Point((currentX - 1), currentY);
+			return new Point((currentXIndex - 1), currentYindex);
 		case "^":
 			//go up
-			return new Point(currentX, (currentY - 1));
+			return new Point(currentXIndex, (currentYindex - 1));
 		case "v":
 			//go down
-			return new Point(currentX, (currentY + 1));
+			return new Point(currentXIndex, (currentYindex + 1));
 		default :
 			return null;
 		}
@@ -225,7 +231,8 @@ public class Car {
 
 	/**
 	 * Checks the next Tile Point position on the current map layout and
-	 * returns a boolean of 'true' if the tile is a valid one to move too.
+	 * returns a boolean of 'true' if the tile is a valid one to move to.
+	 * Updates the car's position if necessary
 	 * 
 	 * @param nextTile the car's next proposed position to check
 	 * @param layout the current map Tile layout
@@ -233,17 +240,15 @@ public class Car {
 	 */
 	public boolean checkTile(Point nextTile, Tile[][] layout) {
 		Tile tile = layout[nextTile.getY()][nextTile.getX()];
-		System.out.println(tile.getClass().getSimpleName());
-		
 		/*
 		 * Make sure road direction allows car's current travel direction
 		 */
 		if(tile.getClass().getSimpleName().equals("Road")) {
 			Road road = (Road) tile;
-			if((this.getDirection().equals(">") || this.getDirection().equals("<")) && road.getType().equals("road-horizontal")) {
+			if((this.getDirection().equals(">") || this.getDirection().equals("<")) && road.getClassType().equals("road-horizontal")) {
 				//car is traveling E/W and next tile is E/W road, allow to move
 				return true;
-			} else if((this.getDirection().equals("^") || this.getDirection().equals("v")) && road.getType().equals("road-verticle")) {
+			} else if((this.getDirection().equals("^") || this.getDirection().equals("v")) && road.getClassType().equals("road-verticle")) {
 				//car is traveling N/S and next tile is N/S road, allow to move
 				return true;
 			} else {
@@ -254,17 +259,17 @@ public class Car {
 		 * Next position is ground, search for valid direction to turn
 		 */
 		} else if(tile.getClass().getSimpleName().equals("Ground")) {
-			Point currentPoint = this.getCurrentPosition();
-			int currentX  = currentPoint.getX();
-			int currentY = currentPoint.getY(); 
+			Point currentIndex = this.getCurrentIndex();
+			int currentXIndex  = currentIndex.getX();
+			int currentYIndex = currentIndex.getY(); 
 			if(this.getDirection().equals("<") || this.getDirection().equals(">")) {
 				//can either turn north or south
 				//check north tile
-				if(layout[currentY - 1][currentX].getClass().getSimpleName().equals("Road")) {
+				if(layout[currentYIndex - 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
 					this.setDirection("^");
 					return true;
 				//check south tile
-				} else  if (layout[currentY + 1][currentX].getClass().getSimpleName().equals("Road")) {
+				} else  if (layout[currentYIndex + 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
 					this.setDirection("v");
 					return true;
 				} else {
@@ -274,11 +279,11 @@ public class Car {
 			} else if(this.getDirection().equals("^") || this.getDirection().equals("v")) {
 				//can either turn east or west 
 				//check east tile
-				if(layout[currentY][currentX + 1].getClass().getSimpleName().equals("Road")) {
+				if(layout[currentYIndex][currentXIndex + 1].getClass().getSimpleName().equals("Road")) {
 					this.setDirection(">");
 					return true;
 				//check west tile
-				} else  if (layout[currentY][currentX - 1].getClass().getSimpleName().equals("Road")) {
+				} else  if (layout[currentYIndex][currentXIndex - 1].getClass().getSimpleName().equals("Road")) {
 					this.setDirection("<");
 					return true;
 				} else {
@@ -294,32 +299,22 @@ public class Car {
 		 * Next position is a Stop Sign, add car to queue and have it wait
 		 */
 		} else if(tile.getClass().getSimpleName().equals("StopSign")) {
-			StopSign stopSign = (StopSign) tile;
-			this.waiting(); //have car wait
-			stopSign.addCarToQueue(this);
+			this.state = "waiting"; //have car wait
 			return false;
-		/*
-		 * TODO: Have car pass through for full time, then turn and continue on
-		 * Next position is a Traffic Light, check color and have car pass or wait 
-		 * at sign.
-		 */
 		
 		} else if(tile.getClass().getSimpleName().equals("TrafficLight")) {
-			TrafficLight trafficLight = (TrafficLight) tile;
-			if(trafficLight.getColor().contains(this.getDirection()) && trafficLight.getState().equals("empty")) {
-				this.setState("passing");
+			if(((TrafficLight) tile).getColor().contains(this.getDirection()) && ((TrafficLight) tile).getState().equals("empty")) {
+				this.state = "passing";
 				//light is green in traveling direction and no cross traffic
 				//car enters intersection 
-				return true;
-			} else if(trafficLight.getColor().contains(this.getDirection()) && trafficLight.getState().equals("passing")) {
-				//TODO: Light is green but has cross traffic, stop and wait
-				this.waiting(); //wait car
-				trafficLight.enQueue(this);
 				return false;
-			} else if(trafficLight.getColor().contains(this.getDirection()) == false) {
+			} else if(((TrafficLight) tile).getColor().contains(this.getDirection()) && ((TrafficLight) tile).getState().equals("passing")) {
+				//TODO: Light is green but has cross traffic, stop and wait
+				this.state = "waiting"; //wait car
+				return false;
+			} else if(((TrafficLight) tile).getColor().contains(this.getDirection()) == false) {
 				//light is red
-				this.waiting(); //wait car
-				trafficLight.enQueue(this);
+				this.state = "waiting"; //wait car
 				return false;
 			} else {
 				//default 
@@ -340,7 +335,13 @@ public class Car {
 	 * @return the car's new traveling direction, chosen randomly
 	 */
 	public String turn(String builtDirections) {
+		String oldDir = this.getDirection();
+		
+		//TODO: allow U-Turns if built directions is size 2
+		//currently keeps looping until it finds a valid non uturn
+		//infinite loop occurs if uturn is only possible turn
 		String oppDir;
+		
 		if(this.getDirection().equals("<")) {
 			oppDir = ">";
 		} else if(this.getDirection().equals(">")) {
@@ -353,14 +354,66 @@ public class Car {
 			oppDir = null;
 		}
 		
+		
 		int randInt = (int) (Math.random() * builtDirections.length());
 		String newDirection = Character.toString(builtDirections.charAt(randInt));
-		while(newDirection.equals(oppDir)) {
+		int count = 0;
+		while(newDirection.equals(oppDir) && count <= 4) {
+			
 			randInt = (int) (Math.random() * builtDirections.length());
 			newDirection = Character.toString(builtDirections.charAt(randInt));
+			count++;
 		}
+		
+		this.rotateCarEntity(oldDir, newDirection);
+		this.updateCarEntityTilePos(oldDir, newDirection);
 		System.out.println("New Direction: " + newDirection);
 		return newDirection;
+	}
+	/**
+	 * Log car infomation as json string.
+	 * @param log
+	 */
+	public void logCarInfo(String log) {
+		System.out.println(log);
+		this.logger.append("|"+log+"|");
+	}
+	
+	/**
+	 * rotates car entity's direction after it has turned
+	 * @param oldDir
+	 * @param newDir
+	 */
+	public void rotateCarEntity(String oldDir, String newDir) {
+		double currRotAng = this.getCarEntity().getRotation();
+		double rotAngDeg = RotationMapper.getRotationMapping().get(oldDir + newDir).doubleValue();
+		System.out.println("rotAngDeg: " + rotAngDeg);
+		this.getCarEntity().setRotation(currRotAng + rotAngDeg);
+	}
+	
+	/**
+	 * Checks current car index and stops car if it 
+	 * is at its destination point.
+	 */
+	public void checkCurrentIndex() {
+		int currX = this.getCurrentIndex().getX();
+		int currY = this.getCurrentIndex().getY();
+		
+		int stopX = this.getStopIndex().getX();
+		int stopY = this.getStopIndex().getY();
+		
+		if(currX == stopX && currY == stopY) {
+			this.state = "stopped";
+		}
+	}
+	
+	
+	/**
+	 * For advance debug
+	 * @return car logging status in string
+	 */
+	public String getLogger() {
+		return this.logger.toString();
 	}
 	
 	/**
@@ -427,6 +480,68 @@ public class Car {
 		this.increment = increment;
 	}
 	
+	public void updateIncrement() {
+		// only update increment if car is not waiting at intersection or at a deadend
+		if(this.state.equals("waiting") == false && this.state.equals("stopped") == false) {
+			this.increment++;
+			this.updateCarEntityPos();
+		}
+	}
+	
+	/**
+	 * updates the position of the car objects entity (gui) representation based on dir
+	 */
+	public void updateCarEntityPos() {
+		double carEntX = this.getCarEntity().getX();
+		double carEntY = this.getCarEntity().getY();
+		
+		int addVal = 0;
+		if(this.getState().equals("accel") || this.getState().equals("passing") ) {
+			addVal = 1;
+		} else if(this.state.equals("moving")) {
+			addVal = 2;
+		}
+			
+		if(this.state.equals("passing") == false) {
+			switch(this.getDirection()) 
+			{
+			case ">":
+				this.getCarEntity().setX(carEntX + addVal);
+				break;
+			case "^":
+				this.getCarEntity().setY(carEntY - addVal);
+				break;
+			case "<":
+				this.getCarEntity().setX(carEntX - addVal);
+				break;
+			case "v":
+				this.getCarEntity().setY(carEntY + addVal);
+				break;
+				
+			default:
+				//default
+				break;
+			}
+		
+		}
+	}
+	
+	/**
+	 * updates car entity position after car performs a turn
+	 */
+	public void updateCarEntityTilePos(String oldDir, String newDir) {
+		
+		double carEntX = this.getCarEntity().getX();
+		double carEntY = this.getCarEntity().getY();
+		
+		double shiftX = ShiftMapperX.getShiftMappingX().get(oldDir + newDir);
+		double shiftY = ShiftMapperY.getShiftMappingY().get(oldDir + newDir);
+	
+		this.getCarEntity().setX(carEntX + shiftX);
+		this.getCarEntity().setY(carEntY + shiftY);
+	}
+	
+	
 	/**
 	 * 
 	 * @return current state of car: 'stopped', 'waiting', 'passing', etc.
@@ -447,49 +562,64 @@ public class Car {
 	 * 
 	 * @return starting position (Point) of Car
 	 */
-	public Point getStart() {
-		return start;
+	public Point getStartIndex() {
+		return startIndex;
 	}
 	
 	/**
 	 * 
 	 * @param start set start position (Point) of Car
 	 */
-	public void setStart(Point start) {
-		this.start = start;
+	public void setStartIndex(Point startIndex) {
+		this.startIndex = startIndex;
 	}
 	
 	/**
 	 * 
 	 * @return get car's stopping position (Point)
 	 */
-	public Point getStop() {
-		return stop;
+	public Point getStopIndex() {
+		return stopIndex;
 	}
 	
 	/**
 	 * 
 	 * @param stop set car's stopping position (Point)
 	 */
-	public void setStop(Point stop) {
-		this.stop = stop;
+	public void setStopIndex(Point stopIndex) {
+		this.stopIndex = stopIndex;
 	}
 	
 	/**
 	 * 
 	 * @return current position (Point) of car
 	 */
-	public Point getCurrentPosition() {
-		return currentPosition;
+	public Point getCurrentIndex() {
+		return currentIndex;
+	}
+
+	public void setCurrentIndex(Point currentIndex) {
+		this.currentIndex = currentIndex;
+	}
+	
+	public Entity getCarEntity() {
+		return carEntity;
+	}
+
+	public void setCarEntity(Entity carEntity) {
+		this.carEntity = carEntity;
 	}
 	
 	/**
-	 * 
-	 * @param currentPosition sets current position (Point) of car
+	 * Overrides the default toString() method
+	 * Returns a string showing the direction and current position of the car.
 	 */
-	public void setCurrentPosition(Point currentPosition) {
-		this.currentPosition = currentPosition;
+	public String toString(){ 
+		return "direction is " + direction +
+				", current position is " + "<" + this.getCurrentIndex().getX() +"," + this.getCurrentIndex().getY() + ">" +
+				"state " + this.state +
+				"increment " + this.increment; 
 	}
-
+	
 }
 

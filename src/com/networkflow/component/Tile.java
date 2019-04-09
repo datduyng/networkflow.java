@@ -1,15 +1,22 @@
 package com.networkflow.component;
 
-public abstract class Tile {
+import com.almasb.fxgl.entity.Entity;
+
+public abstract class Tile{
 	
+	private Entity mapEntity;
 	protected int numCarPass;
 	
 	Point mapIndex;
 	Point position;
-	String type; // added @dat
+	String generalType;
+	String classType;
 	
-	public Tile() {
-		this.numCarPass = 0;
+
+
+	
+	public Tile(String generalType) {
+		this.generalType = generalType;
 	}
 	
 	public Tile(Point mapIndex, Point position) {
@@ -17,26 +24,96 @@ public abstract class Tile {
 		this.position = position;
 	}
 	
+	public Tile(Entity mapEntity, int numCarPass, Point mapIndex, Point position, String type) {
+		super();
+		this.mapEntity = mapEntity;
+		this.numCarPass = numCarPass;
+		this.mapIndex = mapIndex;
+		this.position = position;
+		this.generalType = generalType;
+	}
 	/**
 	 * This function take a String indicate tile type
 	 * then return corresponding object that implement
 	 * Tile
-	 * //////////////////TODO:///////////////
+	 * 
 	 * @param <T>
 	 * @param type
 	 * @return
 	 */
-	public static Tile initTileType(String generalType, String classType, Point mapIndex) {
-		if(generalType.equalsIgnoreCase("ground")) {
+	public static Tile initTileType(String classType, Point mapIndex) {
+		switch(classType) {
+		case "construction-man":
 			return new Ground(classType);
-		} else if(generalType.equalsIgnoreCase("road")) {
+			
+		case "construction-barrier":
+			return new Ground(classType);
+			
+		case "grass":
+			return new Ground(classType);
+		
+		case "ground":
+			return new Ground(classType);
+			
+		case "water":
+			return new Ground(classType);
+		
+		case "road-horizontal":
 			return new Road(classType);
-		} else if(generalType.equalsIgnoreCase("stop-sign")) {
-			return new StopSign(classType, mapIndex);
-		} else if(generalType.equalsIgnoreCase("traffic-light")) {
-			return new TrafficLight(classType, mapIndex);
-		}
-		return null;
+			
+		case "road-verticle":
+			return new Road(classType);
+			
+		case "stop-sign":
+			return new StopSign(mapIndex);
+			
+		case "traffic-light":
+			return new TrafficLight(mapIndex);
+		
+		default:
+			//default
+			System.out.println("Tile Type does not Exist!!!!!!!!!!");
+			return null;
+			
+		}	
+	}
+	
+	
+	/************getter and setters********/
+	public Entity getMapEntity() {
+		return mapEntity;
+	}
+
+	public void setMapEntity(Entity mapEntity) {
+		this.mapEntity = mapEntity;
+	}
+
+	public Point getMapIndex() {
+		return mapIndex;
+	}
+
+	public void setMapIndex(Point mapIndex) {
+		this.mapIndex = mapIndex;
+	}
+
+	public Point getPosition() {
+		return position;
+	}
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+
+	public String getGeneralType() {
+		return generalType;
+	}
+
+	public void setGeneralType(String generalType) {
+		this.generalType = generalType;
+	}
+
+	public void setNumCarPass(int numCarPass) {
+		this.numCarPass = numCarPass;
 	}
 
 	/**
@@ -45,6 +122,10 @@ public abstract class Tile {
 	 */
 	public int getNumCarPass() {
 		return this.numCarPass;
+	}
+	
+	public String getClassType() {
+		return classType;
 	}
 	
 }

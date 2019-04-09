@@ -12,36 +12,35 @@ package com.networkflow.component;
 
 public class Ground extends Tile{
 	
-	private String type;
 
 	/**
 	 * Default Constructor
 	 */
 	public Ground() {
-		super();
-		this.type = "Ground";
+		super("ground");
 	}
 	
 	/**
 	 * Constructor w/ type
 	 * @param type type of ground: 'ground', 'grass', etc.
 	 */
-	public Ground(String type) {
-		this.type = type;
+	public Ground(String classType) {
+		super("ground");
+		this.classType = classType;
 	}
  	
 	/**
 	 * 
 	 * @return type of ground
 	 */
-	public String getType() {
-		return this.type;
+	public String getGeneralType() {
+		return this.generalType;
 	}
 	
 	/**
 	 * returns String of the type of Ground
 	 */
 	public String toString() {
-		return this.type;
+		return this.classType;
 	}
 }

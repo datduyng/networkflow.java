@@ -1,5 +1,5 @@
 package com.networkflow.component;
-
+import javafx.beans.property.IntegerProperty;
 /**
  * Models a Point object that has integer x and y coordinates.
  * 
@@ -11,8 +11,8 @@ package com.networkflow.component;
 
 public class Point {
 	
-	public int x;
-	public int y;
+	private int x;
+	private int y;
 	
 	/**
 	 * Constructor w/ x and y coordinates
@@ -20,8 +20,8 @@ public class Point {
 	 * @param y-axis coordinate
 	 */
 	public Point(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.setX(x);
+		this.setY(y);
 	}
 	
 	/**
@@ -67,14 +67,14 @@ public class Point {
 	 * Increments the y-axis coordinate by 1
 	 */
 	public void increaseY() {
-		this.y++;
+		this.y+=1;
 	}
 	
 	/**
 	 * Decrements the x-axis coordinate by 1
 	 */
 	public void decreaseX() {
-		this.x--;
+		this.x-=1;
 	}
 	
 	/**

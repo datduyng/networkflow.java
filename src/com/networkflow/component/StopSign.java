@@ -1,6 +1,6 @@
 package com.networkflow.component;
 
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 
 /**
  * Models a Stop Sign object extending from Intersection.
@@ -12,61 +12,51 @@ import java.util.PriorityQueue;
  *
  */
 
-public class StopSign extends Intersection {
+public class StopSign extends Intersection{
 	
-	private PriorityQueue<Car> carEnter;
+	private LinkedList<Car> carEnter;
 	private String state;
 	
 	/**
 	 * Default constructor
 	 */
 	public StopSign() {
-		this.type = "stop-sign";
+		super("stop-sign");
+		this.generalType = "stop-sign";
 		this.state = "empty";
 		this.increment = 0;
 		this.mapIndex = new Point(0,0);
-		this.carEnter = new PriorityQueue<Car>();
+		this.carEnter = new LinkedList<Car>();
 	}
 	
 	/**
-	 * Constructor with type
-	 * @param type 'stop-sign'
-	 */
-	public StopSign(String type) {
-		this.type = type;
-		this.state = "empty";
-		this.increment = 0;
-		this.mapIndex = new Point(0,0);
-		this.carEnter = new PriorityQueue<Car>();
-	
-	}
-	
-	/**
-	 * Constructor w/ type and index
+	 * Constructor w/ index
 	 * @param type
 	 * @param mapIndex
 	 */
-	public StopSign(String type, Point mapIndex) {
+	public StopSign(Point mapIndex) {
+		super("stop-sign");
+		this.generalType = "stop-sign";
 		this.mapIndex = mapIndex;
-		this.type = type;
 		this.state = "empty";
 		this.increment = 0;
-		this.carEnter = new PriorityQueue<Car>();
+		this.carEnter = new LinkedList<Car>();
 	}
 	
 	/**
-	 * Constructor w/ type, index, and directions
+	 * Constructor w/index, and directions
 	 * @param type
 	 * @param mapIndex
 	 * @param builtDirections
 	 */
-	public StopSign(String type, Point mapIndex, String builtDirections) {
+	public StopSign(Point mapIndex, String builtDirections) {
+		super("stop-sign");
+		this.generalType = "stop-sign";
 		this.mapIndex = mapIndex;
 		this.builtDirections = builtDirections;
-		this.type = type;
 		this.state = "empty";
 		this.increment = 0;
-		this.carEnter = new PriorityQueue<Car>();
+		this.carEnter = new LinkedList<Car>();
 	}
 	
 	/**
@@ -76,9 +66,8 @@ public class StopSign extends Intersection {
 	 */
 	public boolean addCarToQueue(Car car) {
 		boolean carAdded = this.carEnter.add(car);
-		if(this.carEnter.isEmpty() == false) {
-			this.setState("passing");
-		}
+		//System.out.println("carAdded: " + carAdded);
+		//System.out.println("Size of queue: " + this.carEnter.size());
 		return carAdded;
 	}
 
@@ -88,15 +77,15 @@ public class StopSign extends Intersection {
 	 * @return Car
 	 */
 	public void deQueue() {
-		Car car = this.carEnter.peek();
-		if(car != null) {
-			car.setCurrentPosition(car.moveTile());
-			car.setIncrement(0);
-			car.setState("stopped");
-			this.carEnter.remove();
-		}
-		if(this.carEnter.isEmpty()) {
-			this.setState("empty");
+		if(this.state.equals("empty")) {
+			Car car = this.carEnter.peek();
+			//System.out.println(this.getCarEnter().size());
+			if(car != null) {
+				car.setState("passing");
+				this.state = "passing";
+				car.setIncrement(0);
+				this.carEnter.removeFirst();
+			}
 		}
 	}
 
@@ -106,14 +95,25 @@ public class StopSign extends Intersection {
 	 * to pass through.
 	 */
 	public void updateIncrement() {
-		this.deQueue();	
+		
+		this.deQueue(); // dequeue car 
+		
+		//Let car pass for 5 seconds before getting the next one 
+		if(this.state.equals("passing")) {
+			this.increment++;
+			
+			if(this.increment > 0 && this.increment % 10 == 0) {
+				this.increment = 0;
+				this.state = "empty";
+			}
+		}
 	}
 	
-	public PriorityQueue<Car> getCarEnter() {
+	public LinkedList<Car> getCarEnter() {
 		return this.carEnter;
 	}
 	
-	public void setCarEnter(PriorityQueue<Car> carEnter) {
+	public void setCarEnter(LinkedList<Car> carEnter) {
 		this.carEnter = carEnter;
 	}
 	
@@ -126,7 +126,7 @@ public class StopSign extends Intersection {
 	}
 	
 	public String toString() {
-		return this.state;
+		return this.classType;
 	}
 
 }

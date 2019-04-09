@@ -2,8 +2,11 @@ package com.networkflow.unitest;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+
 import com.networkflow.component.Car;
 import com.networkflow.component.Intersection;
+import com.networkflow.component.JSONProcessor;
 import com.networkflow.component.SimulationMap;
 import com.networkflow.component.StopSign;
 import com.networkflow.component.TrafficLight;
@@ -12,6 +15,12 @@ import com.networkflow.component.TrafficLight;
 public class cs03_25_19_addComments_test {
 
 	public static void main(String args[]) {
+		
+		JSONArray tiles = JSONProcessor.getTiles("simulation-data/map08.json");
+		JSONArray cars = JSONProcessor.getCars("simulation-data/map08.json");
+		
+		/*
+		 
 		SimulationMap map = new SimulationMap(30, 30);
 		
 		map.loadComponents("./simulation-data/map08.json");
@@ -47,5 +56,7 @@ public class cs03_25_19_addComments_test {
 			} //sleep for 1/2 second
 			count++;
 		}
+		
+		*/
 	}
 }
