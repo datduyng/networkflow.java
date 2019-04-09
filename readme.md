@@ -8,7 +8,17 @@
 
 ## Quick Intro
 
-<center><img src="https://user-images.githubusercontent.com/35666615/54955307-efa7b400-4f1a-11e9-81db-8a74db918069.gif"></center>
+**Desktop app**
+
+<center><img src="https://user-images.githubusercontent.com/35666615/55765742-c4eb4e80-5a36-11e9-8939-98459d89523e.PNG"></center>
+
+Overview of NetworkFlow Desktop app. [here]()
+
+**Online App**
+
+<center><img src="https://user-images.githubusercontent.com/35666615/55765587-fe6f8a00-5a35-11e9-90aa-df35de9f5b87.gif"></center>
+
+
 
 ## Teams archives
 - Team Docs (SDD/ RAD/ slides/.....).[Link](https://1drv.ms/f/s!Ao4rMqb_sxm7hekkgVly3Rf05hR_0Q)
