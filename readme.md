@@ -10,7 +10,7 @@
 
 **Desktop app**
 
-<center><img height="400" width="400" src="https://user-images.githubusercontent.com/35666615/55765742-c4eb4e80-5a36-11e9-8939-98459d89523e.PNG"></center>
+<center><img height="400" width="480" src="https://user-images.githubusercontent.com/35666615/55765742-c4eb4e80-5a36-11e9-8939-98459d89523e.PNG"></center>
 
 Overview of NetworkFlow Desktop app. [here]()
 
