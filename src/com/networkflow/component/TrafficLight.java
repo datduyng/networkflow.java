@@ -86,9 +86,9 @@ public class TrafficLight extends Intersection {
 		int nsSize = this.nsTraffic.size();
 		int ewSize = this.ewTraffic.size();
 		
-		if(this.color.equals("<>") && nsSize > 0) {
+		if(this.color.equals("<>") && ewSize == 0 && nsSize > 0) {
 			this.switchColor();
-		} else if (this.color.equals("^v") && ewSize > 0) {
+		} else if (this.color.equals("^v") && nsSize == 0 && ewSize > 0) {
 			this.switchColor();
 		}
 		
