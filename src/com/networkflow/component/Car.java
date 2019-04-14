@@ -1,6 +1,7 @@
 package com.networkflow.component;
 
 import com.almasb.fxgl.entity.Entity;
+import com.networkflow.app.AppMain;
 import com.networkflow.component.Point;
 import java.lang.StringBuilder;
 
@@ -145,6 +146,8 @@ public class Car {
 					//next tile isn't valid and not waiting/passing at intersection
 					if(this.state.equals("accel")) {
 						this.state = "stopped"; // road ends
+					} else if (this.state.equals("turningAround")) {
+						this.state = "accel";
 					}
 				}
 			}
@@ -162,6 +165,8 @@ public class Car {
 					//next tile isn't valid and not waiting/passing at intersection
 					if(this.state.equals("moving")) {
 						this.state = "stopped"; // road ends
+					} else if (this.state.equals("turningAround")) {
+						this.state = "moving";
 					}
 				}
 			}
@@ -239,90 +244,105 @@ public class Car {
 	 * @return 'true' if valid, otherwise 'false'
 	 */
 	public boolean checkTile(Point nextTile, Tile[][] layout) {
-		Tile tile = layout[nextTile.getY()][nextTile.getX()];
-		/*
-		 * Make sure road direction allows car's current travel direction
-		 */
-		if(tile.getClass().getSimpleName().equals("Road")) {
-			Road road = (Road) tile;
-			if((this.getDirection().equals(">") || this.getDirection().equals("<")) && road.getClassType().equals("road-horizontal")) {
-				//car is traveling E/W and next tile is E/W road, allow to move
-				return true;
-			} else if((this.getDirection().equals("^") || this.getDirection().equals("v")) && road.getClassType().equals("road-verticle")) {
-				//car is traveling N/S and next tile is N/S road, allow to move
-				return true;
-			} else {
-				//search for directions to turn shouldn't happen
-				return false;
-			}
-		/*
-		 * Next position is ground, search for valid direction to turn
-		 */
-		} else if(tile.getClass().getSimpleName().equals("Ground")) {
-			Point currentIndex = this.getCurrentIndex();
-			int currentXIndex  = currentIndex.getX();
-			int currentYIndex = currentIndex.getY(); 
-			if(this.getDirection().equals("<") || this.getDirection().equals(">")) {
-				//can either turn north or south
-				//check north tile
-				if(layout[currentYIndex - 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
-					this.setDirection("^");
+		Tile tile = null;
+		int xMaxIndex = layout[0].length - 1;
+		int yMaxIndex = layout.length - 1;
+		int nextX = nextTile.getX();
+		int nextY = nextTile.getY();
+		
+		if(nextX >= 0 && nextX <= xMaxIndex && nextY >= 0 && nextY <= yMaxIndex) {
+			tile = layout[nextTile.getY()][nextTile.getX()];
+		}
+		//tile is null, car is traveling on road going off of the map
+		//turn car around 
+		if(tile == null) {
+			this.turnAround();
+			return false;
+		} else {
+			/*
+			 * Make sure road direction allows car's current travel direction
+			 */
+			if(tile.getClass().getSimpleName().equals("Road")) {
+				Road road = (Road) tile;
+				if((this.getDirection().equals(">") || this.getDirection().equals("<")) && road.getClassType().equals("road-horizontal")) {
+					//car is traveling E/W and next tile is E/W road, allow to move
 					return true;
-				//check south tile
-				} else  if (layout[currentYIndex + 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
-					this.setDirection("v");
+				} else if((this.getDirection().equals("^") || this.getDirection().equals("v")) && road.getClassType().equals("road-verticle")) {
+					//car is traveling N/S and next tile is N/S road, allow to move
 					return true;
+				} else {
+					//search for directions to turn shouldn't happen
+					return false;
+				}
+			/*
+			 * Next position is ground, search for valid direction to turn
+			 */
+			} else if(tile.getClass().getSimpleName().equals("Ground")) {
+				Point currentIndex = this.getCurrentIndex();
+				int currentXIndex  = currentIndex.getX();
+				int currentYIndex = currentIndex.getY(); 
+				if(this.getDirection().equals("<") || this.getDirection().equals(">")) {
+					//can either turn north or south
+					//check north tile
+					if(layout[currentYIndex - 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
+						this.setDirection("^");
+						return true;
+					//check south tile
+					} else  if (layout[currentYIndex + 1][currentXIndex].getClass().getSimpleName().equals("Road")) {
+						this.setDirection("v");
+						return true;
+					} else {
+						//default
+						return false;
+					}
+				} else if(this.getDirection().equals("^") || this.getDirection().equals("v")) {
+					//can either turn east or west 
+					//check east tile
+					if(layout[currentYIndex][currentXIndex + 1].getClass().getSimpleName().equals("Road")) {
+						this.setDirection(">");
+						return true;
+					//check west tile
+					} else  if (layout[currentYIndex][currentXIndex - 1].getClass().getSimpleName().equals("Road")) {
+						this.setDirection("<");
+						return true;
+					} else {
+						//default
+						return false;
+					}
 				} else {
 					//default
 					return false;
 				}
-			} else if(this.getDirection().equals("^") || this.getDirection().equals("v")) {
-				//can either turn east or west 
-				//check east tile
-				if(layout[currentYIndex][currentXIndex + 1].getClass().getSimpleName().equals("Road")) {
-					this.setDirection(">");
-					return true;
-				//check west tile
-				} else  if (layout[currentYIndex][currentXIndex - 1].getClass().getSimpleName().equals("Road")) {
-					this.setDirection("<");
-					return true;
+			
+			/*
+			 * Next position is a Stop Sign, add car to queue and have it wait
+			 */
+			} else if(tile.getClass().getSimpleName().equals("StopSign")) {
+				this.state = "waiting"; //have car wait
+				return false;
+			
+			} else if(tile.getClass().getSimpleName().equals("TrafficLight")) {
+				if(((TrafficLight) tile).getColor().contains(this.getDirection()) && ((TrafficLight) tile).getState().equals("empty")) {
+					this.state = "passing";
+					//light is green in traveling direction and no cross traffic
+					//car enters intersection 
+					return false;
+				} else if(((TrafficLight) tile).getColor().contains(this.getDirection()) && ((TrafficLight) tile).getState().equals("passing")) {
+					//TODO: Light is green but has cross traffic, stop and wait
+					this.state = "waiting"; //wait car
+					return false;
+				} else if(((TrafficLight) tile).getColor().contains(this.getDirection()) == false) {
+					//light is red
+					this.state = "waiting"; //wait car
+					return false;
 				} else {
-					//default
+					//default 
 					return false;
 				}
 			} else {
 				//default
 				return false;
 			}
-		
-		/*
-		 * Next position is a Stop Sign, add car to queue and have it wait
-		 */
-		} else if(tile.getClass().getSimpleName().equals("StopSign")) {
-			this.state = "waiting"; //have car wait
-			return false;
-		
-		} else if(tile.getClass().getSimpleName().equals("TrafficLight")) {
-			if(((TrafficLight) tile).getColor().contains(this.getDirection()) && ((TrafficLight) tile).getState().equals("empty")) {
-				this.state = "passing";
-				//light is green in traveling direction and no cross traffic
-				//car enters intersection 
-				return false;
-			} else if(((TrafficLight) tile).getColor().contains(this.getDirection()) && ((TrafficLight) tile).getState().equals("passing")) {
-				//TODO: Light is green but has cross traffic, stop and wait
-				this.state = "waiting"; //wait car
-				return false;
-			} else if(((TrafficLight) tile).getColor().contains(this.getDirection()) == false) {
-				//light is red
-				this.state = "waiting"; //wait car
-				return false;
-			} else {
-				//default 
-				return false;
-			}
-		} else {
-			//default
-			return false;
 		}
 	}
 	
@@ -369,6 +389,44 @@ public class Car {
 		this.updateCarEntityTilePos(oldDir, newDirection);
 		System.out.println("New Direction: " + newDirection);
 		return newDirection;
+	}
+	
+	/**
+	 * Have car turn around (make U-turn) when traveling on 
+	 * road that goes off of the map.
+	 */
+	public void turnAround() {
+		this.increment = 0;
+		this.state = "turningAround";
+		double currRotAng = this.getCarEntity().getRotation();
+		double currEntX = this.getCarEntity().getX();
+		double currEntY = this.getCarEntity().getY();
+		this.getCarEntity().setRotation(currRotAng + 180);
+		switch(this.direction) {
+		case ">":
+			this.direction = "<";
+			this.getCarEntity().setX(currEntX + (AppMain.getSimulationMap().getPixelSize() / 2));
+			this.getCarEntity().setY(currEntY - (AppMain.getSimulationMap().getPixelSize() / 2));
+			break;
+		case "<":
+			this.direction = ">";
+			this.getCarEntity().setX(currEntX - (AppMain.getSimulationMap().getPixelSize() / 2));
+			this.getCarEntity().setY(currEntY + (AppMain.getSimulationMap().getPixelSize() / 2));
+			break;	
+		case "^":
+			this.direction = "v";
+			this.getCarEntity().setX(currEntX - (AppMain.getSimulationMap().getPixelSize() / 2));
+			this.getCarEntity().setY(currEntY - (AppMain.getSimulationMap().getPixelSize() / 2));
+			break;	
+		case "v":
+			this.direction = "^";
+			this.getCarEntity().setX(currEntX + (AppMain.getSimulationMap().getPixelSize() / 2));
+			this.getCarEntity().setY(currEntY + (AppMain.getSimulationMap().getPixelSize() / 2));
+			break;
+		default:
+			//default
+			break;
+		}
 	}
 	/**
 	 * Log car infomation as json string.

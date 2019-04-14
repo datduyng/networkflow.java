@@ -83,6 +83,15 @@ public class TrafficLight extends Intersection {
 		//System.out.println("size: " + this.nsTraffic.size());
 		this.increment++;
 		
+		int nsSize = this.nsTraffic.size();
+		int ewSize = this.ewTraffic.size();
+		
+		if(this.color.equals("<>") && nsSize > 0) {
+			this.switchColor();
+		} else if (this.color.equals("^v") && ewSize > 0) {
+			this.switchColor();
+		}
+		
 		//allow 5 seconds for car to pass through light
 		if(this.state.equals("passing")) {
 			this.passingInc++;
@@ -97,12 +106,11 @@ public class TrafficLight extends Intersection {
 		}
 		//240 - 1/2 seconds = 120 seconds (2 min)
 		if(this.increment > 0 && this.increment % 240 == 0) {
-			this.increment = 0;
 			this.switchColor();
-			this.rotateTrafficLightEntity();
 
 		}
 	}
+	
 	
 	/**
 	 * Switches traffic-light color
@@ -113,6 +121,8 @@ public class TrafficLight extends Intersection {
 		} else if(this.color.equals("^v")) {
 			this.color = "<>";
 		}
+		this.increment = 0;
+		this.rotateTrafficLightEntity();
 	}
 	
 	/**
