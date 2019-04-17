@@ -326,6 +326,9 @@ public class Car {
 			} else if(tile.getClass().getSimpleName().equals("TrafficLight")) {
 				if(((TrafficLight) tile).getColor().contains(this.getDirection()) && ((TrafficLight) tile).getState().equals("empty")) {
 					this.state = "passing";
+					int currNumPassed = ((TrafficLight) tile).getNumPassed();
+					currNumPassed = currNumPassed + 1;
+					((TrafficLight) tile).setNumPassed(currNumPassed);
 					//light is green in traveling direction and no cross traffic
 					//car enters intersection 
 					return false;
