@@ -1,4 +1,4 @@
-package com.networkflow.app;
+package src.com.networkflow.app;
 
 
 import java.awt.Event;
@@ -26,6 +26,7 @@ import com.networkflow.component.JSONProcessor;
 import com.networkflow.component.SimulationMap;
 import com.networkflow.component.Tile;
 import com.networkflow.component.TrafficLight;
+import com.networkflow.component.StopSign;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -129,7 +130,31 @@ public class AppMain extends GameApplication {
 				Entity tileEntity = getGameWorld().spawn(classType, spawnX, spawnY);
 				//set traffic-light entity for visually updating traffic directions
 				if(classType.equals("traffic-light")) {
-					((TrafficLight) simulationMap.getLayout()[y][x]).setTrafficLightEntity(tileEntity);
+					TrafficLight tl = ((TrafficLight) simulationMap.getLayout()[y][x]);
+					tl.setIntEntity(tileEntity);
+					//event handler for clicking on traffic light
+					EventHandler<MouseEvent> trafficLightClick = new EventHandler<MouseEvent> () {
+						 public void handle(MouseEvent e){ 
+							 AgentInfoView.getIntStateStr().set(tl.getState());
+							 AgentInfoView.getIntNumPassed().set(Integer.toString(tl.getNumPassed()));
+						 }
+					};
+					
+					//add event handler for car entity
+					tl.getIntEntity().getView().setOnMouseClicked(trafficLightClick);
+				} else if(classType.equals("stop-sign")) {
+					StopSign ss = ((StopSign) simulationMap.getLayout()[y][x]);
+					ss.setIntEntity(tileEntity);
+					//event handler for clicking on stop sign
+					EventHandler<MouseEvent> stopSignClick = new EventHandler<MouseEvent> () {
+						 public void handle(MouseEvent e){ 
+							 AgentInfoView.getIntStateStr().set(ss.getState());
+							 AgentInfoView.getIntNumPassed().set(Integer.toString(ss.getNumPassed()));
+						 }
+					};
+					
+					//add event handler for car entity
+					ss.getIntEntity().getView().setOnMouseClicked(stopSignClick);
 				}
 
 			}
@@ -194,7 +219,7 @@ public class AppMain extends GameApplication {
 			EventHandler<MouseEvent> carClicked = new EventHandler<MouseEvent> () {
 				 public void handle(MouseEvent e){ 
 					 String currCarState = car.getState();
-					 AgentInfoView.getStateStr().set(currCarState);
+					 AgentInfoView.getCarStateStr().set(currCarState);
 					 switch(currCarState) {
 					 case "accel" : 
 						 AgentInfoView.getSpeedStr().set("15 mph");

@@ -1,8 +1,10 @@
 package com.networkflow.component;
 
 import com.almasb.fxgl.entity.Entity;
-import com.networkflow.app.AppMain;
 import com.networkflow.component.Point;
+
+import src.com.networkflow.app.AppMain;
+
 import java.lang.StringBuilder;
 
 /**

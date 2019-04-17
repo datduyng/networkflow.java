@@ -23,8 +23,6 @@ public class TrafficLight extends Intersection {
 	private LinkedList<Car> nsTraffic;
 	private LinkedList<Car> ewTraffic;
 	
-	Entity trafficLightEntity;
-	
 	/**
 	 * Default constructor
 	 */
@@ -36,6 +34,7 @@ public class TrafficLight extends Intersection {
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
 		this.passingInc = 0;
+		this.numPassed = 0;
 	}
 
 	/**
@@ -52,6 +51,7 @@ public class TrafficLight extends Intersection {
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
 		this.passingInc = 0;
+		this.numPassed = 0;
 
 	}
 	
@@ -71,6 +71,7 @@ public class TrafficLight extends Intersection {
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
 		this.passingInc = 0;
+		this.numPassed = 0;
 
 	}
 	
@@ -167,6 +168,7 @@ public class TrafficLight extends Intersection {
 				this.state = "passing";
 				//System.out.println("dequeud car state: " + car.getState());
 				car.setIncrement(0);
+				this.numPassed++;
 			}
 		} else if (this.color.equals("<>")) {
 			car = this.ewTraffic.peek();
@@ -175,6 +177,7 @@ public class TrafficLight extends Intersection {
 				car.setState("passing");
 				this.state = "passing";
 				car.setIncrement(0);
+				this.numPassed++;
 			}
 		} else {
 			//default
@@ -182,8 +185,8 @@ public class TrafficLight extends Intersection {
 	}
 	
 	public void rotateTrafficLightEntity() {
-		double oldRotAng = this.trafficLightEntity.getRotation();
-		this.trafficLightEntity.setRotation(oldRotAng + 90);
+		double oldRotAng = this.intEntity.getRotation();
+		this.intEntity.setRotation(oldRotAng + 90);
 	}
 	
 	public String getState() {
@@ -204,15 +207,6 @@ public class TrafficLight extends Intersection {
 	
 	public void setColor(String color) {
 		this.color = color;
-	}
-	
-	public Entity getTrafficLightEntity() {
-		return trafficLightEntity;
-	}
-
-
-	public void setTrafficLightEntity(Entity trafficLightEntity) {
-		this.trafficLightEntity = trafficLightEntity;
 	}
  	
 	public String toString() {

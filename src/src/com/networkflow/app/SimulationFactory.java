@@ -1,4 +1,4 @@
-package com.networkflow.app;
+package src.com.networkflow.app;
 
 import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.entity.Entities;

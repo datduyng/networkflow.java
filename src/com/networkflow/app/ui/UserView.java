@@ -5,7 +5,6 @@ package com.networkflow.app.ui;
  * https://docs.oracle.com/javafx/2/ui_controls/file-chooser.htm
  */
 import com.almasb.fxgl.ui.InGameWindow;
-import com.networkflow.app.AppMain;
 import com.networkflow.apputils.AppException;
 import com.networkflow.component.SimulationMap;
 
@@ -42,6 +41,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import src.com.networkflow.app.AppMain;
 import javafx.scene.layout.VBox;
 
 

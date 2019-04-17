@@ -5,7 +5,7 @@ import com.almasb.fxgl.entity.Entity;
 public abstract class Tile{
 	
 	private Entity mapEntity;
-	protected int numCarPass;
+	//protected int numCarPass;
 	
 	Point mapIndex;
 	Point position;
@@ -24,10 +24,10 @@ public abstract class Tile{
 		this.position = position;
 	}
 	
-	public Tile(Entity mapEntity, int numCarPass, Point mapIndex, Point position, String type) {
+	public Tile(Entity mapEntity, Point mapIndex, Point position, String type) {
 		super();
 		this.mapEntity = mapEntity;
-		this.numCarPass = numCarPass;
+		//this.numCarPass = numCarPass;
 		this.mapIndex = mapIndex;
 		this.position = position;
 		this.generalType = generalType;
@@ -112,17 +112,22 @@ public abstract class Tile{
 		this.generalType = generalType;
 	}
 
+	/*
 	public void setNumCarPass(int numCarPass) {
 		this.numCarPass = numCarPass;
 	}
-
+	*/
+	
 	/**
 	 * Gets attribute of the specific tile
 	 * @return the number of cars that have passed through this tile
 	 */
+	/*
 	public int getNumCarPass() {
 		return this.numCarPass;
 	}
+	
+	*/
 	
 	public String getClassType() {
 		return classType;

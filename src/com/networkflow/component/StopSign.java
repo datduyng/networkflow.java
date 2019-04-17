@@ -27,6 +27,7 @@ public class StopSign extends Intersection{
 		this.increment = 0;
 		this.mapIndex = new Point(0,0);
 		this.carEnter = new LinkedList<Car>();
+		this.numPassed = 0;
 	}
 	
 	/**
@@ -41,6 +42,7 @@ public class StopSign extends Intersection{
 		this.state = "empty";
 		this.increment = 0;
 		this.carEnter = new LinkedList<Car>();
+		this.numPassed = 0;
 	}
 	
 	/**
@@ -57,6 +59,7 @@ public class StopSign extends Intersection{
 		this.state = "empty";
 		this.increment = 0;
 		this.carEnter = new LinkedList<Car>();
+		this.numPassed = 0;
 	}
 	
 	/**
@@ -85,6 +88,7 @@ public class StopSign extends Intersection{
 				this.state = "passing";
 				car.setIncrement(0);
 				this.carEnter.removeFirst();
+				this.numPassed++;
 			}
 		}
 	}
