@@ -23,8 +23,6 @@ public class TrafficLight extends Intersection {
 	private LinkedList<Car> nsTraffic;
 	private LinkedList<Car> ewTraffic;
 	
-	Entity trafficLightEntity;
-	
 	/**
 	 * Default constructor
 	 */
@@ -36,6 +34,7 @@ public class TrafficLight extends Intersection {
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
 		this.passingInc = 0;
+		this.numPassed = 0;
 	}
 
 	/**
@@ -52,6 +51,7 @@ public class TrafficLight extends Intersection {
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
 		this.passingInc = 0;
+		this.numPassed = 0;
 
 	}
 	
@@ -71,6 +71,7 @@ public class TrafficLight extends Intersection {
 		this.nsTraffic = new LinkedList<Car>();
 		this.ewTraffic = new LinkedList<Car>();
 		this.passingInc = 0;
+		this.numPassed = 0;
 
 	}
 	
@@ -82,6 +83,15 @@ public class TrafficLight extends Intersection {
 	public void updateIncrement() {
 		//System.out.println("size: " + this.nsTraffic.size());
 		this.increment++;
+		
+		int nsSize = this.nsTraffic.size();
+		int ewSize = this.ewTraffic.size();
+		
+		if(this.color.equals("<>") && ewSize == 0 && nsSize > 0) {
+			this.switchColor();
+		} else if (this.color.equals("^v") && nsSize == 0 && ewSize > 0) {
+			this.switchColor();
+		}
 		
 		//allow 5 seconds for car to pass through light
 		if(this.state.equals("passing")) {
@@ -97,12 +107,11 @@ public class TrafficLight extends Intersection {
 		}
 		//240 - 1/2 seconds = 120 seconds (2 min)
 		if(this.increment > 0 && this.increment % 240 == 0) {
-			this.increment = 0;
 			this.switchColor();
-			this.rotateTrafficLightEntity();
 
 		}
 	}
+	
 	
 	/**
 	 * Switches traffic-light color
@@ -113,6 +122,8 @@ public class TrafficLight extends Intersection {
 		} else if(this.color.equals("^v")) {
 			this.color = "<>";
 		}
+		this.increment = 0;
+		this.rotateTrafficLightEntity();
 	}
 	
 	/**
@@ -157,6 +168,7 @@ public class TrafficLight extends Intersection {
 				this.state = "passing";
 				//System.out.println("dequeud car state: " + car.getState());
 				car.setIncrement(0);
+				this.numPassed++;
 			}
 		} else if (this.color.equals("<>")) {
 			car = this.ewTraffic.peek();
@@ -165,6 +177,7 @@ public class TrafficLight extends Intersection {
 				car.setState("passing");
 				this.state = "passing";
 				car.setIncrement(0);
+				this.numPassed++;
 			}
 		} else {
 			//default
@@ -172,8 +185,8 @@ public class TrafficLight extends Intersection {
 	}
 	
 	public void rotateTrafficLightEntity() {
-		double oldRotAng = this.trafficLightEntity.getRotation();
-		this.trafficLightEntity.setRotation(oldRotAng + 90);
+		double oldRotAng = this.intEntity.getRotation();
+		this.intEntity.setRotation(oldRotAng + 90);
 	}
 	
 	public String getState() {
@@ -194,15 +207,6 @@ public class TrafficLight extends Intersection {
 	
 	public void setColor(String color) {
 		this.color = color;
-	}
-	
-	public Entity getTrafficLightEntity() {
-		return trafficLightEntity;
-	}
-
-
-	public void setTrafficLightEntity(Entity trafficLightEntity) {
-		this.trafficLightEntity = trafficLightEntity;
 	}
  	
 	public String toString() {

@@ -16,7 +16,7 @@ import com.almasb.fxgl.entity.Entity;
 public abstract class Intersection extends Tile {
 	
 	public Intersection(Entity mapEntity, int numCarPass, Point mapIndex, Point position, String type) {
-		super(mapEntity, numCarPass, mapIndex, position, type);
+		super(mapEntity, mapIndex, position, type);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -28,7 +28,9 @@ public abstract class Intersection extends Tile {
 	protected String generalType;
 	protected int increment;
 	protected String builtDirections;
-	
+	protected Entity intEntity;
+	protected int numPassed;
+
 	/**
 	 * 
 	 * @return type of Intersection: 'stop-sign', 'traffic-light'
@@ -57,6 +59,30 @@ public abstract class Intersection extends Tile {
 	 */
 	public void setBuiltDirections(String str) {
 		this.builtDirections = str;
+	}
+	
+	/**
+	 * returns intersection entity
+	 * @return
+	 */
+	public Entity getIntEntity() {
+		return intEntity;
+	}
+
+	/**
+	 * set intersection entity for display
+	 * @param intEntity
+	 */
+	public void setIntEntity(Entity intEntity) {
+		this.intEntity = intEntity;
+	}
+	
+	public int getNumPassed() {
+		return numPassed;
+	}
+
+	public void setNumPassed(int numPassed) {
+		this.numPassed = numPassed;
 	}
 
 	/**

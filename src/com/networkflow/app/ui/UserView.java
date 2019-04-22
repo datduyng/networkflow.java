@@ -5,7 +5,6 @@ package com.networkflow.app.ui;
  * https://docs.oracle.com/javafx/2/ui_controls/file-chooser.htm
  */
 import com.almasb.fxgl.ui.InGameWindow;
-import com.networkflow.app.AppMain;
 import com.networkflow.apputils.AppException;
 import com.networkflow.component.SimulationMap;
 
@@ -42,6 +41,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import src.com.networkflow.app.AppMain;
 import javafx.scene.layout.VBox;
 
 
@@ -63,7 +63,7 @@ public class UserView extends InGameWindow{
         VBox attrBox = new VBox(6);
         attrBox.setSpacing(30); 
 
-        
+        /*
         FXGLButton fooBtn = new FXGLButton("foo button");
         EventHandler<ActionEvent> eventFoo = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) 
@@ -71,11 +71,15 @@ public class UserView extends InGameWindow{
                 System.out.println("FX gL button");
             } 
         };
+        
         fooBtn.setOnAction(eventFoo);
+        */
+        
         Pane box = new Pane();
         box.setPrefSize(160, 15);
-        box.getChildren().addAll(fooBtn);
+        //box.getChildren().addAll(fooBtn);
         attrBox.getChildren().add(box);
+        
 
         Button startBtn = new Button("Start"); 
         startBtn.setStyle("-fx-text-fill: green");
