@@ -116,7 +116,7 @@ public class Car {
 			
 		case "passing":
 			//get current intersection 
-			System.out.println("increment: " + this.increment); // TODO: remove debug statement
+			//System.out.println("increment: " + this.increment); // TODO: remove debug statement
 			Point intersectionTile = this.getCarNextPoint(this.currentIndex);
 			//get possible turning directions
 			String builtDirections = ((Intersection) SimulationMap.getTileAtIndex(intersectionTile)).getBuiltDirections();
@@ -392,7 +392,7 @@ public class Car {
 		
 		this.rotateCarEntity(oldDir, newDirection);
 		this.updateCarEntityTilePos(oldDir, newDirection);
-		System.out.println("New Direction: " + newDirection);
+		//System.out.println("New Direction: " + newDirection);
 		return newDirection;
 	}
 	
@@ -450,7 +450,7 @@ public class Car {
 	public void rotateCarEntity(String oldDir, String newDir) {
 		double currRotAng = this.getCarEntity().getRotation();
 		double rotAngDeg = RotationMapper.getRotationMapping().get(oldDir + newDir).doubleValue();
-		System.out.println("rotAngDeg: " + rotAngDeg);
+		//System.out.println("rotAngDeg: " + rotAngDeg);
 		this.getCarEntity().setRotation(currRotAng + rotAngDeg);
 	}
 	

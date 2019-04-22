@@ -34,7 +34,7 @@ public class AgentInfoView extends InGameWindow{
 		relocate(0, 240);
 		
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(340, 340);
+        setPrefSize(300, 150);
         setCanResize(false);
         
         //TODO:
