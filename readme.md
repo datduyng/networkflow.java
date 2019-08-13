@@ -4,7 +4,7 @@
 
 ## NetFlow 
 - [**Web App demo**](https://datduyng.github.io/cityboost/createMap.html)
-- Team website: [datduyng.github.io/cityboost](https://datduyng.github.io/cityboost/)
+- Team website: [datduyng.github.io/networkflow](https://datduyng.github.io/networkflow/)
 
 ## Quick Intro
 
